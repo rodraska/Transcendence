@@ -2,9 +2,13 @@ python3 -m venv myenv (python virtual environment created in Windows)
 
 myenv\Scripts\activate (activate myenv virtual env; command is different in other OSs)
 
+source myenv/bin/activate (mac & linux)
+
 pip install django (install django)
 
 django-admin version (check django version)
+
+cd to project
 
 python manage.py runserver (run project)
 
