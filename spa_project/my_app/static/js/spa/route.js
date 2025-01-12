@@ -42,7 +42,8 @@ class Route
 {
     static subscribe(url, component)
     {
-        customElements.define(transformString(component.name), component);
+        if(customElements.get(transformString(component.name)) === undefined) 
+            customElements.define(transformString(component.name), component);
         console.log(transformString(component.name));
         console.log(component.name);
         components.set(url, component);
