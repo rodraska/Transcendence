@@ -17,7 +17,7 @@ export default class Component extends HTMLElement
     }
 
 
-    getElement(id){
+    getElementById(id){
         return this.querySelector('#'+id);
     }
 
