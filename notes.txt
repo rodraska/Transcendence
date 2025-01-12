@@ -1,0 +1,11 @@
+python3 -m venv myenv (python virtual environment created in Windows)
+
+myenv\Scripts\activate (activate myenv virtual env; command is different in other OSs)
+
+pip install django (install django)
+
+django-admin version (check django version)
+
+python manage.py runserver (run project)
+
+http://127.0.0.1:8000/ (localhost)
