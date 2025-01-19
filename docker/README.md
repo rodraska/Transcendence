@@ -4,7 +4,7 @@
   - `Dockerfile` (para criar a imagem do Django)  
   - `requirements.txt` (bibliotecas Python, como Django e psycopg2)  
   - `manage.py` (comandos principais do Django)  
-  - `transcendence/` (app gerada com `startapp transcendence`, temos de avaliar se queremos centralizar todo o código nesta app, ou se preferimos construir apps pequenas)  
+  - `transcendence/` (app gerada com `startapp transcendence`, **temos de avaliar se queremos centralizar todo o código nesta app, ou se preferimos construir apps pequenas**)  
 - **Pasta `srcs/postgresql/`**: contém o `Dockerfile` do PostgreSQL  
 - **`docker-compose.yml`**: configura e orquestra os dois containers (Django e Postgres)  
 - **Makefile**: para facilitar comandos de build, up, down, etc.
