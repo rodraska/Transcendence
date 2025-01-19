@@ -215,7 +215,7 @@ class PowerRubber extends PowerUp
     powerRemove() {}
 }
 
-FtGame.powerConstructors = {
+FtCurveGame.powerConstructors = {
     1: PowerSpeed,
     2: PowerSlow,
     3: PowerThin,
@@ -243,7 +243,7 @@ FtPower.paint_powerup = function()
     ctx.fill();
 }
 
-FtGame.new_powerup = function()
+FtCurveGame.new_powerup = function()
 {
     drop = (game.currentIters[14] == 0) ? 601 : 301;
     if (Math.floor(Math.random() * drop) > 1) return;

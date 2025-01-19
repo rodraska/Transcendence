@@ -1,9 +1,9 @@
-FtGame.dist = function([x1, y1], [x2, y2])
+FtCurveGame.dist = function([x1, y1], [x2, y2])
 {
     return (Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)));
 }
 
-FtGame.give_points = function(id)
+FtCurveGame.give_points = function(id)
 {
     for (let i = 0; i < this.players.length; i++)
     {
@@ -12,7 +12,7 @@ FtGame.give_points = function(id)
     }
 }
 
-FtGame.checkRGB = function(pos, rgb)
+FtCurveGame.checkRGB = function(pos, rgb)
 {
     var posData = ctx.getImageData(pos[0], pos[1], 1, 1).data;
     for (let k = 0; k < 3; k++) if (posData[k] != rgb[k]) return (0);

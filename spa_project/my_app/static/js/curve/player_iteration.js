@@ -1,10 +1,10 @@
-FtPlayer.save_hist = function()
+FtCurvePlayer.save_hist = function()
 {
     this.back = {...this.mid};
     this.mid = {...this.truepos};
 }
 
-FtPlayer.generalized_coordinates = function()
+FtCurvePlayer.generalized_coordinates = function()
 {
     if (this.stop == true) return ;
     //Update position
@@ -24,7 +24,7 @@ FtPlayer.generalized_coordinates = function()
 }
 
 
-FtPlayer.holes = function()
+FtCurvePlayer.holes = function()
 {
     if (game.currentIters.begin < 160 || game.currentIters[15] > 0 || this.god == true || this.stop == true) return ;
     if (this.hole_iter > 0)
@@ -41,19 +41,19 @@ FtPlayer.holes = function()
     }
 }
 
-FtPlayer.processCollision = function()
+FtCurvePlayer.processCollision = function()
 {
     game.give_points(this.id);
     this.stop = true;
     game.dead++;
-    if (game.dead >= game.numberPlayers - 1) game.roundWinner();
+    if (game.dead >= game.numberCurvePlayers - 1) game.roundWinner();
     b = 0;
     if ((x = this.falseIndex(12)) != -1) {b = (this.powers[x].iters < 60) ? this.powers[x].iters : 60}
     this.powers = [];
     b > 0 ? this.powers.push(new PowerUp(12, [0, 0], b)) : null;
 }
 
-FtPlayer.checkCollision = function()
+FtCurvePlayer.checkCollision = function()
 {
     if (this.god == true || this.stop == true) return ;
     outer: for (let i = -1; i <= 1; i++)

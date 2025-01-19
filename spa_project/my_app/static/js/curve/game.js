@@ -1,6 +1,6 @@
-class Game
+class CurveGame
 {
-    numberPlayers = 2;
+    numberCurvePlayers = 2;
     players = [];
     powers = [];
     round = 1;
@@ -146,7 +146,7 @@ class Game
         }
     } 
 
-    gamePaintPlayer()
+    gamePaintCurvePlayer()
     {
         for (let i = 0; i < this.players.length; i++)
         {
@@ -189,31 +189,6 @@ class Game
     }
 }
 
-const FtGame = Game.prototype;
+const FtCurveGame = CurveGame.prototype;
 
-game = new Game();
-
-/*playersPlay = document.getElementById('playersPlay');
-playersPlay.textContent = game.numberPlayers + ' Players';
-playerList = document.getElementById('playerList');
-for (let i = 0; i < game.numberPlayers; i++)
-{
-    playerNumber = i + 1;
-    //Create div element
-    playerDiv = document.createElement('div');
-    playerDiv.style.display = 'flex';
-    //Player Name
-    playerName = document.createElement('p');
-    playerName.textContent = 'Player ' + playerNumber;
-    playerName.style.justifyContent = 'left';
-    playerName.style.flexGrow = '1';
-    //Player Score
-    playerScore = document.createElement('p');
-    playerScore.textContent = '0';
-    playerScore.id = 'score' + playerNumber;
-    playerScore.style.justifyContent = 'left';
-    playerScore.style.flexGrow = '1';
-    playerDiv.appendChild(playerName);
-    playerDiv.appendChild(playerScore);
-    playerList.appendChild(playerDiv);
-}*/
+game = new CurveGame();

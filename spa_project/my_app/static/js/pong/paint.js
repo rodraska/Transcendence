@@ -1,10 +1,10 @@
-FtGame.paint_black = function()
+FtPongGame.paint_black = function()
 {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0 , map.width, map.height);
 }
 
-FtGame.paint_squares = function()
+FtPongGame.paint_squares = function()
 {
     ctx.fillStyle = 'white';
     for (i = 0; i < 31; i++)
@@ -18,7 +18,7 @@ FtGame.paint_squares = function()
     }
 }
 
-FtGame.paint_score = function()
+FtPongGame.paint_score = function()
 {
     ctx.font = "80px 'Press Start 2P', cursive";
     ctx.fillStyle = 'white';
@@ -30,7 +30,7 @@ FtGame.paint_score = function()
     ctx.fillText(this.p2.score, width / 2 + this.s_width, this.s_height);
 }
 
-FtGame.paint_ball = function()
+FtPongGame.paint_ball = function()
 {
     x = (this.ball.pos[0]) + width / 2;
     y = (this.ball.pos[1]) + height / 2;
@@ -39,7 +39,7 @@ FtGame.paint_ball = function()
     ctx.fill();
 }
 
-FtGame.paint_players = function()
+FtPongGame.paint_players = function()
 {
     x = this.p1.pos[0] - this.p_width / 2 + width / 2;
     y = this.p1.pos[1] - this.p_height / 2 + height / 2;
@@ -50,7 +50,7 @@ FtGame.paint_players = function()
     ctx.fillRect(x, y, this.p_width, this.p_height);
 }
 
-FtGame.paint_gameover = function()
+FtPongGame.paint_pong_gameover = function()
 {
     ctx.textAlign = "right";
     ctx.textBaseline = "middle";
@@ -60,17 +60,17 @@ FtGame.paint_gameover = function()
     ctx.fillText("OVER", width / 2 + this.s_width, height / 2);
 }
 
-FtGame.paint_stop = function()
+FtPongGame.paint_stop = function()
 {
     ctx.clearRect(0, 0, map.width, map.height);
     this.paint_black();
     this.paint_squares();
     this.paint_score();
-    this.paint_gameover();
+    this.paint_pong_gameover();
     this.paint_players();
 }
 
-FtGame.paint_loop = function()
+FtPongGame.paint_loop = function()
 {
     this.paint_black();
     this.paint_squares();

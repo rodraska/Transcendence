@@ -4,9 +4,9 @@ var ctx;
 var width;
 var height;
 
-game = new Game();
+pong_game = new PongGame();
 
-FtGame.update = function()
+FtPongGame.update = function()
 {
     let x = this.check_goal();
     if (x === 1) return (this.ft_start());
@@ -17,7 +17,7 @@ FtGame.update = function()
     this.animationID = requestAnimationFrame(this.update.bind(this));
 }
 
-FtGame.ft_start = function()
+FtPongGame.ft_start = function()
 {
     if (this.isPaused === true) return (this.ft_pause());
     if (this.isStart === true) return ;
@@ -27,7 +27,7 @@ FtGame.ft_start = function()
     requestAnimationFrame(this.update.bind(this));
 }
 
-FtGame.ft_pause = function()
+FtPongGame.ft_pause = function()
 {
     console.log('pause');
     if (!this.isStart) return ;
@@ -36,7 +36,7 @@ FtGame.ft_pause = function()
     else this.animationID = requestAnimationFrame(this.update.bind(this));
 }
 
-FtGame.ft_stop = function()
+FtPongGame.ft_stop = function()
 {
     console.log('stop');
     this.isStart = false;

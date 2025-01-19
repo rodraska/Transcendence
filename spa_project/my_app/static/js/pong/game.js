@@ -1,4 +1,4 @@
-class Game 
+class PongGame 
 {
     constructor()
     {
@@ -16,9 +16,9 @@ class Game
         this.isStart = false;
         this.animationID;
         this.ball = new Ball();
-        this.p1 = new Player([-width / 2 + this.p_width / 2 + this.p_offest, 0]);
-        this.p2 = new Player([width / 2 - this.p_width / 2 - this.p_offest, 0]);
+        this.p1 = new PongPlayer([-width / 2 + this.p_width / 2 + this.p_offest, 0]);
+        this.p2 = new PongPlayer([width / 2 - this.p_width / 2 - this.p_offest, 0]);
     }
 }
 
-const FtGame = Game.prototype;
+const FtPongGame = PongGame.prototype;

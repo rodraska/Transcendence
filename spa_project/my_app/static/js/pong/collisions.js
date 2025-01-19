@@ -1,4 +1,4 @@
-FtGame.update_positions = function()
+FtPongGame.update_positions = function()
 {
     this.ball.pos[0] += this.ball.vel[0];
     this.ball.pos[1] += this.ball.vel[1];
@@ -10,7 +10,7 @@ FtGame.update_positions = function()
         this.p1.pos[1] += this.p1.vel;
 }
 
-FtGame.collision_2 = function()
+FtPongGame.collision_2 = function()
 {
     if (this.ball.pos[0] + this.b_radius >= width / 2 - this.p_offest - this.p_width)
     {
@@ -30,7 +30,7 @@ FtGame.collision_2 = function()
     }
 }
 
-FtGame.collision_1 = function()
+FtPongGame.collision_1 = function()
 {
     if (this.ball.pos[0] + this.b_radius <= - width / 2 + this.p_offest + this.p_width)
     {
@@ -50,7 +50,7 @@ FtGame.collision_1 = function()
     }
 }
 
-FtGame.check_goal = function()
+FtPongGame.check_goal = function()
 {
     if (this.ball.pos[0] + this.b_radius >= width / 2)
     {
@@ -69,13 +69,13 @@ FtGame.check_goal = function()
     return (0);
 }
 
-FtGame.collision_tb = function()
+FtPongGame.collision_tb = function()
 {
     if (this.ball.pos[1] + this.b_radius >= height / 2 || this.ball.pos[1] + this.b_radius <= - height / 2)
         this.ball.vel[1] *= -1;
 }
 
-FtGame.collisions = function()
+FtPongGame.collisions = function()
 {
     this.collision_1();
     this.collision_2();

@@ -1,4 +1,4 @@
-class Player
+class PongPlayer
 {
     constructor(pos)
     {

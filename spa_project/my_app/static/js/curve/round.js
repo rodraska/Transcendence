@@ -1,4 +1,4 @@
-FtGame.ft_round = function()
+FtCurveGame.ft_round = function()
 {
     if (this.game_winner != 0) return (this.final_paint());
     this.round++;
@@ -9,9 +9,9 @@ FtGame.ft_round = function()
     this.ft_start();
 }
 
-FtGame.players_spawn = function()
+FtCurveGame.players_spawn = function()
 {
-    for (let i = 1; i <= this.numberPlayers; i++)
+    for (let i = 1; i <= this.numberCurvePlayers; i++)
     {
         outer: while (1)
         {
@@ -22,28 +22,28 @@ FtGame.players_spawn = function()
             break ;
         }
         let t = Math.floor(Math.random() * 361) * Math.PI / 180;
-        this.players.push(new Player(i, this.playerColors[i], this.playerRGB[i], [x, y], t, this.playerControls[i][0], this.playerControls[i][1]));
+        this.players.push(new CurvePlayer(i, this.playerColors[i], this.playerRGB[i], [x, y], t, this.playerControls[i][0], this.playerControls[i][1]));
     }
 }
 
-FtGame.players_load = function()
+FtCurveGame.players_load = function()
 {
     for (let key in this.currentIters) this.currentIters[key] = 0;
     this.round_winner = 0;
     this.stp = 0;
     this.paint_offset();
-    this.gamePaintPlayer();
+    this.gamePaintCurvePlayer();
     this.gamePaintArrows();
 }
 
-FtGame.players_still = function()
+FtCurveGame.players_still = function()
 {
     if (this.currentIters.load == 150) return (this.players_free());
     this.currentIters.load++;
     requestAnimationFrame(this.players_still.bind(this));
 }
 
-FtGame.roundWinner = function()
+FtCurveGame.roundWinner = function()
 {
     this.stp = 1;
     let top_scorer = 0;
@@ -53,6 +53,6 @@ FtGame.roundWinner = function()
         if (this.playerScores[i] == this.playerScores[top_scorer]) top_scorer = 0;
         if (this.playerScores[i] > this.playerScores[top_scorer]) top_scorer = i;
     }
-    if (this.numberPlayers == 1) this.round_winner = 1;
-    if (top_scorer != 0 && this.playerScores[top_scorer] >= this.numberPlayers * 1) this.game_winner = top_scorer;
+    if (this.numberCurvePlayers == 1) this.round_winner = 1;
+    if (top_scorer != 0 && this.playerScores[top_scorer] >= this.numberCurvePlayers * 1) this.game_winner = top_scorer;
 }

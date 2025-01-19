@@ -24,20 +24,20 @@ export default class CurvePage extends Component
         height = canvas.height;
 
         playersPlay = document.getElementById('playersPlay');
-        playersPlay.textContent = game.numberPlayers + ' Players';
+        playersPlay.textContent = game.numberCurvePlayers + ' CurvePlayers';
         playerList = document.getElementById('playerList');
-        for (let i = 0; i < game.numberPlayers; i++)
+        for (let i = 0; i < game.numberCurvePlayers; i++)
         {
             let playerNumber = i + 1;
             //Create div element
             let playerDiv = document.createElement('div');
             playerDiv.style.display = 'flex';
-            //Player Name
+            //CurvePlayer Name
             let playerName = document.createElement('p');
-            playerName.textContent = 'Player ' + playerNumber;
+            playerName.textContent = 'CurvePlayer ' + playerNumber;
             playerName.style.justifyContent = 'left';
             playerName.style.flexGrow = '1';
-            //Player Score
+            //CurvePlayer Score
             let playerScore = document.createElement('p');
             playerScore.textContent = '0';
             playerScore.id = 'score' + playerNumber;

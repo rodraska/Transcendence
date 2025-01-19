@@ -6,7 +6,7 @@ var offset;
 var width;
 var height;
 
-FtGame.players_free = function()
+FtCurveGame.players_free = function()
 {
     if (this.currentIters.begin == 150)
     {
@@ -18,14 +18,14 @@ FtGame.players_free = function()
     this.reset_paint();
     this.gameSaveHist();
     this.gameCoordinates();
-    this.gamePaintPlayer();
+    this.gamePaintCurvePlayer();
     this.gamePaintArrows();
     this.paint_offset();
     this.currentIters.begin++;
     requestAnimationFrame(this.players_free.bind(this));
 }
 
-FtGame.begin_iter = function()
+FtCurveGame.begin_iter = function()
 {
     for (let i = 12; i <= 15; i++) if (this.currentIters[i] > 0) this.currentIters[i]--;
     this.paint_offset();
@@ -33,7 +33,7 @@ FtGame.begin_iter = function()
     this.restoreCanvas();
 }
 
-FtGame.curr_iter = function()
+FtCurveGame.curr_iter = function()
 {
     this.gameSaveHist();
     this.gameCoordinates();
@@ -42,11 +42,11 @@ FtGame.curr_iter = function()
     this.gameCheckCollision();
     this.gamePaintHist();
     this.saveCanvas();
-    this.gamePaintPlayer();
+    this.gamePaintCurvePlayer();
     this.gamePaintPowers();
 }
 
-FtGame.end_iter = function()
+FtCurveGame.end_iter = function()
 {
     if (this.currentIters[12] > 0) this.paint_bulb();
     if (this.currentIters.end > 60) this.paint_gg();
@@ -55,7 +55,7 @@ FtGame.end_iter = function()
     this.currentIters.begin++;
 }
 
-FtGame.players_play = function()
+FtCurveGame.players_play = function()
 {
     if (this.stp == 1) this.currentIters.end++;
     if (this.currentIters.end > 300) return (this.ft_round());
@@ -65,7 +65,7 @@ FtGame.players_play = function()
     requestAnimationFrame(this.players_play.bind(this));
 }
 
-FtGame.ft_start = function()
+FtCurveGame.ft_start = function()
 {
     this.reset_paint();
     this.players_spawn();

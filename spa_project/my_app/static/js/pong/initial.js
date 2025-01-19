@@ -1,4 +1,4 @@
-FtGame.initial_conditions = function()
+FtPongGame.initial_conditions = function()
 {
     this.ball.pos[0] = 0;
     this.ball.pos[1] = 0;
@@ -11,7 +11,7 @@ FtGame.initial_conditions = function()
     this.p2.pos[1] = 0;
 }
 
-FtGame.initial_ball = function()
+FtPongGame.initial_ball = function()
 {
     const randomSide = Math.floor(Math.random() * 2) + 1;
     if (randomSide == 1)

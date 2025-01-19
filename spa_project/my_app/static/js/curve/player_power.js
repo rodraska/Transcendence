@@ -1,4 +1,4 @@
-FtPlayer.pick_powerups = function()
+FtCurvePlayer.pick_powerups = function()
 {
     for (let i = 0; i < game.powers.length; i++)
     {
@@ -13,7 +13,7 @@ FtPlayer.pick_powerups = function()
     this.iter_power();
 }
 
-FtPlayer.give_powerup = function(id)
+FtCurvePlayer.give_powerup = function(id)
 {
     if (id <= 4) //give me
     {
@@ -78,7 +78,7 @@ FtPlayer.give_powerup = function(id)
     }
 }
 
-FtPlayer.iter_power = function()
+FtCurvePlayer.iter_power = function()
 {
     for (let i = 0; i < this.powers.length; i++)
     {
