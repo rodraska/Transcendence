@@ -112,6 +112,8 @@ Opção para partilhar o estado do volume entre máquinas:
      ```
    Desta forma, sincronizamos manualmente os dados de uma máquina para outra.
 
+   Mantemos cada um a sua base de dados local e, quando quisermos alinhar os dados, fazemos um dump oficial (por exemplo, `pg_dump -U admin transcendence > dump.sql`) e colocamos no repositório. Depois, quem precisar sincronizar simplesmente faz `psql -U admin transcendence < dump.sql`. Assim, as migrações do Django tratam a estrutura da BD, enquanto o dump permite partilhar dados concretos (utilizadores, estatísticas, etc.) apenas quando for necessário.
+
 ## Conclusão
 
 1. Correr `make build` e `make up` (ou `make`) para levantar o Django e o Postgres em Docker.  
