@@ -41,8 +41,8 @@ FtGame.ft_stop = function()
     console.log('stop');
     this.isStart = false;
     cancelAnimationFrame(this.animationID);
-    initial_conditions();
-    paint_stop();
+    this.initial_conditions();
+    this.paint_stop();
     this.p1.score = 0;
     this.p2.score = 0;
 }
