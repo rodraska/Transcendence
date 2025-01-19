@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    </style>
+</head>
+<body>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <h2>Pong</h2>
+    </div>
+    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
+        <button onclick="game.ft_start()" style="background-color: green; margin-right: 10px; width: 50px; height: 50px;">Start</button>
+        <button onclick="game.ft_pause()" style="background-color: blue; margin-right: 10px; width: 50px; height: 50px;">Pause</button>
+        <button onclick="game.ft_stop()" style="background-color: red; width: 50px; height: 50px;">Stop</button>
+    </div>
+    <div id="canvas_container" style="display: flex; justify-content: center;">
+        <canvas id="pong" width="1500" height="750"></canvas>
+    </div>
+
+    <script src="{% static 'js/pong/test.js' %}"></script>
+</body>
+</html>

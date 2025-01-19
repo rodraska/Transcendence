@@ -44,8 +44,6 @@ class Route
     {
         if(customElements.get(transformString(component.name)) === undefined) 
             customElements.define(transformString(component.name), component);
-        console.log(transformString(component.name));
-        console.log(component.name);
         components.set(url, component);
     }
 
