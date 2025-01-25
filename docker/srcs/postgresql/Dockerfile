@@ -9,7 +9,9 @@ RUN mkdir -p /var/lib/postgresql/data && chown -R postgres:postgres /var/lib/pos
 
 USER postgres
 
-RUN /usr/lib/postgresql/13/bin/initdb -D /var/lib/postgresql/data
+RUN /usr/lib/postgresql/13/bin/initdb -D /var/lib/postgresql/data \
+    --encoding=UTF8 \
+    --locale=C.UTF-8
 
 RUN echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf
 
