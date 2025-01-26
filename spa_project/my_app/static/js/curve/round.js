@@ -6,7 +6,7 @@ FtCurveGame.ft_round = function()
     this.powers = [];
     this.players = [];
     ctx.reset();
-    this.ft_start();
+    this.initial_loop();
 }
 
 FtCurveGame.players_spawn = function()

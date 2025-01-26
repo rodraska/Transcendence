@@ -1,5 +1,6 @@
 class CurveGame
 {
+    isActive = false;
     numberCurvePlayers = 2;
     players = [];
     powers = [];
