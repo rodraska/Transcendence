@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Bem-vindo ao Dashboard, {{ user.username }}!</h1>
+	<h2>{{ user.first_name }} {{ user.last_name }}</h2>
+	{% if avatar_url %}
+		<img src="{{ avatar_url }}" alt="Avatar de {{ user.username }}" width="100">
+	{% else %}
+		<p>Sem avatar disponível.</p>
+	{% endif %}
+    <p>Esta é a sua página inicial após o login.</p>
+    <a href="/accounts/logout/">Logout</a>
+</body>
+</html>

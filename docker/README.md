@@ -102,11 +102,11 @@ Por padrão, os volumes criados localmente para o PostgreSQL (por exemplo, `db_d
 Opção para partilhar o estado do volume entre máquinas:
 
 1. **Exportar/Importar via Dump**  
-   - **Exportar**: No teu contêiner, faz um dump da base de dados:
+   - **Exportar**: No teu container, faz um dump da base de dados:
      ```bash
      docker compose exec db pg_dump -U admin transcendence > dump.sql
      ```
-   - **Importar**: O colega pode subir o contêiner dele e depois restaurar os dados:
+   - **Importar**: O colega pode subir o container dele e depois restaurar os dados:
      ```bash
      docker compose exec -T db psql -U admin transcendence < dump.sql
      ```
