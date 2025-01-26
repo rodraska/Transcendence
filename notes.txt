@@ -13,3 +13,7 @@ cd to project
 python manage.py runserver (run project)
 
 http://127.0.0.1:8000/ (localhost)
+
+TODO:
+
+when switching from pong to curve the game continues

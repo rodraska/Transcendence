@@ -3,7 +3,6 @@ export default class Component extends HTMLElement
     constructor(template)   
     {
         super()
-        console.log("template: ", template);
         fetch(template).then(async (r) => {
             if (r.ok)
             { 
