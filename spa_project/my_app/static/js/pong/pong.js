@@ -9,10 +9,11 @@ export default class PongPage extends Component
 
     onInit()
     {
+        if (game) console.log(game);
         map = document.getElementById('pong');
-        ctx = map.getContext('2d');
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, map.clientWidth, map.height);
+        pong_ctx = map.getContext('2d');
+        pong_ctx.fillStyle = 'black';
+        pong_ctx.fillRect(0, 0, map.clientWidth, map.height);
 
         width = map.width;
         height = map.height;

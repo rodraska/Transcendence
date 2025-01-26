@@ -9,6 +9,7 @@ export default class CurvePage extends Component
 
     onInit()
     {
+        console.log(window.location.href.slice(-5));
         canvas = document.getElementById('curve');
         ctx = canvas.getContext('2d');
         ctx.fillStyle = 'black';

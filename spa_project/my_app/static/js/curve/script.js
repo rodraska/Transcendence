@@ -1,3 +1,4 @@
+var game;
 var canvas;
 var ctx;
 var s_canvas;
@@ -57,6 +58,8 @@ FtCurveGame.end_iter = function()
 
 FtCurveGame.players_play = function()
 {
+    /*if (window.location.href.slice(-5) != "curve") return;
+    console.log('curve update');*/
     if (this.stp == 1) this.currentIters.end++;
     if (this.currentIters.end > 300) return (this.ft_round());
     this.begin_iter();
@@ -65,10 +68,17 @@ FtCurveGame.players_play = function()
     requestAnimationFrame(this.players_play.bind(this));
 }
 
-FtCurveGame.ft_start = function()
+FtCurveGame.initial_loop = function()
 {
     this.reset_paint();
     this.players_spawn();
     this.players_load();
     this.players_still();
+}
+
+FtCurveGame.ft_start = function()
+{
+    if (this.isActive == true) return ;
+    this.isActive = true;
+    this.initial_loop();
 }

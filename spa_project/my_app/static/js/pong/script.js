@@ -1,5 +1,5 @@
 var map;
-var ctx;
+var pong_ctx;
 
 var width;
 var height;
