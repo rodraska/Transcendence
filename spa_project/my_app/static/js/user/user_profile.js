@@ -8,11 +8,8 @@ export default class UserProfile extends Component
     }
 
     onInit(){
-        console.log('hello');
         const div = this.getElementById("test");
-        console.log("User: ", div)
         div.innerHTML = "asdasd";
-
     }
 }
 

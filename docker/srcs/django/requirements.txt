@@ -1,0 +1,5 @@
+#To install specific libs
+django
+psycopg2
+django-allauth
+requests
