@@ -49,7 +49,7 @@ header img {
 	/* Circular shape */
 }
 
-body {
+html body {
 	background-color: var(--background-color);
 	color: var(--primary-color);
 	/* Default text color */
@@ -69,3 +69,20 @@ button.secondary {
 	background-color: var(--accent-color);
 	color: #fff;
 }
+
+/* css sofia */
+.btn-primary:hover {
+	background-color: #E66F36;
+	border-color: #E66F36;
+	transform: scale(1.05);
+}
+
+.btn-primary,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus {
+	background-color: var(--accent-color);
+	border-color: var(--accent-color);
+	color: white;
+}
+/* css sofia */
