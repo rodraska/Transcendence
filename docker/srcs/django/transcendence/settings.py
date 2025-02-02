@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 	'transcendence.providers',
 	'transcendence.providers.fortytwo',
 	'transcendence',
+	'my_app',
 ]
 
 SITE_ID = 3
