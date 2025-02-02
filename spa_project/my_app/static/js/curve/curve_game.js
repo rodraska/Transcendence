@@ -1,15 +1,14 @@
 import Component from "../spa/component.js"
 
-export default class CurvePage extends Component
+export default class CurveGame extends Component
 {
     constructor()
     {
-        super('static/html/curve.html')
+        super('static/html/curve_game.html')
     }
 
     onInit()
     {
-        console.log(window.location.href.slice(-5));
         canvas = document.getElementById('curve');
         ctx = canvas.getContext('2d');
         ctx.fillStyle = 'black';

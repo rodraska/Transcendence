@@ -1,10 +1,10 @@
 import Component from "../spa/component.js"
 
-export default class PongPage extends Component
+export default class PongGame extends Component
 {
     constructor()
     {
-        super('static/html/pong.html')
+        super('static/html/pong_game.html')
     }
 
     onInit()

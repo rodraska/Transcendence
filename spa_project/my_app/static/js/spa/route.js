@@ -50,5 +50,6 @@ class Route
     static go(url)
     {
         window.history.pushState({},"", "#" + url);
+        setPage(url || "/");
     }
 }
