@@ -74,7 +74,9 @@ button.secondary {
 .btn-primary:hover {
 	background-color: #E66F36;
 	border-color: #E66F36;
-	transform: scale(1.05);
+	/* transform: scale(1.05); */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	transition: box-shadow 0.1s ease-in-out;
 }
 
 .btn-primary,
@@ -82,7 +84,7 @@ button.secondary {
 .btn-primary:visited,
 .btn-primary:focus {
 	background-color: var(--accent-color);
-	border-color: var(--accent-color);
+	border-color: var(--accent-color) !important;
 	color: white;
 }
 /* css sofia */
