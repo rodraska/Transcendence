@@ -14,6 +14,11 @@ python manage.py runserver (run project)
 
 http://127.0.0.1:8000/ (localhost)
 
-TODO:
+pip install channels
+pip install channels-redis  (install django channels)
 
-when switching from pong to curve the game continues
+settings.py:
+Add 'channels' to INSTALLED_APPS
+Add ASGI_APPLICATION and CHANNEL_LAYERS 
+
+
