@@ -1,20 +1,37 @@
-header {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	background-color: #fff;
-	/* Light background */
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	/* Subtle shadow */
-	z-index: 1000;
-}
 
-/*#menuButton {
-	border: none;
-	background: none;
-	font-size: 24px;
-}*/
+.bg-primary-color {
+	background-color: var(--primary-color);
+  }
+  
+  .bg-secondary-color {
+	background-color: var(--secondary-color);
+  }
+  
+  .bg-accent-color {
+	background-color: var(--accent-color);
+  }
+  
+  .bg-light-color {
+	background-color: var(--background-color);
+  }
+
+  .primary-color {
+	color: var(--primary-color);
+  }
+  
+  .secondary-color {
+	color: var(--secondary-color)
+  }
+
+  .accent-color {
+	color: var(--accent-color);
+  }
+
+  .text-color {
+	color: var(--text-color);
+  }
+
+
 
 
 

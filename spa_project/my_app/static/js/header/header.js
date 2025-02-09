@@ -9,14 +9,17 @@ export default class HeaderBar extends Component
 
 	onInit(){
 
-		// Add a click event to the menu button
-		document.getElementById('menuButton').addEventListener('click', () => {
-			const menu = document.getElementById('menu'); // Assuming your menu is hidden initially
-			if (menu) {
-				menu.classList.toggle('d-none'); // Toggle visibility
-			}
+		document.getElementById('profilebtn').addEventListener('click', () => {
+			window.location.href = '#/profile';
 		});
 
+		document.getElementById('playgamebtn').addEventListener('click', () => {
+			window.location.href = '#/play_games';
+		});
+	
+		document.getElementById('logoutbtn').addEventListener('click', () => {
+			window.location.href = '#/login';
+		});
 		// Example usage
 		updateHeader('John Doe', 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg');
 	}
@@ -29,4 +32,5 @@ export default class HeaderBar extends Component
 		if (userName) userNameElement.textContent = userName;
 		if (profileImage) profileImageElement.src = profileImage;
 	}
+
 }
