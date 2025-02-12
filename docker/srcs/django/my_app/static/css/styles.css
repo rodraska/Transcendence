@@ -1,13 +1,13 @@
 header {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	background-color: #fff;
-	/* Light background */
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	/* Subtle shadow */
-	z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  /* Light background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow */
+  z-index: 1000;
 }
 
 /*#menuButton {
@@ -16,56 +16,70 @@ header {
 	font-size: 24px;
 }*/
 
-
-
 #menu {
-	background-color: var(--secondary-color);
-	position: absolute;
-	top: 60px; /* Ajuste para ficar abaixo do cabeçalho */
-	left: 0;
-	width: 20%;
-	border-top: 1px solid #ccc;
+  background-color: var(--secondary-color);
+  position: absolute;
+  top: 60px; /* Ajuste para ficar abaixo do cabeçalho */
+  left: 0;
+  width: 20%;
+  border-top: 1px solid #ccc;
 }
 #menu ul {
-	list-style-type: none;
-	padding-left: 0;
+  list-style-type: none;
+  padding-left: 0;
 }
 #menu ul li {
-	padding: 10px;
-	border-bottom: 1px solid #ddd;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 #menu ul li a {
-	text-decoration: none;
-	color: var(--primary-color);
-	font-size: 16px;
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 16px;
 }
 #menu ul li a:hover {
-	color: var(--accent-color); /* Cor ao passar o mouse */
+  color: var(--accent-color); /* Cor ao passar o mouse */
 }
-
 
 header img {
-	border-radius: 50%;
-	/* Circular shape */
+  border-radius: 50%;
+  /* Circular shape */
 }
 
-body {
-	background-color: var(--background-color);
-	color: var(--primary-color);
-	/* Default text color */
+html body {
+  background-color: var(--background-color);
+  color: var(--primary-color);
+  /* Default text color */
 }
 
 button.primary {
-	background-color: var(--primary-color);
-	color: #fff;
+  background-color: var(--primary-color);
+  color: #fff;
 }
 
 button.secondary {
-	background-color: var(--secondary-color);
-	color: #fff;
+  background-color: var(--secondary-color);
+  color: #fff;
 }
 
 .alert {
-	background-color: var(--accent-color);
-	color: #fff;
+  background-color: var(--accent-color);
+  color: #fff;
 }
+
+/* css sofia */
+.btn-primary:hover {
+  background-color: #e66f36;
+  border-color: #e66f36;
+  transform: scale(1.05);
+}
+
+.btn-primary,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: white;
+}
+/* css sofia */

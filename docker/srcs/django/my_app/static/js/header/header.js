@@ -2,12 +2,18 @@ import Component from "../spa/component.js";
 
 export default class HeaderBar extends Component {
   constructor() {
-    super("/static/html/header.html");
+    super("static/html/header.html");
   }
 
   onInit() {
-	const dataSetElement = this.querySelector("#dataSet");
-    // Update Username
+    document.getElementById("logout-button").addEventListener("click", () => {
+      window.location.href = "/accounts/logout/";
+    });
+
+    document.getElementById("friends-button").addEventListener("click", () => {
+      window.location.href = "#/friends";
+    });
+
     const userNameElement = this.querySelector("#userName");
     if (userNameElement && window.loggedInUserName) {
       userNameElement.textContent = window.loggedInUserName;

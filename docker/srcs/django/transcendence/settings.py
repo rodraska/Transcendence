@@ -41,13 +41,13 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+	'transcendence',
 	'transcendence.providers',
 	'transcendence.providers.fortytwo',
-	'transcendence',
 	'my_app',
 ]
 
-SITE_ID = 3
+SITE_ID = 4
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -57,6 +57,10 @@ AUTHENTICATION_BACKENDS = (
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 SOCIALACCOUNT_ADAPTER = 'transcendence.adapter.CustomSocialAccountAdapter'
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+ACCOUNT_LOGOUT_ON_GET = True
 
 # settings.py
 
@@ -183,6 +187,6 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Redirecionar para a página inicial após login
-LOGIN_REDIRECT_URL = '/dashboard/'
+LOGIN_REDIRECT_URL = '/#/header/'
 LOGOUT_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'transcendence.CustomUser'
