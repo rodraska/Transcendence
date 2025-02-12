@@ -1,0 +1,88 @@
+<style>
+  /* Estilos personalizados */
+  .card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+
+  .card-img-top {
+    border-radius: 10px 10px 0 0;
+    object-fit: cover;
+    height: 200px;
+  }
+
+  .btn {
+    width: 100%; /* Faz os botões ocuparem toda a largura */
+  }
+
+  textarea {
+    resize: vertical; /* Permite redimensionar a área de texto apenas verticalmente */
+  }
+</style>
+
+<div class="container-fluid mt-5">
+  <div class="row">
+    <!-- Parte Esquerda: Cartão com Imagem de Perfil e Botões -->
+    <div class="col-md-4 d-flex justify-content-center">
+      <div class="card my-auto" style="width: 18rem;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg" class="card-img-top" alt="Profile Photo" id="profileImage">
+        <div class="card-body text-center">
+          <button class="btn  bg-secondary-color mb-2" id="changeImageBtn">Change Photo</button>
+          <button class="btn bg-primary-color" id="resetImageBtn">Default Avatar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parte Direita: Formulário para Inserir Dados de Perfil -->
+    <div class="col-md-7">
+      <form>
+        <div class="mb-3">
+          <label for="dname" class="form-label">Display Name</label>
+          <input type="text" class="form-control" id="dname" placeholder="Name">
+        </div>
+        <div class="mb-3">
+          <label for="name1" class="form-label">First Name</label>
+          <input type="text" class="form-control" id="name2" placeholder="">
+        </div>
+        <div class="mb-3">
+          <label for="name2" class="form-label">Last Name</label>
+          <input type="text" class="form-control" id="name2" placeholder="">
+        </div>
+        <div class="mb-3">
+          <label for="bio" class="form-label">About me...</label>
+          <textarea class="form-control" id="bio" rows="4" placeholder=""></textarea>
+        </div>
+        <button type="submit" class="btn bg-accent-color">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  // Alterar imagem para a escolhida
+  document.getElementById('changeImageBtn').addEventListener('click', function() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.click();
+
+    input.addEventListener('change', function() {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('profileImage').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  // Resetar para imagem padrão
+  document.getElementById('resetImageBtn').addEventListener('click', function() {
+    document.getElementById('profileImage').src = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
+  });
+</script>
+
+
+
