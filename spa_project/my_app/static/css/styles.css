@@ -2,15 +2,15 @@
 .bg-primary-color {
 	background-color: var(--primary-color);
   }
-  
+
   .bg-secondary-color {
 	background-color: var(--secondary-color);
   }
-  
+
   .bg-accent-color {
 	background-color: var(--accent-color);
   }
-  
+
   .bg-light-color {
 	background-color: var(--background-color);
   }
@@ -18,7 +18,7 @@
   .primary-color {
 	color: var(--primary-color);
   }
-  
+
   .secondary-color {
 	color: var(--secondary-color)
   }
@@ -98,8 +98,8 @@ button.secondary {
 .btn-primary:active,
 .btn-primary:visited,
 .btn-primary:focus {
-	background-color: var(--accent-color);
-	border-color: var(--accent-color);
+	background-color: var(--accent-color) !important;
+	border-color: var(--accent-color) !important;
 	color: white;
 }
 /* css sofia */

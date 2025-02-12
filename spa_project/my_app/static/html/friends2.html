@@ -40,7 +40,7 @@
 
     <!-- Notificação de pedidos de amizade -->
     <div class="notification mb-4">
-      <button class="btn btn-info" id="friend-requests-btn" data-bs-toggle="collapse" data-bs-target="#friend-requests-list">
+      <button class="btn btn-primary" id="friend-requests-btn" data-bs-toggle="collapse" data-bs-target="#friend-requests-list">
         Friend requests
         <span class="notification-count" id="notification-count">3</span>
       </button>
@@ -126,7 +126,7 @@
       // Mostrar/ocultar botões de navegação
       document.getElementById('prev-page').style.display = currentPage > 1 ? '' : 'none';
       document.getElementById('next-page').style.display = currentPage < totalPages ? '' : 'none';
-      
+
       // Definir comportamento dos botões de navegação
       document.getElementById('prev-page').addEventListener('click', () => {
         if (currentPage > 1) {
