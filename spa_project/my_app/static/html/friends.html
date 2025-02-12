@@ -12,31 +12,30 @@
   .status.offline {
     background-color: #6c757d;
   }
-  .notification {
-    position: relative;
-  }
-  .notification-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: #dc3545;
-    color: white;
-    border-radius: 50%;
-    padding: 5px;
-    font-size: 12px;
-  }
   .friend-photo {
     width: 40px; /* Reduced size */
     height: 40px; /* Reduced size */
     border-radius: 50%;
     margin-right: 10px;
   }
+  header {
+      text-align: center;
+      margin-top: 20px;
+  }
+  h1 {
+      font-size: 2.5em;
+      color: var(--primary-color);
+      font-family: 'Arial', sans-serif;
+  }
 </style>
 <body>
+  <header>
+    <h1>Friend's Page</h1>
+  </header>
   <div class="container mt-5">
 
     <!-- Search Bar -->
-    <div class="row mb-4">
+    <div class="row mb-4 justify-content-center">
       <div class="col-md-6">
         <input type="text" class="form-control" id="search" placeholder="Search...">
       </div>
@@ -59,13 +58,12 @@
     <nav aria-label="Page navigation">
       <ul class="pagination justify-content-center">
         <li class="page-item" id="prev-page">
-          <a class="page-link" href="#">Anterior</a>
+          <button class="page-link">Prev</button>
         </li>
         <li class="page-item" id="next-page">
-          <a class="page-link" href="#">Próximo</a>
+          <button class="page-link">Next</button>
         </li>
       </ul>
     </nav>
   </div>
 </body>
-</html>
