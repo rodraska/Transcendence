@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model, authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from transcendence.models import Relationship, CustomUser
+from transcendence.models import Relationship, CustomUser, GameType
 from django.db.models import Q
 
 def index(request):
@@ -166,10 +166,6 @@ def block_user(request):
         return JsonResponse({"error": str(e)}, status=400)
     return JsonResponse({"message": "User blocked."})
 
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from transcendence.models import CustomUser, Relationship
 
 @csrf_exempt
 @login_required
@@ -201,3 +197,15 @@ def get_all_users(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
     return JsonResponse(users, safe=False)
+
+@csrf_exempt
+@login_required
+def get_game_types(request):
+    if request.method != "GET":
+        return JsonResponse({"error": "Only GET is allowed."}, status=405)
+    try:
+        data = GameType.objects
+        data_parsed = list(data.values("id", "name"))
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    return JsonResponse(data_parsed, safe=False)

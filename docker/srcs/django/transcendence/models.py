@@ -31,3 +31,9 @@ class Relationship(models.Model):
 
     def __str__(self):
         return f"{self.from_user.username} -> {self.to_user.username}: {self.status}"
+    
+class GameType(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
