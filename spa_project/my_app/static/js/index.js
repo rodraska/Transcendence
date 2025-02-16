@@ -23,10 +23,10 @@ import CurveLobby from "./curve/curve_lobby.js"
 Route.subscribe('/', HomePage);
 Route.subscribe('/profile', UserProfile);
 Route.subscribe('/header', HeaderBar);
-Route.subscribe('/play_games', PlayGames)
+Route.subscribe('/play_games', PlayGames);
 Route.subscribe('/login', LoginButtons);
 Route.subscribe('/login_form', LoginForm);
-Route.subscribe('/registration_form', RegistrationForm);
+Route.subscribe('/registration_form', RegistrationForm);EAD
 Route.subscribe('/friends', FriendsPage);
 Route.subscribe('/friend_card', FriendCard);
 Route.subscribe('/pong_main', PongMain);
