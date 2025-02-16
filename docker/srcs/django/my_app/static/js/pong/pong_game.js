@@ -1,6 +1,6 @@
 import Component from "../spa/component.js"
 
-export default class PongGame extends Component
+class PongGame extends Component
 {
     constructor()
     {
@@ -19,3 +19,5 @@ export default class PongGame extends Component
         height = map.height;
     }
 }
+
+export default PongGame;

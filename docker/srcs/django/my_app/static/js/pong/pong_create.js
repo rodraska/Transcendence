@@ -1,6 +1,6 @@
 import Component from "../spa/component.js"
 
-export default class PongCreate extends Component
+class PongCreate extends Component
 {
     constructor()
     {
@@ -9,6 +9,10 @@ export default class PongCreate extends Component
 
     onInit()
     {
-
+        document.getElementById('button_create').addEventListener('click', () => {
+			window.location.href = '#/pong_lobby';
+		});
     }
 }
+
+export default PongCreate;
