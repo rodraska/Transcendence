@@ -11,8 +11,8 @@ export default class FriendsPage extends Component
 	onInit(){
 		// Mock data
 		const originalFriendsData = [
-			{ id: 1, name: "João Silva", status: "online", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: true },
-			{ id: 2, name: "Maria Oliveira", status: "offline", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: false },
+			{ id: 1, name: "João Silva", status: "online", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: false, hasFriendRequest: true },
+			{ id: 2, name: "Maria Oliveira", status: "offline", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: false, hasFriendRequest: false },
 			{ id: 3, name: "Carlos Souza", status: "online", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: true },
 			{ id: 4, name: "Ana Costa", status: "offline", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: false, hasFriendRequest: true },
 			{ id: 5, name: "Lucas Santos", status: "online", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: false, hasFriendRequest: false },
@@ -21,11 +21,60 @@ export default class FriendsPage extends Component
 			{ id: 8, name: "Roberto Gomes", status: "offline", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: true },
 		];
 
+		// const sortedFriendsData = originalFriendsData.sort((a, b) => {
+		// 	if (a.isFriend === b.isFriend) {
+		// 		return a.name.localeCompare(b.name);
+		// 	}
+		// 	return a.isFriend ? -1 : 1;
+		// });
+
+		// let friendsData = [...sortedFriendsData];
 		let friendsData = [...originalFriendsData];
 
 		// Pagination parameters
 		let currentPage = 1;
 		const friendsPerPage = 8;  // Número de amigos por página
+
+		// function displayFriends(page) {
+		// 	const startIndex = (page - 1) * friendsPerPage;
+		// 	const endIndex = page * friendsPerPage;
+		// 	const currentFriends = friendsData.slice(startIndex, endIndex);
+		// 	const friendsList = document.getElementById('friends-list');
+		// 	friendsList.innerHTML = '';
+
+		// 	currentFriends.forEach(friend => {
+		// 		const statusClass = friend.status === 'online' ? 'online' : 'offline';
+		// 		const friendItem = document.createElement('li');
+		// 		friendItem.className = 'list-group-item d-flex align-items-center';
+		// 		friendItem.innerHTML = `
+		// 			<img src="${friend.photo}" class="friend-photo" alt="Foto de amigo">
+		// 			<span class="me-2">${friend.name}</span>
+		// 			<span class="status ${statusClass} me-2"></span>
+		// 			<small class="text-muted me-2">Last seen online</small>
+		// 			<div class="friend-actions ms-auto">
+		// 			${friend.isFriend ?
+		// 				'<span class="badge bg-secondary"><i class="bi bi-person-check"></i> Friend</span>' :
+		// 				friend.hasFriendRequest ?
+		// 				'<button class="btn btn-sm btn-success"><i class="bi bi-check-circle"></i></button><button class="btn btn-sm btn-danger"><i class="bi bi-x-circle"></i></button>' :
+		// 				'<button class="btn btn-sm btn-primary send-request-btn"><i class="bi bi-person-plus"></i> Send friend request</button>'
+		// 				}
+		// 			</div>
+		// 		`;
+
+		// 		if (!friend.isFriend && !friend.hasFriendRequest) {
+		// 			const sendRequestBtn = friendItem.querySelector('.send-request-btn');
+		// 			sendRequestBtn.addEventListener('click', () => {
+		// 				sendRequestBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Pending';
+		// 				sendRequestBtn.classList.remove('btn-primary');
+		// 				sendRequestBtn.classList.add('btn-warning');
+		// 				// Optionally, update the friend status in your data
+		// 				friend.hasFriendRequest = true;
+		// 			});
+		// 		}
+
+		// 		friendsList.appendChild(friendItem);
+		// 	});
+		// }
 
 		function displayFriends(page) {
 			const startIndex = (page - 1) * friendsPerPage;
@@ -47,13 +96,31 @@ export default class FriendsPage extends Component
 					${friend.isFriend ?
 						'<span class="badge bg-secondary"><i class="bi bi-person-check"></i> Friend</span>' :
 						friend.hasFriendRequest ?
-						'<button class="btn btn-sm btn-success"><i class="bi bi-check-circle"></i></button><button class="btn btn-sm btn-danger"><i class="bi bi-x-circle"></i></button>' :
+						'<button class="btn btn-sm btn-success accept-btn"><i class="bi bi-check-circle"></i></button><button class="btn btn-sm btn-danger decline-btn"><i class="bi bi-x-circle"></i></button>' :
 						'<button class="btn btn-sm btn-primary send-request-btn"><i class="bi bi-person-plus"></i> Send friend request</button>'
 						}
 					</div>
 				`;
 
-				if (!friend.isFriend && !friend.hasFriendRequest) {
+				if (!friend.isFriend && friend.hasFriendRequest) {
+					const acceptBtn = friendItem.querySelector('.accept-btn');
+					const declineBtn = friendItem.querySelector('.decline-btn');
+
+					acceptBtn.addEventListener('click', () => {
+						friendItem.querySelector('.friend-actions').innerHTML = '<span class="badge bg-secondary"><i class="bi bi-person-check"></i> Friend</span>';
+						// Optionally, update the friend status in your data
+						friend.isFriend = true;
+						friend.hasFriendRequest = false;
+					});
+
+					declineBtn.addEventListener('click', () => {
+						friendItem.querySelector('.friend-actions').innerHTML = '<button class="btn btn-sm btn-primary send-request-btn"><i class="bi bi-person-plus"></i> Send friend request</button>';
+						// Optionally, update the friend status in your data
+						friend.isFriend = false;
+						friend.hasFriendRequest = false;
+					});
+				} else if (!friend.isFriend && !friend.hasFriendRequest) {
+					console.log("entrei")
 					const sendRequestBtn = friendItem.querySelector('.send-request-btn');
 					sendRequestBtn.addEventListener('click', () => {
 						sendRequestBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Pending';
