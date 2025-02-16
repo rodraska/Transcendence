@@ -1,6 +1,6 @@
 import Component from "../spa/component.js"
 
-export default class CurveJoin extends Component
+class CurveJoin extends Component
 {
     constructor()
     {
@@ -8,6 +8,18 @@ export default class CurveJoin extends Component
     }
     onInit()
     {
-        
+        document.getElementById('button1').addEventListener('click', () => {
+			window.location.href = '#/curve_lobby';
+		});
+
+        document.getElementById('button2').addEventListener('click', () => {
+			window.location.href = '#/curve_lobby';
+		});
+
+        document.getElementById('button3').addEventListener('click', () => {
+			window.location.href = '#/curve_lobby';
+		});
     }
 }
+
+export default CurveJoin;

@@ -1,6 +1,6 @@
 import Component from "../spa/component.js"
 
-export default class CurveHistory extends Component
+class CurveHistory extends Component
 {
     constructor()
     {
@@ -12,3 +12,5 @@ export default class CurveHistory extends Component
         
     }
 }
+
+export default CurveHistory;

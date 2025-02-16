@@ -1,6 +1,6 @@
 import Component from "../spa/component.js"
 
-export default class CurveGame extends Component
+class CurveGame extends Component
 {
     constructor()
     {
@@ -49,3 +49,5 @@ export default class CurveGame extends Component
         }
     }
 }
+
+export default CurveGame;

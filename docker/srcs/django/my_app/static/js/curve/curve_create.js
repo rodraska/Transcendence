@@ -1,6 +1,6 @@
 import Component from "../spa/component.js"
 
-export default class CurveCreate extends Component
+class CurveCreate extends Component
 {
     constructor()
     {
@@ -9,6 +9,10 @@ export default class CurveCreate extends Component
 
     onInit()
     {
-        
+        document.getElementById('button_create').addEventListener('click', () => {
+			window.location.href = '#/curve_lobby';
+		});
     }
 }
+
+export default CurveCreate;
