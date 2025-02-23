@@ -1,4 +1,5 @@
 import Component from "../spa/component.js"
+import Route from "../spa/route.js"
 
 class PongJoin extends Component
 {
@@ -10,15 +11,15 @@ class PongJoin extends Component
     onInit()
     {
         document.getElementById('button1').addEventListener('click', () => {
-			window.location.href = '#/pong_lobby';
+			Route.go('/pong_lobby');
 		});
 
         document.getElementById('button2').addEventListener('click', () => {
-			window.location.href = '#/pong_lobby';
+			Route.go('/pong_lobby');
 		});
 
         document.getElementById('button3').addEventListener('click', () => {
-			window.location.href = '#/pong_lobby';
+			Route.go('/pong_lobby');
 		});
     }
 }

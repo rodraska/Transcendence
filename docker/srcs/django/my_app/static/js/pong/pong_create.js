@@ -1,4 +1,5 @@
 import Component from "../spa/component.js"
+import Route from "../spa/route.js"
 
 class PongCreate extends Component
 {
@@ -10,7 +11,7 @@ class PongCreate extends Component
     onInit()
     {
         document.getElementById('button_create').addEventListener('click', () => {
-			window.location.href = '#/pong_lobby';
+            Route.go('/pong_lobby');
 		});
     }
 }

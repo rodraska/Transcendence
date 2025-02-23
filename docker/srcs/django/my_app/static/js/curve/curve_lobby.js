@@ -1,4 +1,5 @@
 import Component from "../spa/component.js"
+import Route from "../spa/route.js"
 
 class CurveLobby extends Component
 {
@@ -10,7 +11,7 @@ class CurveLobby extends Component
     onInit()
     {
         document.getElementById('button_start').addEventListener('click', () => {
-			window.location.href = '#/curve_game';
+            Route.go('/curve_game');
 		});
     }
 }

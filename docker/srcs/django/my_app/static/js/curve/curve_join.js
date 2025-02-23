@@ -1,4 +1,5 @@
 import Component from "../spa/component.js"
+import Route from "../spa/route.js"
 
 class CurveJoin extends Component
 {
@@ -9,15 +10,15 @@ class CurveJoin extends Component
     onInit()
     {
         document.getElementById('button1').addEventListener('click', () => {
-			window.location.href = '#/curve_lobby';
+            Route.go('/curve_lobby');
 		});
 
         document.getElementById('button2').addEventListener('click', () => {
-			window.location.href = '#/curve_lobby';
+            Route.go('/curve_lobby');
 		});
 
         document.getElementById('button3').addEventListener('click', () => {
-			window.location.href = '#/curve_lobby';
+            Route.go('/curve_lobby');
 		});
     }
 }
