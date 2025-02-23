@@ -19,6 +19,7 @@ import CurveCreate from "./curve/curve_create.js"
 import CurveJoin from "./curve/curve_join.js"
 import CurveHistory from "./curve/curve_history.js"
 import CurveLobby from "./curve/curve_lobby.js"
+import ChatRoom from "./chat/chat_room.js";
 
 Route.subscribe("/", HomePage);
 Route.subscribe("/user", UserProfile);
@@ -39,6 +40,7 @@ Route.subscribe('/curve_create', CurveCreate);
 Route.subscribe('/curve_join', CurveJoin);
 Route.subscribe('/curve_history', CurveHistory);
 Route.subscribe('/curve_lobby', CurveLobby);
+Route.subscribe('/chat_room', ChatRoom);
 
 
 function checkLoginStatus() {

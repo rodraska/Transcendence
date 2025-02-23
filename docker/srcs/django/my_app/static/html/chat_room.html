@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .chat-container {
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin-bottom: 20px;
+        }
+
+        .chat-log {
+        height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+        }
+
+        .chat-input {
+        display: flex;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Chat Room Page</h1>
+    <div class="chat-container">
+        <div id="chat-log"></div><br>
+        <div class="chat-input">
+            <input id="chat-message-input" type="text">
+            <button id="chat-message-submit">Send</button>
+        </div>
+    </div>
+</body>
+</html>
