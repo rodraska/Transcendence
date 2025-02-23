@@ -7,9 +7,10 @@ class FriendsPage extends Component {
 
 	onInit() {
 		const friendsList = document.getElementById("friends-list");
+		let originalFriendsData = [];
 		let friendsData = [];
 		let currentPage = 1;
-		const friendsPerPage = 2;
+		const friendsPerPage = 8;
 
 		function fetchFriends() {
 			fetch(`/api/all-users/?target_user_id=${window.loggedInUserId}`, {
@@ -22,7 +23,7 @@ class FriendsPage extends Component {
 					if (data.error) {
 						alert("Error getting users!");
 					} else {
-						friendsData = data.map((user) => ({
+						originalFriendsData = data.map((user) => ({
 							id: user.id,
 							name: user.username,
 							status: user.is_online ? "online" : "offline", // should we keep this?
@@ -41,7 +42,7 @@ class FriendsPage extends Component {
 						//   { id: 7, name: "Paula Almeida", status: "online", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: true },
 						//   { id: 8, name: "Roberto Gomes", status: "offline", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: true },
 						// ];
-						friendsData = [
+						originalFriendsData = [
 							{ id: 1, name: "João Silva", status: "online", photo: "https://randomuser.me/api/portraits/men/1.jpg", isFriend: false, receivedFriendRequest: true, sentFriendRequest: false },
 							{ id: 2, name: "Maria Oliveira", status: "offline", photo: "https://randomuser.me/api/portraits/women/2.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: true },
 							{ id: 3, name: "Carlos Souza", status: "online", photo: "https://randomuser.me/api/portraits/men/3.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: false },
@@ -49,8 +50,13 @@ class FriendsPage extends Component {
 							{ id: 5, name: "Lucas Santos", status: "online", photo: "https://randomuser.me/api/portraits/men/5.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: true },
 							{ id: 6, name: "Fernanda Lima", status: "offline", photo: "https://randomuser.me/api/portraits/women/6.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
 							{ id: 7, name: "Paula Almeida", status: "online", photo: "https://randomuser.me/api/portraits/women/7.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
-							{ id: 8, name: "Roberto Gomes", status: "offline", photo: "https://randomuser.me/api/portraits/men/8.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
+							{ id: 9, name: "Roberto Gomes", status: "offline", photo: "https://randomuser.me/api/portraits/men/8.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
+							{ id: 10, name: "Lucas Santos", status: "online", photo: "https://randomuser.me/api/portraits/men/5.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: true },
+							{ id: 11, name: "Fernanda Lima", status: "offline", photo: "https://randomuser.me/api/portraits/women/6.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
+							{ id: 12, name: "Paula Almeida", status: "online", photo: "https://randomuser.me/api/portraits/women/7.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
+							{ id: 13, name: "Roberto Gomes", status: "offline", photo: "https://randomuser.me/api/portraits/men/8.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
 						];
+						friendsData = [...originalFriendsData];
 						displayFriends(currentPage);
 						setupPagination();
 					}
@@ -113,8 +119,8 @@ class FriendsPage extends Component {
 				}
 				friendsList.appendChild(friendItem);
 				} catch (error) {
-			console.error("Error processing friend:", error);
-		}
+					console.error("Error processing friend:", error);
+				}
 			});
 		}
 
@@ -156,6 +162,7 @@ class FriendsPage extends Component {
 			document.getElementById("next-page").style.visibility = currentPage < totalPages ? "visible" : "hidden";
 
 			document.getElementById("prev-page").onclick = () => {
+				console.log("clicked prev")
 				if (currentPage > 1) {
 					currentPage--;
 					displayFriends(currentPage);
@@ -164,6 +171,7 @@ class FriendsPage extends Component {
 			};
 
 			document.getElementById("next-page").onclick = () => {
+				console.log("clicked next")
 				if (currentPage < totalPages) {
 					currentPage++;
 					displayFriends(currentPage);
@@ -174,7 +182,7 @@ class FriendsPage extends Component {
 
 		document.getElementById("search").addEventListener("input", function () {
 			const searchText = this.value.toLowerCase();
-			friendsData = friendsData.filter((friend) => friend.name.toLowerCase().includes(searchText));
+			friendsData = originalFriendsData.filter((friend) => friend.name.toLowerCase().includes(searchText));
 			currentPage = 1;
 			displayFriends(currentPage);
 			setupPagination();
@@ -185,3 +193,9 @@ class FriendsPage extends Component {
 }
 
 export default FriendsPage
+
+
+
+// TODO:
+// - click pending button -> cancel request
+// - click friend button -> unfriend person
