@@ -1,4 +1,4 @@
-import Route from "./spa/route.js";
+import Route from "../spa/route.js";
 import Component from "../spa/component.js";
 
 class LoginButtons extends Component {

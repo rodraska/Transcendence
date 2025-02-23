@@ -137,7 +137,7 @@ def give_up_match(self):
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_id = self.scope['url_route']['kwargs']['room_id']
+        self.room_id = 42
         self.room_group_name = f'chat_{self.room_id}'
         self.user = self.scope["user"]
 
@@ -155,7 +155,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'user': message['username'],
                 'timestamp': message['timestamp']
             }))
-
+    
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name,
@@ -165,7 +165,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        username = self.scope["user"].username 
+        username = self.scope["user"].username
 
         await self.save_message(message)
 
@@ -174,7 +174,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
-                'user': user,
+                'user': username,
                 'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
         )
@@ -193,8 +193,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def save_message(self, message):
         room = ChatRoom.objects.get(id=self.room_id)
-        Message.objects.create(room=room, sender=self.user, contact=message)
-
+        Message.objects.create(room=room, sender=self.user, content=message)
+    
     @database_sync_to_async
     def get_messages(self):
         room = ChatRoom.objects.get(id=self.room_id)

@@ -12,9 +12,13 @@ class ChatRoom extends Component
         const chatLog = document.getElementById('chat-log')
         const messageInput = document.getElementById('chat-message-input')
         const submitButton = document.getElementById('chat-message-submit')
-        const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat_room`);
+        const chatSocket = new WebSocket(`ws://localhost:8000/ws/chat_room/`);
+        chatSocket.onopen = function() {
+            console.log('chat socket open')
+        }
         chatSocket.onmessage = function(e)
         {
+            console.log('chat socket onmessage')
             const data = JSON.parse(e.data);
             const messageDiv = document.createElement('div');
             const metaSpan = document.createElement('span');
@@ -29,6 +33,7 @@ class ChatRoom extends Component
         }
         function sendMessage() 
         {
+            console.log('chat socket sendMessage')
             const message = messageInput.value;
             if (message) {
                 chatSocket.send(JSON.stringify({message: message}));

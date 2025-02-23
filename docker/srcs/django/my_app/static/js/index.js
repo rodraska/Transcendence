@@ -1,5 +1,7 @@
 import "./spa/component.js";
 import HeaderBar from "./header/header.js";
+import HomePage from "./home/home_page.js"
+import UserProfile from "./user/user_profile.js"
 import LoginButtons from "./login/login.js";
 import Route from "./spa/route.js";
 import RegistrationForm from "./login/registration_form.js";
