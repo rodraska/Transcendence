@@ -1,3 +1,4 @@
+from datetime import timedelta, timezone
 import json
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -5,7 +6,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model, authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from transcendence.models import Relationship, CustomUser, GameType
+from transcendence.models import Matchmaking, Relationship, CustomUser, GameType, Match
 from django.db.models import Q
 
 def index(request):
@@ -209,3 +210,89 @@ def get_game_types(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
     return JsonResponse(data_parsed, safe=False)
+
+@csrf_exempt
+@login_required
+def search_for_match(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed."}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        game_type_id = data.get("game_type_id")
+        user = request.user
+
+        if not game_type_id:
+            return JsonResponse({"error": "Game type is required."}, status=400)
+
+        game_type = GameType.objects.get(id=game_type_id)
+
+        # Check if user is already in queue
+        if Matchmaking.objects.filter(user=user, match__isnull=True).exists():
+            return JsonResponse({"error": "You are already searching for a match."}, status=400)
+
+        # Insert user into matchmaking
+        Matchmaking.objects.create(game_type=game_type, user=user)
+        
+        return JsonResponse({"message": "Searching for match..."})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    
+def find_match():
+    matchmaking_entries = Matchmaking.objects.filter(match__isnull=True).order_by("created_at")
+
+    for entry in matchmaking_entries:
+        potential_match = Matchmaking.objects.filter(
+            match__isnull=True,
+            game_type__in=[entry.game_type.id, 3]
+        ).exclude(user=entry.user).first()
+
+        if potential_match:
+            match = Match.objects.create(
+                game_type=entry.game_type,
+                player1=entry.user,
+                player2=potential_match.user
+            )
+
+            entry.match = match
+            entry.started_on = timezone.now()
+            entry.save()
+
+            potential_match.match = match
+            potential_match.started_on = timezone.now()
+            potential_match.save()
+
+            return match
+
+    return None
+
+@csrf_exempt
+@login_required
+def search_for_match(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed."}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        game_type_id = data.get("game_type_id")
+        user = request.user
+
+        if not game_type_id:
+            return JsonResponse({"error": "Game type is required."}, status=400)
+
+        game_type = GameType.objects.get(id=game_type_id)
+
+        if Matchmaking.objects.filter(user=user, match__isnull=True).exists():
+            return JsonResponse({"error": "You are already searching for a match."}, status=400)
+
+        Matchmaking.objects.create(game_type=game_type, user=user)
+        
+        return JsonResponse({"message": "Searching for match..."})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    
+def cleanup_stale_entries():
+    timeout = timezone.now() - timedelta(minutes=5)
+    Matchmaking.objects.filter(match__isnull=True, created_at__lt=timeout).delete()

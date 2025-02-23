@@ -42,7 +42,7 @@ class LoginForm extends Component {
               });
           }
         })
-        .catch((error) => {
+        .catch((error) => { 
           console.error("Error logging in user:", error);
           alert("Error logging in user: " + error);
         });

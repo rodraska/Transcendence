@@ -1,6 +1,6 @@
 import Component from "../spa/component.js";
 
-export default class HeaderBar extends Component {
+class HeaderBar extends Component {
   constructor() {
     super("static/html/header.html");
   }
@@ -51,3 +51,5 @@ export default class HeaderBar extends Component {
     });
   }
 }
+
+export default HeaderBar;

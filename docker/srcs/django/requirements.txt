@@ -3,3 +3,5 @@ django
 psycopg2
 django-allauth
 requests
+channels
+daphne
