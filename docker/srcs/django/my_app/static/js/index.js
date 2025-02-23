@@ -8,7 +8,7 @@ import LoginButtons from "./login/login.js";
 import Route from "./spa/route.js";
 import RegistrationForm from "./login/registration_form.js";
 import LoginForm from "./login/login_form.js";
-import Friends from "./header/friends.js";
+import FriendsPage from "./header/friends.js";
 import PlayGames from "./play_games/play_games.js";
 
 Route.subscribe("/", HomePage);
@@ -19,7 +19,7 @@ Route.subscribe("/curve", CurvePage);
 Route.subscribe("/login", LoginButtons);
 Route.subscribe("/registration_form", RegistrationForm);
 Route.subscribe("/login_form", LoginForm);
-Route.subscribe("/friends", Friends);
+Route.subscribe("/friends", FriendsPage);
 Route.subscribe("/play-games", PlayGames);
 
 
