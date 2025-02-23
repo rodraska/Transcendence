@@ -15,47 +15,52 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="{% static '/css/variables.css' %}" />
-    <link rel="stylesheet" href="{% static '/css/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/variables.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
   </head>
   <body>
+    <div id="header"></div>
+    <div id="app"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="{% static 'js/spa/route.js' %}"></script>
+    <script type="module" src="{% static 'js/index.js' %}"></script>
+    <script src="{% static 'js/header/header.js' %}"></script>
+    <script src="{% static 'js/pong/player.js' %}"></script>
+    <script src="{% static 'js/pong/ball.js' %}"></script>
+    <script src="{% static 'js/pong/game.js' %}"></script>
+    <script src="{% static 'js/pong/events.js' %}"></script>
+    <script src="{% static 'js/pong/initial.js' %}"></script>
+    <script src="{% static 'js/pong/collisions.js' %}"></script>
+    <script src="{% static 'js/pong/paint.js' %}"></script>
+    <script src="{% static 'js/pong/script.js' %}"></script>
+
+    <script src="{% static 'js/curve/game.js' %}"></script>
+    <script src="{% static 'js/curve/powerup.js' %}"></script>
+    <script src="{% static 'js/curve/player.js' %}"></script>
+    <script src="{% static 'js/curve/script.js' %}"></script>
+    <script src="{% static 'js/curve/player_utils.js' %}"></script>
+    <script src="{% static 'js/curve/player_paint.js' %}"></script>
+    <script src="{% static 'js/curve/player_power.js' %}"></script>
+    <script src="{% static 'js/curve/player_iteration.js' %}"></script>
+    <script src="{% static 'js/curve/utils.js' %}"></script>
+    <script src="{% static 'js/curve/round.js' %}"></script>
+    <script src="{% static 'js/curve/keys.js' %}"></script>
+    <script src="{% static 'js/curve/paint.js' %}"></script>
+    <script type="module" src="{% static 'js/login/login.js' %}"></script>
+    <script type="module" src="{% static 'js/login/login_form.js' %}"></script>
+    <script
+      type="module"
+      src="{% static 'js/login/registration_form.js' %}"
+    ></script>
+    <script src="{% static 'js/play_games/play_games.js' %}"></script>
+    <script src="{% static 'js/match/matchmaking.js' %}"></script>
+
+    <script>
+      window.loggedInUserId = "{{ user.id|escapejs }}";
+      window.loggedInUserName = "{{ user.username|escapejs }}";
+      window.loggedInAvatarUrl =
+        "{{ user.avatar_url|default:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg'|escapejs }}";
+    </script>
   </body>
-  <script type="module" src="{% static '/js/spa/route.js' %}"></script>
-  <script type="module" src="{% static '/js/index.js' %}"></script>
-
-  <script src="{% static 'js/pong/player.js' %}"></script>
-  <script src="{% static 'js/pong/ball.js' %}"></script>
-  <script src="{% static 'js/pong/game.js' %}"></script>
-  <script src="{% static 'js/pong/events.js' %}"></script>
-  <script src="{% static 'js/pong/initial.js' %}"></script>
-  <script src="{% static 'js/pong/collisions.js' %}"></script>
-  <script src="{% static 'js/pong/paint.js' %}"></script>
-  <script src="{% static 'js/pong/script.js' %}"></script>
-
-  <script src="{% static 'js/curve/game.js' %}"></script>
-  <script src="{% static 'js/curve/powerup.js' %}"></script>
-  <script src="{% static 'js/curve/player.js' %}"></script>
-  <script src="{% static 'js/curve/script.js' %}"></script>
-  <script src="{% static 'js/curve/player_utils.js' %}"></script>
-  <script src="{% static 'js/curve/player_paint.js' %}"></script>
-  <script src="{% static 'js/curve/player_power.js' %}"></script>
-  <script src="{% static 'js/curve/player_iteration.js' %}"></script>
-  <script src="{% static 'js/curve/utils.js' %}"></script>
-  <script src="{% static 'js/curve/round.js' %}"></script>
-  <script src="{% static 'js/curve/keys.js' %}"></script>
-  <script src="{% static 'js/curve/paint.js' %}"></script>
-  <script type="module" src="{% static 'js/login/login.js' %}"></script>
-  <script type="module" src="{% static 'js/login/login_form.js' %}"></script>
-  <script
-    type="module"
-    src="{% static 'js/login/registration_form.js' %}"
-  ></script>
-  <script>
-    window.loggedInUserId = "{{ user.id|escapejs }}";
-    window.loggedInUserName = "{{ user.username|escapejs }}";
-    window.loggedInAvatarUrl =
-      "{{ user.avatar_url|default:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg'|escapejs }}";
-  </script>
-  <script src="{% static 'js/play_games/play_games.js' %}"></script>
 </html>

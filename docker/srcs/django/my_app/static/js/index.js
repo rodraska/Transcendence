@@ -1,27 +1,15 @@
-import "./spa/component.js";
-import UserProfile from "./user/user_profile.js";
-import HomePage from "./home/home_page.js";
 import HeaderBar from "./header/header.js";
-import PongPage from "./pong/pong.js";
-import CurvePage from "./curve/curve.js";
-import LoginButtons from "./login/login.js";
 import Route from "./spa/route.js";
-import RegistrationForm from "./login/registration_form.js";
-import LoginForm from "./login/login_form.js";
-import Friends from "./header/friends.js";
-import PlayGames from "./play_games/play_games.js";
 
-Route.subscribe("/", HomePage);
-Route.subscribe("/user", UserProfile);
-Route.subscribe("/header", HeaderBar);
-Route.subscribe("/pong", PongPage);
-Route.subscribe("/curve", CurvePage);
-Route.subscribe("/login", LoginButtons);
-Route.subscribe("/registration_form", RegistrationForm);
-Route.subscribe("/login_form", LoginForm);
-Route.subscribe("/friends", Friends);
-Route.subscribe("/play-games", PlayGames);
-
+function loadHeader() {
+  const headerContainer = document.getElementById("header");
+  if (!customElements.get("header-bar")) {
+    customElements.define("header-bar", HeaderBar);
+  }
+  headerContainer.innerHTML = "";
+  const headerInstance = document.createElement("header-bar");
+  headerContainer.appendChild(headerInstance);
+}
 
 function checkLoginStatus() {
   fetch("/api/current_user/", {
@@ -29,9 +17,8 @@ function checkLoginStatus() {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log("Login status:", data);
       if (data.logged_in) {
-        Route.go("/header");
+        Route.go("/matchmaking");
       } else {
         Route.go("/login");
       }
@@ -42,4 +29,7 @@ function checkLoginStatus() {
     });
 }
 
-window.addEventListener("DOMContentLoaded", checkLoginStatus);
+window.addEventListener("DOMContentLoaded", () => {
+  loadHeader();
+  checkLoginStatus();
+});
