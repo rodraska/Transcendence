@@ -1,3 +1,4 @@
+import "./spa/component.js";
 import HeaderBar from "./header/header.js";
 import LoginButtons from "./login/login.js";
 import Route from "./spa/route.js";
@@ -38,7 +39,6 @@ Route.subscribe('/curve_join', CurveJoin);
 Route.subscribe('/curve_history', CurveHistory);
 Route.subscribe('/curve_lobby', CurveLobby);
 Route.subscribe('/chat_room', ChatRoom);
-import Route from "./spa/route.js";
 
 function loadHeader() {
   const headerContainer = document.getElementById("header");
