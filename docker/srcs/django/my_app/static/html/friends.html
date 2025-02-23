@@ -24,7 +24,7 @@
 		margin-right: 10px;
 	}
 
-	header {
+	.header-friends {
 		text-align: center;
 		margin-top: 20px;
 	}
@@ -34,13 +34,18 @@
 		color: var(--primary-color);
 		font-family: 'Arial', sans-serif;
 	}
+
+	.bottom {
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		padding: 150px;
+	}
 </style>
 
 <body>
-	<header>
-		<h1>Friend's Page</h1>
-	</header>
-	<div class="container mt-5">
+	<h1 class="header-friends">Friend's Page</h1>
+	<div class="container-fluid mt-5">
 
 		<!-- Search Bar -->
 		<div class="row mb-4 justify-content-center">
@@ -50,7 +55,8 @@
 		</div>
 
 		<!-- Friends List -->
-		<div id="friends-list" class="row">
+		<div id="friends-list" class="row justify-content-center px-5">
+			<div class="col-md-8">
 			<li class="list-group-item d-flex align-items-center">
 				<img src="" class="friend-photo" alt="Foto de amigo">
 				<span class="me-2"></span>
@@ -60,16 +66,17 @@
 					<!-- Buttons will be dynamically added here -->
 				</div>
 			</li>
+			</div>
 		</div>
 
 		<!-- Pagination -->
-		<nav aria-label="Page navigation">
+		<nav aria-label="Page navigation" class="bottom d-flex justify-content-center align-items-center">
 			<ul class="pagination justify-content-center">
 				<li class="page-item" id="prev-page">
 					<button class="page-link">Prev</button>
 				</li>
 				<li class="page-item" id="next-page">
-					<button class="page-link" disabled aria-disabled="true">Next</button>
+					<button class="page-link">Next</button>
 				</li>
 			</ul>
 		</nav>
