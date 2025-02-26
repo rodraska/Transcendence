@@ -1,0 +1,41 @@
+<style>
+	.form-container {
+		max-width: 400px;
+		margin: auto;
+		padding: 1rem;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		background-color: var(--background-color);
+		margin-top: 50px;
+		position: relative;
+	}
+
+    .back-button {
+        display: block;
+        margin-bottom: 20px;
+    }
+</style>
+
+<button type="button" class="btn btn-secondary back-button" onclick="window.history.back();">Back</button>
+<div class="form-container">
+	<h2>Register</h2>
+	<form>
+		<div class="form-group">
+			<label for="username">Username</label>
+			<input type="text" class="form-control" id="username" name="username" required>
+		</div>
+		<div class="form-group">
+			<label for="email">Email</label>
+			<input type="email" class="form-control" id="email" name="email" required>
+		</div>
+		<div class="form-group">
+			<label for="password">Password</label>
+			<input type="password" class="form-control" id="password" name="password" required>
+		</div>
+		<div class="form-group">
+			<label for="confirm-password">Confirm Password</label>
+			<input type="password" class="form-control" id="confirm-password" name="confirm-password" required>
+		</div>
+		<button type="submit" class="btn btn-primary btn-block">Register</button>
+	</form>
+</div>
