@@ -1,0 +1,105 @@
+
+.bg-primary-color {
+	background-color: var(--primary-color);
+  }
+  
+  .bg-secondary-color {
+	background-color: var(--secondary-color);
+  }
+  
+  .bg-accent-color {
+	background-color: var(--accent-color);
+  }
+  
+  .bg-light-color {
+	background-color: var(--background-color);
+  }
+
+  .primary-color {
+	color: var(--primary-color);
+  }
+  
+  .secondary-color {
+	color: var(--secondary-color)
+  }
+
+  .accent-color {
+	color: var(--accent-color);
+  }
+
+  .text-color {
+	color: var(--text-color);
+  }
+
+
+
+
+
+#menu {
+	background-color: var(--secondary-color);
+	position: absolute;
+	top: 60px; /* Ajuste para ficar abaixo do cabeçalho */
+	left: 0;
+	width: 20%;
+	border-top: 1px solid #ccc;
+}
+#menu ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+#menu ul li {
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+}
+#menu ul li a {
+	text-decoration: none;
+	color: var(--primary-color);
+	font-size: 16px;
+}
+#menu ul li a:hover {
+	color: var(--accent-color); /* Cor ao passar o mouse */
+}
+
+
+header img {
+	border-radius: 50%;
+	/* Circular shape */
+}
+
+html body {
+	background-color: var(--background-color);
+	color: var(--primary-color);
+	/* Default text color */
+}
+
+button.primary {
+	background-color: var(--primary-color);
+	color: #fff;
+}
+
+button.secondary {
+	background-color: var(--secondary-color);
+	color: #fff;
+}
+
+.alert {
+	background-color: var(--accent-color);
+	color: #fff;
+}
+
+/* css sofia */
+.btn-primary:hover {
+	background-color: #E66F36;
+	border-color: #E66F36;
+	transform: scale(1.05);
+}
+
+.btn-primary,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus {
+	background-color: var(--accent-color);
+	border-color: var(--accent-color);
+	color: white;
+}
+/* css sofia */

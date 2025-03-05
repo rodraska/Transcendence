@@ -1,0 +1,48 @@
+<style>
+  /* Estilos personalizados */
+  .card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+
+  .card-img-top {
+    border-radius: 10px 10px 0 0;
+    object-fit: cover;
+    height: 200px;
+  }
+
+  .btn {
+    width: 80%;
+  }
+
+  textarea {
+    resize: vertical; /* Permite redimensionar a área de texto apenas verticalmente */
+  }
+</style>
+
+<div class="container-fluid mt-5">
+  <div class="row">
+    <!-- Parte Esquerda: Cartão com nomes-->
+    <div class="col-md-4 d-flex justify-content-center">
+      <div class="card my-auto" style="width: 18rem;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg" class="card-img-top" alt="Profile Photo" id="profileImage">
+        <div class="card-body text-center">
+            <h3>username<h3>
+            <h3>FirstName LastName<h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parte Direita: Botões para  game stats-->
+
+    <div class=" col-md-7d-flex flex-column align-items-center justify-content-center vh-100">
+        <button class="btn btn-primary btn-lg w-50 h-40 mb-3" id="playpong">Pong</button>
+        <button class="btn btn-primary btn-lg w-50 mb-3" id="playcurve">Curve</button>
+    </div>        
+
+  </div>
+</div>
+
+
+
+
