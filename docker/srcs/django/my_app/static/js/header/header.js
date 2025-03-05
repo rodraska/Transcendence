@@ -2,11 +2,11 @@ import Component from "../spa/component.js";
 
 export default class HeaderBar extends Component {
   constructor() {
-    super("static/html/header.html");
+    super("templates/header.html");
   }
 
   onInit() {
-    document.getElementById("logout-button").addEventListener("click", () => {
+    document.getElementById("logoutbtn").addEventListener("click", () => {
       window.location.href = "/accounts/logout/";
     });
 

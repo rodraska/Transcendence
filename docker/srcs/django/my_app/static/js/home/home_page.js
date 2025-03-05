@@ -4,6 +4,6 @@ export default class HomePage extends Component
 {
     constructor()
     {
-        super('static/html/home.html')
+        super('static/pages/home.html')
     }
 }

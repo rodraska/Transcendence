@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM public.ecr.aws/docker/library/debian:bullseye
 
 RUN apt-get update && apt-get install -y \
     postgresql \
