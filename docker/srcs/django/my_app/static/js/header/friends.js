@@ -23,39 +23,16 @@ class FriendsPage extends Component {
 					if (data.error) {
 						alert("Error getting users!");
 					} else {
+						// console.log(data)
 						originalFriendsData = data.map((user) => ({
 							id: user.id,
 							name: user.username,
 							status: user.is_online ? "online" : "offline", // should we keep this?
-							photo: user.profile_picture || "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg",
-							isFriend: user.relationship || user.relationship?.status === "accepted",
-							receivedFriendRequest: user.relationship || user.relationship?.direction === "received",
-							sentFriendRequest: user.relationship || user.relationship?.direction === "sent"
+							photo: user.avatar_url || "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg",
+							isFriend: user.relationship?.status === "accepted",
+							receivedFriendRequest: user.relationship?.status === "pending" && user.relationship?.direction === "received",
+							sentFriendRequest:  user.relationship?.status === "pending" && user.relationship?.direction === "sent"
 						}));
-						// friendsData= [
-						//   { id: 1, name: "João Silva", status: "online", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: false, receivedFriendRequest: true, sentFriendRequest: false },
-						//   { id: 2, name: "Maria Oliveira", status: "offline", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: true },
-						//   { id: 3, name: "Carlos Souza", status: "online", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: true },
-						//   { id: 4, name: "Ana Costa", status: "offline", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: true, receivedFriendRequest: true },
-						//   { id: 5, name: "Lucas Santos", status: "online", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: true },
-						//   { id: 6, name: "Fernanda Lima", status: "offline", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: true },
-						//   { id: 7, name: "Paula Almeida", status: "online", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: true },
-						//   { id: 8, name: "Roberto Gomes", status: "offline", photo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg", isFriend: true },
-						// ];
-						originalFriendsData = [
-							{ id: 1, name: "João Silva", status: "online", photo: "https://randomuser.me/api/portraits/men/1.jpg", isFriend: false, receivedFriendRequest: true, sentFriendRequest: false },
-							{ id: 2, name: "Maria Oliveira", status: "offline", photo: "https://randomuser.me/api/portraits/women/2.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: true },
-							{ id: 3, name: "Carlos Souza", status: "online", photo: "https://randomuser.me/api/portraits/men/3.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: false },
-							{ id: 4, name: "Ana Costa", status: "offline", photo: "https://randomuser.me/api/portraits/women/4.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
-							{ id: 5, name: "Lucas Santos", status: "online", photo: "https://randomuser.me/api/portraits/men/5.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: true },
-							{ id: 6, name: "Fernanda Lima", status: "offline", photo: "https://randomuser.me/api/portraits/women/6.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
-							{ id: 7, name: "Paula Almeida", status: "online", photo: "https://randomuser.me/api/portraits/women/7.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
-							{ id: 9, name: "Roberto Gomes", status: "offline", photo: "https://randomuser.me/api/portraits/men/8.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
-							{ id: 10, name: "Lucas Santos", status: "online", photo: "https://randomuser.me/api/portraits/men/5.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: true },
-							{ id: 11, name: "Fernanda Lima", status: "offline", photo: "https://randomuser.me/api/portraits/women/6.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
-							{ id: 12, name: "Paula Almeida", status: "online", photo: "https://randomuser.me/api/portraits/women/7.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
-							{ id: 13, name: "Roberto Gomes", status: "offline", photo: "https://randomuser.me/api/portraits/men/8.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
-						];
 						friendsData = [...originalFriendsData];
 						displayFriends(currentPage);
 						setupPagination();
@@ -69,87 +46,134 @@ class FriendsPage extends Component {
 			const startIndex = (page - 1) * friendsPerPage;
 			const endIndex = page * friendsPerPage;
 			const currentFriends = friendsData.slice(startIndex, endIndex);
-			console.log("CURRENT FRIENDS", currentFriends)
-			console.log("FRIENDS DATA", friendsData)
+			// console.log("CURRENT FRIENDS", currentFriends)
+			// console.log("FRIENDS DATA", friendsData)
 
 			currentFriends.forEach((friend) => {
 				try {
-				console.log("FRIEND", friend)
-				const friendItem = document.createElement("li");
-				friendItem.className = "list-group-item d-flex align-items-center";
-				friendItem.innerHTML = `
-					<img src="${friend.photo}" class="friend-photo" alt="Profile">
-					<span class="me-2">${friend.name}</span>
-					<span class="status ${friend.status} me-2"></span>
-					<small class="text-muted me-2">Last seen online</small>
-					<div class="friend-actions ms-auto">
-						${friend.isFriend ?
-							'<span class="badge bg-secondary"><i class="bi bi-person-check"></i> Friend</span>' :
-						friend.receivedFriendRequest ?
-						'<button class="btn btn-sm btn-success accept-btn"><i class="bi bi-check-circle"></i></button><button class="btn btn-sm btn-danger decline-btn"><i class="bi bi-x-circle"></i></button>' :
-						friend.sentFriendRequest ? '<button class="btn btn-sm btn-warning send-request-btn" disabled><i class="bi bi-hourglass-split">Pending</i></button>' :
-						'<button class="btn btn-sm btn-primary send-request-btn"><i class="bi bi-person-plus"></i> Send Request</button>'}
-					</div>
-				`;
+					// console.log("FRIEND", friend)
+					const friendItem = document.createElement("li");
+					friendItem.className = "list-group-item d-flex align-items-center";
+					friendItem.innerHTML = `
+						<img src="${friend.photo}" class="friend-photo" alt="Profile">
+						<span class="me-2">${friend.name}</span>
+						<span class="status ${friend.status} me-2"></span>
+						<small class="text-muted me-2">Last seen online</small>
+						<div class="friend-actions ms-auto">
+							${friend.isFriend ?
+								'<button class="btn btn-sm btn-secondary is-friend-btn"><i class="bi bi-person-check"></i> Friend</button>' :
+							friend.receivedFriendRequest ?
+							'<button class="btn btn-sm btn-success accept-btn"><i class="bi bi-check-circle"></i></button><button class="btn btn-sm btn-danger decline-btn"><i class="bi bi-x-circle"></i></button>' :
+							friend.sentFriendRequest ? '<button class="btn btn-sm btn-warning pending-request-btn"><i class="bi bi-hourglass-split">Pending</i></button>' :
+							'<button class="btn btn-sm btn-primary send-request-btn"><i class="bi bi-person-plus"></i> Send Request</button>'}
+						</div>
+					`;
 
-				console.log(`Generated HTML for ${friend.name}:`, friendItem.innerHTML);
+					// console.log(`Generated HTML for ${friend.name}:`, friendItem.innerHTML);
 
-				if (!friend.isFriend) {
-					if (friend.receivedFriendRequest) {
-						const acceptBtn = friendItem.querySelector(".accept-btn");
-						const declineBtn = friendItem.querySelector(".decline-btn");
-						if (acceptBtn) {
-							acceptBtn.addEventListener("click", () => {
-								sendFriendRequest("accept", friend.id, friendItem);
-							});
+					if (!friend.isFriend) {
+						if (friend.receivedFriendRequest) {
+							const acceptBtn = friendItem.querySelector(".accept-btn");
+							const declineBtn = friendItem.querySelector(".decline-btn");
+							if (acceptBtn) {
+								acceptBtn.addEventListener("click", () => {
+									action("accept", friend.id, friendItem);
+								});
+							}
+							if (declineBtn) {
+								declineBtn.addEventListener("click", () => {
+									action("decline", friend.id, friendItem);
+								});
+							}
 						}
-						if (declineBtn) {
-							declineBtn.addEventListener("click", () => {
-								sendFriendRequest("decline", friend.id, friendItem);
-							});
+						else if (friend.sentFriendRequest) {
+							const pendingBtn = friendItem.querySelector(".pending-request-btn")
+							if (pendingBtn) {
+								pendingBtn.addEventListener("click", () => {
+									action("cancel", friend.id, friendItem);
+								});
+							}
 						}
-					} else {
-						const sendRequestBtn = friendItem.querySelector(".send-request-btn");
-						if (sendRequestBtn) {
-							sendRequestBtn.addEventListener("click", () => {
-								sendFriendRequest("send", friend.id, friendItem);
-							});
+						else {
+							const sendRequestBtn = friendItem.querySelector(".send-request-btn");
+							if (sendRequestBtn) {
+								sendRequestBtn.addEventListener("click", () => {
+									action("send", friend.id, friendItem);
+								});
+							}
 						}
 					}
-				}
-				friendsList.appendChild(friendItem);
+					else if (friend.isFriend) {
+						const friendBtn = friendItem.querySelector(".is-friend-btn")
+						friendBtn.addEventListener("click", () => {
+							action("unfriend", friend.id, friendItem);
+						});
+					}
+					friendsList.appendChild(friendItem);
 				} catch (error) {
 					console.error("Error processing friend:", error);
 				}
 			});
 		}
 
-		function sendFriendRequest(action, userId, friendItem) {
+		function action(actionType, userId, friendItem) {
 			let url;
-			if (action === "send") url = "/api/friend_request/send/";
-			else if (action === "accept") url = "/api/friend_request/accept/";
-			else url = "/api/friend_request/decline/";
+			if (actionType === "send") url = "/api/friend_request/send/";
+			else if (actionType === "accept") url = "/api/friend_request/accept/";
+			else if (actionType === "decline") url = "/api/friend_request/decline/";
+			else if (actionType === "unfriend") url = "/api/friend_request/unfriend/";
+			else if (actionType === "cancel") url = "/api/friend_request/cancel/";
+
+			let body;
+			if (actionType === "send" || actionType === "cancel") body = JSON.stringify({ to_user_id: userId });
+			else if ((actionType === "accept") || (actionType === "decline")) body = JSON.stringify({ from_user_id: userId });
+			else body = JSON.stringify({ user_id: userId });
 
 			fetch(url, {
 				method: "POST",
 				credentials: "include",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ to_user_id: userId }),
+				body: body,
 			})
-			.then((res) => res.json())
+			.then((res) => {
+				if (!res.ok) {
+					throw new Error(`HTTP error! status: ${res.status}`);
+				}
+				console.log("here 1")
+				return res.json()
+			})
 			.then((resData) => {
+				console.log("here 2")
+				console.log("Response Data:", resData);
 				if (resData.error) {
 					alert("Error: " + resData.error);
+					console.log("here 2")
 				} else {
-					if (action === "send") {
-						friendItem.querySelector(".friend-actions").innerHTML = '<span class="badge bg-warning">Request Sent</span>';
-					} else if (action === "accept") {
-						friendItem.querySelector(".friend-actions").innerHTML = '<span class="badge bg-secondary"><i class="bi bi-person-check"></i> Friend</span>';
-					} else {
+					console.log("here 3")
+					if (actionType === "send") {
+						friendItem.querySelector(".friend-actions").innerHTML = '<button class="btn btn-sm btn-warning pending-request-btn"><i class="bi bi-hourglass-split">Pending</i></button>';
+						const pendingBtn = friendItem.querySelector(".pending-request-btn");
+						if (pendingBtn) {
+							pendingBtn.addEventListener("click", () => {
+								action("cancel", userId, friendItem);
+							});
+						}
+					} else if (actionType === "accept") {
+						friendItem.querySelector(".friend-actions").innerHTML = '<button class="btn btn-sm btn-secondary is-friend-btn"><i class="bi bi-person-check"></i> Friend</button>';
+						const friendBtn = friendItem.querySelector(".is-friend-btn")
+						if (friendBtn) {
+							friendBtn.addEventListener("click", () => {
+								action("unfriend", userId, friendItem);
+							});
+						}
+					} else if (actionType === "decline" || actionType === "unfriend" || actionType === "cancel") {
 						friendItem.querySelector(".friend-actions").innerHTML = '<button class="btn btn-sm btn-primary send-request-btn"><i class="bi bi-person-plus"></i> Send Request</button>';
-						friendItem.querySelector(".send-request-btn").addEventListener("click", () => {
-							sendFriendRequest("send", userId, friendItem);
-						});
+						const requestBtn = friendItem.querySelector(".send-request-btn")
+						if (requestBtn) {
+							requestBtn.addEventListener("click", () => {
+								action("send", userId, friendItem);
+							});
+						}
 					}
 				}
 			})
@@ -158,26 +182,29 @@ class FriendsPage extends Component {
 
 		function setupPagination() {
 			const totalPages = Math.ceil(friendsData.length / friendsPerPage);
-			document.getElementById("prev-page").style.visibility = currentPage > 1 ? "visible" : "hidden";
-			document.getElementById("next-page").style.visibility = currentPage < totalPages ? "visible" : "hidden";
+			let prev = document.getElementById("prev-page")
+			if (prev){
+				prev.style.visibility = currentPage > 1 ? "visible" : "hidden";
+				prev.onclick = () => {
+					if (currentPage > 1) {
+						currentPage--;
+						displayFriends(currentPage);
+						setupPagination();
+					}
+				};
+			}
 
-			document.getElementById("prev-page").onclick = () => {
-				console.log("clicked prev")
-				if (currentPage > 1) {
-					currentPage--;
-					displayFriends(currentPage);
-					setupPagination();
-				}
-			};
-
-			document.getElementById("next-page").onclick = () => {
-				console.log("clicked next")
-				if (currentPage < totalPages) {
-					currentPage++;
-					displayFriends(currentPage);
-					setupPagination();
-				}
-			};
+			let next = document.getElementById("next-page")
+			if (next) {
+				next.style.visibility = currentPage < totalPages ? "visible" : "hidden";
+				next.onclick = () => {
+					if (currentPage < totalPages) {
+						currentPage++;
+						displayFriends(currentPage);
+						setupPagination();
+					}
+				};
+			}
 		}
 
 		document.getElementById("search").addEventListener("input", function () {
@@ -199,3 +226,20 @@ export default FriendsPage
 // TODO:
 // - click pending button -> cancel request
 // - click friend button -> unfriend person
+// '<span class="badge bg-secondary"><i class="bi bi-person-check"></i> Friend</span>'
+
+
+// originalFriendsData = [
+// 	{ id: 1, name: "João Silva", status: "online", photo: "https://randomuser.me/api/portraits/men/1.jpg", isFriend: false, receivedFriendRequest: true, sentFriendRequest: false },
+// 	{ id: 2, name: "Maria Oliveira", status: "offline", photo: "https://randomuser.me/api/portraits/women/2.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: true },
+// 	{ id: 3, name: "Carlos Souza", status: "online", photo: "https://randomuser.me/api/portraits/men/3.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: false },
+// 	{ id: 4, name: "Ana Costa", status: "offline", photo: "https://randomuser.me/api/portraits/women/4.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
+// 	{ id: 5, name: "Lucas Santos", status: "online", photo: "https://randomuser.me/api/portraits/men/5.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: true },
+// 	{ id: 6, name: "Fernanda Lima", status: "offline", photo: "https://randomuser.me/api/portraits/women/6.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
+// 	{ id: 7, name: "Paula Almeida", status: "online", photo: "https://randomuser.me/api/portraits/women/7.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
+// 	{ id: 9, name: "Roberto Gomes", status: "offline", photo: "https://randomuser.me/api/portraits/men/8.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
+// 	{ id: 10, name: "Lucas Santos", status: "online", photo: "https://randomuser.me/api/portraits/men/5.jpg", isFriend: false, receivedFriendRequest: false, sentFriendRequest: true },
+// 	{ id: 11, name: "Fernanda Lima", status: "offline", photo: "https://randomuser.me/api/portraits/women/6.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
+// 	{ id: 12, name: "Paula Almeida", status: "online", photo: "https://randomuser.me/api/portraits/women/7.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
+// 	{ id: 13, name: "Roberto Gomes", status: "offline", photo: "https://randomuser.me/api/portraits/men/8.jpg", isFriend: true, receivedFriendRequest: false, sentFriendRequest: false },
+// ];
