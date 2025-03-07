@@ -73,13 +73,23 @@ class FriendsPage extends Component {
 
 	setupFriendActions(friendItem, friend) {
 		if (friend.isFriend) {
-			friendItem.querySelector(".is-friend-btn")?.addEventListener("click", () => this.action("unfriend", friend.id));
+			friendItem.querySelector(".is-friend-btn")?.addEventListener("click", () => {
+				const confirmCancel = confirm(`Are you sure you want to remove ${friend.name} from your friends' list?`);
+				if (confirmCancel) {
+					this.action("unfriend", friend.id);
+				}
+			})
 		} else {
 			if (friend.receivedFriendRequest) {
 				friendItem.querySelector(".accept-btn")?.addEventListener("click", () => this.action("accept", friend.id));
 				friendItem.querySelector(".decline-btn")?.addEventListener("click", () => this.action("decline", friend.id));
 			} else if (friend.sentFriendRequest) {
-				friendItem.querySelector(".pending-request-btn")?.addEventListener("click", () => this.action("cancel", friend.id));
+				friendItem.querySelector(".pending-request-btn")?.addEventListener("click", () => {
+					const confirmCancel = confirm("Are you sure you want to cancel the friend request?");
+					if (confirmCancel) {
+						this.action("cancel", friend.id);
+					}
+				})
 			} else {
 				friendItem.querySelector(".send-request-btn")?.addEventListener("click", () => this.action("send", friend.id));
 			}
