@@ -239,3 +239,210 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
             for message in messages
         ]
+
+"""
+class CurveConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.game_id = self.scope['url_route']['kwargs']['game_id']
+        self.game_group_name = f'game_{self.game_id}'
+        self.user = self.scope["user"]
+
+        await self.channel_layer.group_add(
+            self.game_group_name,
+            self.channel_name
+        )
+
+        await self.accept()
+
+        players = await self.get_players()
+
+        await self.send(json.dumps({
+            'type': 'me_join',
+            'players': players
+        }))
+
+    async def disconnect(self, close_code):
+        username = self.scope["user"].username
+
+        await self.channel_layer.group_discard(
+            self.game_group_name,
+            self.channel_name
+        )
+
+        await self.channel_layer.group_send(
+            self.game_group_name,
+            {
+                'type': 'player_leave',
+                'username': username
+            }
+        )
+
+    async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        type = text_data_json['type']
+        username = self.scope["user"].username
+
+        await self.channel_layer.group_send(
+            self.game_group_name,
+            {
+                'type': type,
+                'username': username,
+                'sender_channel_name': self.channel_name,
+                'text_data_json': text_data_json
+            }
+        )
+    
+    async def player_join(self, event):
+        username = event['username']
+
+        if self.channel_name != event['sender_channel_name']:
+            await self.send(text_data=json.dumps({
+                'type': 'player_join',
+                'username': username
+            }))
+    
+    async def player_leave(self, event):
+        username = event['username']
+
+        await self.send(text_data=json.dumps({
+            'type': 'player_leave',
+            'username': username
+        }))
+
+    async def start_game(self, event):
+
+        await self.send(text_data=json.dumps({
+            'type': 'start_game'
+        }))
+    
+    async def player(self, event):
+        text_data_json = event['text_data_json']
+        player = text_data_json['player']
+
+        if self.channel_name != event['sender_channel_name']:
+            await self.send(text_data=json.dumps({
+                'type': 'player',
+                'player': player
+            }))
+        
+    async def round(self, event):
+        username = event['username']
+
+        await self.send(text_data=json.dumps({
+            'type': 'round',
+            'username': username
+        }))
+    
+    async def collision(self, event):
+        text_data_json = event['text_data_json']
+        player = text_data_json['player']
+
+        if self.channel_name != event['sender_channel_name']:
+            await self.send(text_data=json.dumps({
+                'type': 'collision',
+                'player': player
+            }))
+    
+    async def powerup(self, event):
+        text_data_json = event['text_data_json']
+        powerup = text_data_json['powerup']
+
+        if self.channel_name != event['sender_channel_name']:
+            await self.send(text_data=json.dumps({
+                'type': 'powerup',
+                'powerup': powerup
+            }))
+
+    async def power_splice(self, event):
+        text_data_json = event['text_data_json']
+        index = text_data_json['index']
+
+        if self.channel_name != event['sender_channel_name']:
+            await self.send(text_data=json.dumps({
+                'type': 'power_splice',
+                'index': index
+            }))
+
+    async def give_others(self, event):
+        text_data_json = event['text_data_json']
+        power_id = text_data_json['power_id']
+        player_id = text_data_json['player_id']
+
+        if self.channel_name != event['sender_channel_name']:
+            await self.send(text_data=json.dumps({
+                'type': 'give_others',
+                'power_id': power_id,
+                'player_id': player_id
+            }))
+
+    async def renew_others(self, event):
+        text_data_json = event['text_data_json']
+        power_index = text_data_json['power_index']
+        power_id = text_data_json['power_id']
+        player_id = text_data_json['player_id']
+
+        if self.channel_name != event['sender_channel_name']:
+            await self.send(text_data=json.dumps({
+                'type': 'renew_others',
+                'power_index': power_index,
+                'power_id': power_id,
+                'player_id': player_id
+            }))
+
+    async def game_iters(self, event):
+        text_data_json = event['text_data_json']
+        power_id = text_data_json['power_id']
+
+        if self.channel_name != event['sender_channel_name']:
+            await self.send(text_data=json.dumps({
+                'type': 'game_iters',
+                'power_id': power_id
+            }))
+    
+    @database_sync_to_async
+    def get_players(self):
+        game = Game.objects.get(id=self.game_id)
+        players = list(game.players.order_by('joined_at').values('user__username'))
+        return [{'username': player['user__username']} for player in players]
+"""
+
+class CurveConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.game_id = '99'
+        self.game_group_name = f'game_{self.game_id}'
+        self.user = self.scope["user"]
+
+        await self.channel_layer.group_add(
+            self.game_group_name,
+            self.channel_name
+        )
+
+        await self.accept()
+
+        await self.send(json.dumps({
+            'type': 'me_join'
+        }))
+
+    async def disconnect(self, close_code):
+        pass  # Handle cleanup here if necessary
+
+    async def receive(self, text_data):
+        logger.error('receive')
+        text_data_json = json.loads(text_data)
+        type = text_data_json['type']
+        username = self.scope["user"].username
+
+        await self.channel_layer.group_send(
+            self.game_group_name,
+            {
+                'type': type,
+                'username': username,
+                'sender_channel_name': self.channel_name,
+                'text_data_json': text_data_json
+            }
+        )
+
+    async def player_join(self, event):
+        logger.error('player_join')
+
+    

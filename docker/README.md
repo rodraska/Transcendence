@@ -92,6 +92,7 @@ No projeto, já existe a app `transcendence`.
   ```bash
   docker compose -f srcs/docker-compose.yml logs -f web
   docker compose -f srcs/docker-compose.yml logs -f db
+  docker logs django
   ```
 
 ---
