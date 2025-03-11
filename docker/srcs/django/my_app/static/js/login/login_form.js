@@ -9,40 +9,42 @@ class LoginForm extends Component {
     const form = this.querySelector("form");
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const username = form.querySelector("#username").value;
-      const password = form.querySelector("#password").value;
-
-      const payload = {
-        username: username,
-        password: password,
-      };
+      const username = this.querySelector("#username").value;
+      const password = this.querySelector("#password").value;
+      const payload = { username, password };
 
       fetch("/api/login/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
-        .then((response) => response.json())
+        .then((r) => r.json())
         .then((data) => {
           if (data.error) {
             alert("Error: " + data.error);
           } else {
             alert("Login successful.");
             fetch("/api/current_user/", { credentials: "include" })
-              .then((response) => response.json())
-              .then((data) => {
-                if (data.logged_in) {
-                  window.loggedInUserName = data.username;
-                  window.loggedInUserId = data.user_id;
-                  window.loggedInAvatarUrl = data.avatar_url;
-                  window.location.hash = "#/header";
+              .then((resp) => resp.json())
+              .then((userData) => {
+                if (userData.logged_in) {
+                  window.loggedInUserName = userData.username;
+                  window.loggedInUserId = userData.user_id;
+                  window.loggedInAvatarUrl =
+                    userData.avatar_url || "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
+                  const headerEl = document.querySelector("header-component");
+                  if (headerEl && typeof headerEl.updateHeader === "function") {
+                    headerEl.updateHeader(
+                      userData.username,
+                      userData.avatar_url || "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg"
+                    );
+                  }
+                  window.location.hash = "#/friends";
                 }
               });
           }
         })
-        .catch((error) => { 
+        .catch((error) => {
           console.error("Error logging in user:", error);
           alert("Error logging in user: " + error);
         });

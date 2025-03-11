@@ -4,23 +4,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index</title>
+    <title>Transcendence</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
     <link rel="stylesheet" href="{% static 'css/variables.css' %}" />
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
   </head>
   <body>
-    <div id="header"></div>
-    <div id="app"></div>
+    <div id="header-container"></div>
+    <div id="content-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="{% static 'js/spa/route.js' %}"></script>
@@ -55,7 +51,6 @@
     ></script>
     <script src="{% static 'js/play_games/play_games.js' %}"></script>
     <script src="{% static 'js/match/matchmaking.js' %}"></script>
-
     <script>
       window.loggedInUserId = "{{ user.id|escapejs }}";
       window.loggedInUserName = "{{ user.username|escapejs }}";

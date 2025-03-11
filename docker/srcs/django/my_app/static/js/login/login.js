@@ -1,4 +1,4 @@
-import Route from "./spa/route.js";
+import Route from "../spa/route.js";
 import Component from "../spa/component.js";
 
 class LoginButtons extends Component {
@@ -11,12 +11,12 @@ class LoginButtons extends Component {
       Route.go("/login_form");
     });
     document.getElementById("register-button").addEventListener("click", () => {
-      Route.go("#/registration_form");
+      Route.go("/registration_form");
     });
     document
       .getElementById("authenticate-button")
       .addEventListener("click", () => {
-        Route.go("/accounts/fortytwo/login/");
+        window.location.href = "/accounts/fortytwo/login/";
       });
   }
 }
