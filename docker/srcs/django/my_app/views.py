@@ -296,3 +296,53 @@ def search_for_match(request):
 def cleanup_stale_entries():
     timeout = timezone.now() - timedelta(minutes=5)
     Matchmaking.objects.filter(match__isnull=True, created_at__lt=timeout).delete()
+
+@csrf_exempt
+@login_required
+def get_user_by_id(request, user_id):
+    if request.method != "GET":
+        return JsonResponse({"error": "Only GET is allowed."}, status=405)
+    try:
+        user = CustomUser.objects.get(pk=user_id)
+    except CustomUser.DoesNotExist:
+        return JsonResponse({"error": "User not found."}, status=404)
+    
+    data = {
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "avatar_url": user.avatar_url,
+    }
+    return JsonResponse(data)
+
+@csrf_exempt
+@login_required
+def update_user_info(request, user_id):
+    if request.method not in ["PUT", "PATCH"]:
+        return JsonResponse({"error": "Only PUT/PATCH is allowed."}, status=405)
+    if request.user.id != user_id:
+        return JsonResponse({"error": "You cannot update another user's information."}, status=403)
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    
+    if "username" in data:
+        request.user.username = data["username"]
+    if "email" in data:
+        request.user.email = data["email"]
+    if "first_name" in data:
+        request.user.first_name = data["first_name"]
+    if "last_name" in data:
+        request.user.last_name = data["last_name"]
+    if "avatar_url" in data:
+        request.user.avatar_url = data["avatar_url"]
+    
+    try:
+        request.user.save()
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    
+    return JsonResponse({"message": "User updated successfully."})
