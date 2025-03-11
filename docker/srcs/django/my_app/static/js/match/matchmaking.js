@@ -1,21 +1,36 @@
-const socket = new WebSocket("ws://localhost:8000/ws/matchmaking/");
+let socket;
 
-socket.onopen = function () {
-  console.log("Connected to WebSocket.");
-};
+function connectWebSocket() {
+  socket = new WebSocket("ws://localhost:8000/ws/matchmaking/");
 
-socket.onmessage = function (event) {
-  const data = JSON.parse(event.data);
-  if (data.match_found) {
-    alert(`Match found! Match ID: ${data.match_id}`);
-  } else if (data.success === false) {
-    alert(`Error: ${data.message}`);
-  } else if (data.event === "match_forfeited") {
-    alert(`Opponent forfeited: ${data.message}`);
-  } else {
-    console.log("Still searching...");
-  }
-};
+  socket.onopen = function () {
+    console.log("Connected to WebSocket.");
+  };
+
+  socket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    if (data.match_found) {
+      alert(`Match found! Match ID: ${data.match_id}`);
+    } else if (data.success === false) {
+      alert(`Error: ${data.message}`);
+    } else if (data.event === "match_forfeited") {
+      alert(`Opponent forfeited: ${data.message}`);
+    } else {
+      console.log("Still searching...");
+    }
+  };
+
+  socket.onerror = function (error) {
+    console.error("WebSocket error:", error);
+  };
+
+  socket.onclose = function () {
+    console.warn("WebSocket closed. Reconnecting in 5 seconds...");
+    setTimeout(connectWebSocket, 5000);
+  };
+}
+
+connectWebSocket();
 
 function searchForMatch(gameType) {
   if (socket.readyState === WebSocket.OPEN) {
