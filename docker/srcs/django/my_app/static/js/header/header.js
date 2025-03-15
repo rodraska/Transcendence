@@ -2,7 +2,7 @@ import Component from "../spa/component.js";
 
 export default class HeaderBar extends Component {
   constructor() {
-    super("templates/header.html");
+    super("static/html/header.html");
   }
 
   onInit() {
@@ -10,16 +10,16 @@ export default class HeaderBar extends Component {
       window.location.href = "/accounts/logout/";
     });
 
-    document.getElementById("friends-button").addEventListener("click", () => {
-      window.location.href = "#/friends";
-    });
+    // document.getElementById("friends-button").addEventListener("click", () => {
+    //   window.location.href = "#/friends";
+    // });
 
     const userNameElement = this.querySelector("#userName");
     if (userNameElement && window.loggedInUserName) {
       userNameElement.textContent = window.loggedInUserName;
     }
 
-    // Toggle Menu
+    /* // Toggle Menu
     const menuButton = this.querySelector(".menu-btn");
     if (menuButton) {
       menuButton.addEventListener("click", () => {
@@ -28,7 +28,7 @@ export default class HeaderBar extends Component {
           menu.classList.toggle("d-none");
         }
       });
-    }
+    } */
 
     // Update Profile Image
     this.updateHeader(

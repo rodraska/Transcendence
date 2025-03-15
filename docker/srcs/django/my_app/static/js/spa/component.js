@@ -156,3 +156,68 @@ export default class Component extends HTMLElement {
 
 customElements.define("base-component", Component);
 export { };
+ 
+
+/* export default class Component extends HTMLElement {
+    constructor(template) {
+        super();
+        fetch(template).then(async (r) => {
+            if (r.ok) { 
+                const html = await r.text();
+                // Insira apenas o conteúdo dentro do container de conteúdo, sem afetar a navbar
+                const content = this.querySelector('#content'); // Exemplo: #content é o container onde o conteúdo da página é inserido
+                if (content) {
+                    content.innerHTML = html;
+                }
+
+                // ✅ Chamar função para executar scripts
+                this.executeScripts();
+                
+                // ✅ Chamar função para interceptar navegação interna
+                this.interceptLinks();
+
+                this.onInit();
+            } else {
+                this.innerHTML = "Not Found: " + template;
+            }
+        });
+    }
+
+    getElementById(id) {
+        return this.querySelector('#' + id);
+    }
+
+    onInit() {}
+
+    executeScripts() {
+        const inlineScripts = this.querySelectorAll("script:not([src])");
+        inlineScripts.forEach(oldScript => {
+            const newScript = document.createElement("script");
+            newScript.textContent = oldScript.textContent;
+            document.body.appendChild(newScript).parentNode.removeChild(newScript);
+        });
+
+        const externalScripts = this.querySelectorAll("script[src]");
+        externalScripts.forEach(oldScript => {
+            const newScript = document.createElement("script");
+            newScript.src = oldScript.src;
+            newScript.async = true;
+            document.body.appendChild(newScript);
+        });
+    }
+
+    interceptLinks() {
+        const links = this.querySelectorAll("a[href^='#']");
+        links.forEach(link => {
+            link.addEventListener("click", (event) => {
+                event.preventDefault(); // ✅ Evita o comportamento padrão
+                const url = link.getAttribute("href").substring(1); // Remove o `#`
+                Route.go(url); // ✅ Atualiza a página via SPA
+            });
+        });
+    }
+}
+
+customElements.define("base-component", Component);
+export { };
+ */
