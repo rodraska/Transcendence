@@ -49,7 +49,7 @@ class UserProfile extends Component
 			email: document.getElementById("email").value
     };
 
-    fetch(`/api/update_user_info/${window.loggedInUserId}/`, {
+	fetch(`/api/user/${window.loggedInUserId}/update/`, {
 			method: "PATCH",
 			headers: {
 				"Content-Type": "application/json"
@@ -62,7 +62,7 @@ class UserProfile extends Component
         if (data.error) {
             alert("Erro ao atualizar: " + data.error);
         } else {
-            alert("Perfil atualizado com sucesso!");
+            alert("Profile updated!");
 
             // Atualizar os valores no window para refletir as mudanças
             window.loggedInUserName = updatedData.username;
