@@ -201,6 +201,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Collects all static files
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Redirecionar para a página inicial após login
-LOGIN_REDIRECT_URL = '/#/friends/'
+LOGIN_REDIRECT_URL = '/#/play/'
 LOGOUT_REDIRECT_URL = '/#/login/'
 AUTH_USER_MODEL = 'transcendence.CustomUser'

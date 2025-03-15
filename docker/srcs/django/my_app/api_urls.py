@@ -3,7 +3,7 @@ from django.urls import path
 from .views import (
     current_user, register_user, main_login, send_friend_request,
     accept_friend_request, block_user, get_all_users, get_game_types,
-    get_user_by_id, update_user_info
+    get_user_by_id, update_user_info, getMatchRecordByUserId
 )
 
 urlpatterns = [
@@ -17,4 +17,5 @@ urlpatterns = [
     path("game-types/", get_game_types, name="game_types"),
     path("user/<int:user_id>/", get_user_by_id, name="get_user_by_id"),
     path("user/<int:user_id>/update/", update_user_info, name="update_user_info"),
+    path("match_record/<int:user_id>/", getMatchRecordByUserId, name="get_match_record_by_user"),
 ]

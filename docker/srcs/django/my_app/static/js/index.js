@@ -9,6 +9,9 @@ import RegistrationForm from "./login/registration_form.js";
 import LoginForm from "./login/login_form.js";
 import Friends from "./header/friends.js";
 import PlayGames from "./play_games/play_games.js";
+import Record from "./match/record.js";
+import Play from "./play_games/play.js";
+import ActiveMatch from "./match/active_match.js";
 
 const headerContainer = document.getElementById("header-container");
 const contentContainer = document.getElementById("content-container");
@@ -40,7 +43,10 @@ Route.subscribe("/login", LoginButtons);
 Route.subscribe("/registration_form", RegistrationForm);
 Route.subscribe("/login_form", LoginForm);
 Route.subscribe("/friends", Friends);
-Route.subscribe("/play-games", PlayGames);
+// Route.subscribe("/play-games", PlayGames);
+Route.subscribe("/record", Record);
+Route.subscribe("/play", Play);
+Route.subscribe("/active-match", ActiveMatch);
 
 window.addEventListener("hashchange", () => {
   toggleHeader();
@@ -60,7 +66,7 @@ function checkLoginStatus() {
         window.loggedInUserId = data.user_id;
         window.loggedInAvatarUrl = data.avatar_url;
         if (normalizeRoute(window.location.hash) === "/") {
-          Route.go("/friends");
+          Route.go("/play");
         } else {
           Route.go(window.location.hash);
         }
@@ -77,4 +83,33 @@ function checkLoginStatus() {
       window.loggedInAvatarUrl = null;
       Route.go("/login");
     });
+}
+
+let activeSocket = null;
+
+export function getOrCreateSocket() {
+  if (activeSocket && activeSocket.readyState === WebSocket.OPEN) {
+    return activeSocket;
+  }
+  activeSocket = new WebSocket("ws://localhost:8000/ws/matchmaking/");
+  activeSocket.onopen = () => console.log("Global WebSocket connected.");
+  activeSocket.onclose = () => console.warn("Global WebSocket closed.");
+  activeSocket.onerror = (err) => console.error("Global WebSocket error:", err);
+  activeSocket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.event === "match_forfeited") {
+      alert(data.message || "Opponent forfeited.");
+      forceCloseAllModals();
+      window.currentMatchData = null;
+      window.location.hash = "#/play";
+    } else {
+      console.log("Global message:", data);
+    }
+  };
+  return activeSocket;
+}
+
+function forceCloseAllModals() {
+  document.body.classList.remove("modal-open");
+  document.querySelectorAll(".modal-backdrop").forEach((b) => b.remove());
 }

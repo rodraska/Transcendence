@@ -1,0 +1,44 @@
+<div class="container mt-4">
+  <h2>Choose a Game</h2>
+  <div id="searching-indicator" class="alert alert-info d-none">
+    Searching for a match...
+  </div>
+  <button id="cancel-search-btn" class="btn btn-secondary mb-3 d-none">
+    Cancel Search
+  </button>
+  <div id="game-types"></div>
+  <div class="modal fade" id="matchFoundModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Match Found</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p id="match-info"></p>
+        </div>
+        <div class="modal-footer">
+          <button
+            id="enter-match-btn"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+          >
+            Enter
+          </button>
+          <button
+            id="cancel-match-btn"
+            class="btn btn-danger"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -31,15 +31,17 @@ class LoginForm extends Component {
                   window.loggedInUserName = userData.username;
                   window.loggedInUserId = userData.user_id;
                   window.loggedInAvatarUrl =
-                    userData.avatar_url || "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
+                    userData.avatar_url ||
+                    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
                   const headerEl = document.querySelector("header-component");
                   if (headerEl && typeof headerEl.updateHeader === "function") {
                     headerEl.updateHeader(
                       userData.username,
-                      userData.avatar_url || "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg"
+                      userData.avatar_url ||
+                        "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg"
                     );
                   }
-                  window.location.hash = "#/friends";
+                  window.location.hash = "#/play";
                 }
               });
           }

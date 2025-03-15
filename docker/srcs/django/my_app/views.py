@@ -346,3 +346,28 @@ def update_user_info(request, user_id):
         return JsonResponse({"error": str(e)}, status=400)
     
     return JsonResponse({"message": "User updated successfully."})
+
+@csrf_exempt
+@login_required
+def getMatchRecordByUserId(request, user_id):
+    if request.method != "GET":
+        return JsonResponse({"error": "Only GET is allowed."}, status=405)
+    try:
+        user = CustomUser.objects.get(pk=user_id)
+    except CustomUser.DoesNotExist:
+        return JsonResponse({"error": "User not found."}, status=404)
+    matches = Match.objects.filter(Q(player1=user) | Q(player2=user)).select_related(
+        "game_type", "player1", "player2", "winner"
+    )
+    record = []
+    for m in matches:
+        record.append({
+            "match_id": m.id,
+            "game_type": m.game_type.name,
+            "player1": m.player1.username,
+            "player2": m.player2.username,
+            "winner": m.winner.username if m.winner else None,
+            "started_on": m.started_on,
+            "ended_on": m.ended_on,
+        })
+    return JsonResponse({"matches": record}, safe=False)
