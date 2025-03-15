@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,6 +31,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
+    "channels",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +48,13 @@ INSTALLED_APPS = [
 	'transcendence.providers.fortytwo',
 	'my_app',
 ]
+
+ASGI_APPLICATION = "transcendence.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 SITE_ID = 4
 
@@ -180,6 +189,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "my_app/static"),  # Your static files directory
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Collects all static files here
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -187,6 +201,6 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Redirecionar para a página inicial após login
-LOGIN_REDIRECT_URL = '/#/header/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/#/play/'
+LOGOUT_REDIRECT_URL = '/#/login/'
 AUTH_USER_MODEL = 'transcendence.CustomUser'

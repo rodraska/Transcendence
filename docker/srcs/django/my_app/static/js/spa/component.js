@@ -1,27 +1,28 @@
-export default class Component extends HTMLElement
-{
-    constructor(template)   
-    {
-        super()
-        fetch(template).then(async (r) => {
-            if (r.ok)
-            { 
-            const html = await r.text();
-            this.innerHTML = html;
-            this.onInit();
-            } else {
-            this.innerHTML = "Not Found: " + template;
-            }
-        });
-    }
+export default class Component extends HTMLElement {
+  constructor(template) {
+    super();
+    fetch(template)
+      .then(async (r) => {
+        if (r.ok) {
+          const html = await r.text();
+          this.innerHTML = html;
+          this.onInit();
+        } else {
+          this.innerHTML = "Not Found: " + template;
+        }
+      })
+      .catch(() => {
+        this.innerHTML = "Error loading template.";
+      });
+  }
 
+  getElementById(id) {
+    return this.querySelector("#" + id);
+  }
 
-    getElementById(id){
-        return this.querySelector('#'+id);
-    }
-
-    onInit(){}
+  onInit() {}
 }
 
-customElements.define("base-component", Component)
-export {  } ;
+if (!customElements.get("base-component")) {
+  customElements.define("base-component", Component);
+}

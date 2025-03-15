@@ -1,36 +1,24 @@
 import Component from "../spa/component.js";
+import Route from "../spa/route.js";
 
-export default class HeaderBar extends Component {
+class HeaderBar extends Component {
   constructor() {
     super("static/html/header.html");
   }
 
   onInit() {
-    document.getElementById("logout-button").addEventListener("click", () => {
-      window.location.href = "/accounts/logout/";
-    });
-
-    document.getElementById("friends-button").addEventListener("click", () => {
-      window.location.href = "#/friends";
-    });
-
-    const userNameElement = this.querySelector("#userName");
-    if (userNameElement && window.loggedInUserName) {
-      userNameElement.textContent = window.loggedInUserName;
-    }
-
-    // Toggle Menu
-    const menuButton = this.querySelector(".menu-btn");
-    if (menuButton) {
-      menuButton.addEventListener("click", () => {
-        const menu = this.querySelector(".sidebar");
-        if (menu) {
-          menu.classList.toggle("d-none");
-        }
+    const logoutButton = this.querySelector("#logout-button");
+    if (logoutButton) {
+      logoutButton.addEventListener("click", () => {
+        window.location.href = "/accounts/logout/";
       });
     }
-
-    // Update Profile Image
+    const friendsButton = this.querySelector("#friends-button");
+    if (friendsButton) {
+      friendsButton.addEventListener("click", () => {
+        Route.go("/friends");
+      });
+    }
     this.updateHeader(
       window.loggedInUserName || "Guest",
       window.loggedInAvatarUrl ||
@@ -40,14 +28,14 @@ export default class HeaderBar extends Component {
 
   updateHeader(userName, profileImage) {
     const userNameElement = this.querySelector("#userName");
-    const profileImageElements = this.querySelectorAll("img[alt='Profile']");
-
+    const profileImages = this.querySelectorAll("img[alt='Profile']");
     if (userNameElement) {
       userNameElement.textContent = userName;
     }
-
-    profileImageElements.forEach((img) => {
+    profileImages.forEach((img) => {
       img.src = profileImage;
     });
   }
 }
+
+export default HeaderBar;

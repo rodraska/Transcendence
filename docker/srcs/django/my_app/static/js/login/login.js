@@ -1,3 +1,4 @@
+import Route from "../spa/route.js";
 import Component from "../spa/component.js";
 
 class LoginButtons extends Component {
@@ -7,10 +8,10 @@ class LoginButtons extends Component {
 
   onInit() {
     document.getElementById("login-button").addEventListener("click", () => {
-      window.location.href = "#/login_form";
+      Route.go("/login_form");
     });
     document.getElementById("register-button").addEventListener("click", () => {
-      window.location.href = "#/registration_form";
+      Route.go("/registration_form");
     });
     document
       .getElementById("authenticate-button")
