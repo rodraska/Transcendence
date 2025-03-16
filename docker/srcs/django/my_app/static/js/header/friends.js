@@ -13,6 +13,7 @@ class FriendsPage extends Component {
 		this.friendsList = document.getElementById("friends-list");
 		this.fetchFriends();
 		this.setupSearch();
+		this.setupModal();
 	}
 
 	fetchFriends() {
@@ -72,28 +73,25 @@ class FriendsPage extends Component {
 	}
 
 	setupFriendActions(friendItem, friend) {
-		if (friend.isFriend) {
-			friendItem.querySelector(".is-friend-btn")?.addEventListener("click", () => {
-				const confirmCancel = confirm(`Are you sure you want to remove ${friend.name} from your friends' list?`);
-				if (confirmCancel) {
-					this.action("unfriend", friend.id);
-				}
-			})
-		} else {
-			if (friend.receivedFriendRequest) {
-				friendItem.querySelector(".accept-btn")?.addEventListener("click", () => this.action("accept", friend.id));
-				friendItem.querySelector(".decline-btn")?.addEventListener("click", () => this.action("decline", friend.id));
-			} else if (friend.sentFriendRequest) {
-				friendItem.querySelector(".pending-request-btn")?.addEventListener("click", () => {
-					const confirmCancel = confirm("Are you sure you want to cancel the friend request?");
-					if (confirmCancel) {
-						this.action("cancel", friend.id);
-					}
-				})
-			} else {
-				friendItem.querySelector(".send-request-btn")?.addEventListener("click", () => this.action("send", friend.id));
-			}
-		}
+		friendItem.querySelector(".is-friend-btn")?.addEventListener("click", () => {
+			this.showConfirmationModal("Unfriend", `Are you sure you want to remove ${friend.name} from your friends' list?`, "unfriend", friend.id);
+		});
+
+		friendItem.querySelector(".pending-request-btn")?.addEventListener("click", () => {
+			this.showConfirmationModal("Cancel Friend Request", `Are you sure you want to cancel the friend request to ${friend.name}?`, "cancel", friend.id);
+		});
+
+		friendItem.querySelector(".send-request-btn")?.addEventListener("click", () => {
+			this.action("send", friend.id);
+		});
+
+		friendItem.querySelector(".accept-btn")?.addEventListener("click", () => {
+			this.action("accept", friend.id);
+		});
+
+		friendItem.querySelector(".decline-btn")?.addEventListener("click", () => {
+			this.action("decline", friend.id);
+		});
 	}
 
 	action(actionType, userId) {
@@ -158,6 +156,32 @@ class FriendsPage extends Component {
 			this.displayFriends(this.currentPage);
 			this.setupPagination();
 		});
+	}
+
+	setupModal() {
+		this.confirmationModal = new bootstrap.Modal(document.getElementById("confirmationModal"));
+		this.confirmationTitle = document.getElementById("confirmationTitle");
+		this.confirmationMessage = document.getElementById("confirmationMessage");
+		this.confirmActionBtn = document.getElementById("confirmActionBtn");
+
+		this.confirmActionBtn.addEventListener("click", () => {
+			if (this.selectedFriendId && this.actionType) {
+				this.action(this.actionType, this.selectedFriendId);
+			}
+		});
+	}
+
+	showConfirmationModal(title, message, actionType, friendId) {
+		this.confirmationTitle.textContent = title;
+		this.confirmationMessage.textContent = message;
+		this.confirmActionBtn.textContent = actionType === "unfriend" ? "Remove Friend" : "Cancel Request";
+		this.confirmActionBtn.classList.toggle("btn-danger", actionType === "unfriend");
+		this.confirmActionBtn.classList.toggle("btn-primary", actionType === "cancel");
+
+		this.selectedFriendId = friendId;
+		this.actionType = actionType;
+
+		this.confirmationModal.show();
 	}
 }
 
