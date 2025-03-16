@@ -1,7 +1,7 @@
 import Route, { normalizeRoute } from "./spa/route.js";
 import HeaderBar from "./header/header.js";
 import HomePage from "./home/home_page.js";
-import UserProfile from "./user/user_profile.js";
+import UserProfile from "./header/profile.js";
 import PongPage from "./pong/pong.js";
 import CurvePage from "./curve/curve.js";
 import LoginButtons from "./login/login.js";
@@ -35,8 +35,9 @@ function toggleHeader() {
 }
 
 Route.setContentContainer(contentContainer);
-Route.subscribe("/", HomePage);
-Route.subscribe("/user", UserProfile);
+Route.subscribe('/home', HomePage);
+Route.subscribe('/profile', UserProfile);
+//Route.subscribe("/user", UserProfile);
 Route.subscribe("/pong", PongPage);
 Route.subscribe("/curve", CurvePage);
 Route.subscribe("/login", LoginButtons);
@@ -66,7 +67,7 @@ function checkLoginStatus() {
         window.loggedInUserId = data.user_id;
         window.loggedInAvatarUrl = data.avatar_url;
         if (normalizeRoute(window.location.hash) === "/") {
-          Route.go("/play");
+          Route.go("/home");
         } else {
           Route.go(window.location.hash);
         }

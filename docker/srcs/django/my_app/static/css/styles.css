@@ -1,20 +1,51 @@
-header {
+.bg-primary-color {
+	background-color: var(--primary-color);
+  }
+  
+  .bg-secondary-color {
+	background-color: var(--secondary-color);
+  }
+  
+  .bg-accent-color {
+	background-color: var(--accent-color);
+  }
+  
+  .bg-light-color {
+	background-color: var(--background-color);
+  }
+
+  .primary-color {
+	color: var(--primary-color);
+  }
+  
+  .secondary-color {
+	color: var(--secondary-color)
+  }
+
+  .accent-color {
+	color: var(--accent-color);
+  }
+
+  .text-color {
+	color: var(--text-color);
+  }
+
+
+#header-container {
+  height: 80px; 
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  background-color: #fff;
-  /* Light background */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Subtle shadow */
-  z-index: 1000;
+  width: 100%;
+  /* background-color: white;  */
+  z-index: 10;
 }
 
-/*#menuButton {
-	border: none;
-	background: none;
-	font-size: 24px;
-}*/
+#content-container {
+  padding-top: 50px; 
+  /* margin-top: 100px; */
+}
+
 
 #menu {
   background-color: var(--secondary-color);

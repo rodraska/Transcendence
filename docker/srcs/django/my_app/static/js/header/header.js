@@ -13,12 +13,42 @@ class HeaderBar extends Component {
         window.location.href = "/accounts/logout/";
       });
     }
+
+    const homeButton = this.querySelector("#homebtn");
+    if (homeButton) {
+      homeButton.addEventListener("click", () => {
+        Route.go("/home");
+      });
+    }
+
+    const profileButton = this.querySelector("#profilebtn");
+    if (profileButton) {
+      profileButton.addEventListener("click", () => {
+        Route.go("/profile");
+      });
+    }
+
+    const playButton = this.querySelector("#playgamebtn");
+    if (playButton) {
+      playButton.addEventListener("click", () => {
+        Route.go("/play");
+      });
+    }
+
     const friendsButton = this.querySelector("#friends-button");
     if (friendsButton) {
       friendsButton.addEventListener("click", () => {
         Route.go("/friends");
       });
     }
+    
+   
+    const userNameElement = this.querySelector("#userName");
+    if (userNameElement && window.loggedInUserName) {
+      userNameElement.textContent = window.loggedInUserName;
+    }
+
+
     this.updateHeader(
       window.loggedInUserName || "Guest",
       window.loggedInAvatarUrl ||

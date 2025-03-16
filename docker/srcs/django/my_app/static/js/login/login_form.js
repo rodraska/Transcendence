@@ -41,7 +41,7 @@ class LoginForm extends Component {
                         "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg"
                     );
                   }
-                  window.location.hash = "#/play";
+                  window.location.hash = "#/home";
                 }
               });
           }
