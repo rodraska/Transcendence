@@ -115,6 +115,74 @@ def accept_friend_request(request):
 
 @csrf_exempt
 @login_required
+def decline_friend_request(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST is allowed."}, status=405)
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    from_user_id = data.get("from_user_id")
+    if not from_user_id:
+        return JsonResponse({"error": "Sender user ID is required."}, status=400)
+    try:
+        relationship = Relationship.objects.get(
+            from_user_id=from_user_id,
+            to_user=request.user,
+            status="pending"
+        )
+    except Relationship.DoesNotExist:
+        return JsonResponse({"error": "No pending request found."}, status=404)
+    relationship.delete()
+    return JsonResponse({"message": "Friend request declined."})
+
+@csrf_exempt
+@login_required
+def cancel_friend_request(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST is allowed."}, status=405)
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    to_user_id = data.get("to_user_id")
+    if not to_user_id:
+        return JsonResponse({"error": "Target user ID is required."}, status=400)
+    try:
+        relationship = Relationship.objects.get(
+            from_user=request.user,
+            to_user_id=to_user_id,
+            status="pending"
+        )
+    except Relationship.DoesNotExist:
+        return JsonResponse({"error": "No pending request found."}, status=404)
+    relationship.delete()
+    return JsonResponse({"message": "Friend request cancelled."})
+
+@csrf_exempt
+@login_required
+def unfriend(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST is allowed."}, status=405)
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    user_id = data.get("user_id")
+    if not user_id:
+        return JsonResponse({"error": "User ID is required."}, status=400)
+    try:
+        relationship = Relationship.objects.get(
+            (Q(from_user=request.user, to_user_id=user_id) | Q(from_user_id=user_id, to_user=request.user)),
+            status="accepted"
+        )
+    except Relationship.DoesNotExist:
+        return JsonResponse({"error": "No friendship found."}, status=404)
+    relationship.delete()
+    return JsonResponse({"message": "Friendship ended."})
+
+@csrf_exempt
+@login_required
 def reject_user(request):
     if request.method != "POST":
         return JsonResponse({"error": "Only POST is allowed."}, status=405)
@@ -127,7 +195,7 @@ def reject_user(request):
         return JsonResponse({"error": "Target user ID is required."}, status=400)
     from_user = request.user
     try:
-        relationship = Relationship.objects.filter(from_user=from_user, to_user__id=target_user_id).first()
+        relationship = Relationship.objects.filter(from_user=from_user, to_user_id=target_user_id).first()
         if relationship:
             relationship.status = "rejected"
             relationship.save()

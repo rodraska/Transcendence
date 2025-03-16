@@ -8,6 +8,8 @@ import LoginButtons from "./login/login.js";
 import LoginForm from "./login/login_form.js";
 import RegistrationForm from "./login/registration_form.js";
 import PlayGames from "./header/play_games.js";
+import FriendsPage from "./friends/friends.js";
+import FriendCard from "./friends/friend_card.js";
 
 Route.subscribe('/', HomePage);
 Route.subscribe('/profile', UserProfile);
@@ -18,9 +20,11 @@ Route.subscribe('/curve', CurvePage);
 Route.subscribe('/login', LoginButtons);
 Route.subscribe('/login_form', LoginForm);
 Route.subscribe('/registration_form', RegistrationForm);
+Route.subscribe('/friends', FriendsPage);
+Route.subscribe('/friend_card', FriendCard);
 
 // Route.go('/login_form')
 //Route.go('/login')
-Route.go('/header')
+Route.go('/friends')
 
 //este file precisa de ser revisto,nao podemos ter as routes assim, para a Carla quando estiveres a testar tens de comentar o Route.go('/user')
