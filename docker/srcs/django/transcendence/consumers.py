@@ -6,6 +6,9 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.apps import apps
 import random
+import logging
+
+logger = logging.getLogger(__name__)
 
 apps.check_apps_ready()
 
@@ -168,6 +171,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         }))
 
 class ChatConsumer(AsyncWebsocketConsumer):
+    logger.error('chat connect')
     async def connect(self):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         self.room_group_name = f'chat_{self.room_id}'
@@ -195,6 +199,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     async def receive(self, text_data):
+        logger.error('chat receive')
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         username = self.scope["user"].username 
@@ -212,6 +217,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     async def chat_message(self, event):
+        logger.error('chat chatmessage')
         message = event['message']
         user = event['user']
         timestamp = event['timestamp']

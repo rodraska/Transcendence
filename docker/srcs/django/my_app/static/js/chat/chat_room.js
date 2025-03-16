@@ -12,16 +12,22 @@ class ChatRoom extends Component
         const chatLog = document.getElementById('chat-log')
         const messageInput = document.getElementById('chat-message-input')
         const submitButton = document.getElementById('chat-message-submit')
-        const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat_room`);
+        const chatSocket = new WebSocket(`ws://localhost:8000/ws/chat_room/`);
+        chatSocket.onopen = function() {
+            console.log('chat socket open');
+        }
         chatSocket.onmessage = function(e)
         {
             const data = JSON.parse(e.data);
+            displayMessage(data.user, data.timestamp, data.message);
+        }
+        function displayMessage(user, timestamp, message) {
             const messageDiv = document.createElement('div');
             const metaSpan = document.createElement('span');
-            const metaInfo = document.createTextNode(`${data.user} (${data.timestamp}): `);
+            const metaInfo = document.createTextNode(`${user} (${timestamp}): `);
             metaSpan.style.fontWeight = 'bold';
             metaSpan.appendChild(metaInfo);
-            const messageNode = document.createTextNode(data.message);
+            const messageNode = document.createTextNode(message);
             messageDiv.appendChild(metaSpan);
             messageDiv.appendChild(messageNode);
             chatLog.appendChild(messageDiv);
@@ -30,7 +36,10 @@ class ChatRoom extends Component
         function sendMessage() 
         {
             const message = messageInput.value;
+            const username = "You";
+            const timestamp = new Date().toLocaleString();
             if (message) {
+                displayMessage(username, timestamp, message);
                 chatSocket.send(JSON.stringify({message: message}));
                 messageInput.value = '';
             }
