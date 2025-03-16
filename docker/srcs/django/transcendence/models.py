@@ -37,3 +37,20 @@ class GameType(models.Model):
 
     def __str__(self):
         return self.name
+
+class Matchmaking(models.Model):
+    game_type = models.ForeignKey(GameType, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    match = models.ForeignKey('Match', null=True, blank=True, on_delete=models.SET_NULL)
+    won = models.BooleanField(null=True, blank=True)
+    started_on = models.DateTimeField(null=True, blank=True)
+    ended_on = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class Match(models.Model):
+    game_type = models.ForeignKey(GameType, on_delete=models.CASCADE)
+    player1 = models.ForeignKey(CustomUser, related_name="match_player1", on_delete=models.CASCADE)
+    player2 = models.ForeignKey(CustomUser, related_name="match_player2", on_delete=models.CASCADE)
+    winner = models.ForeignKey(CustomUser, null=True, blank=True, on_delete=models.SET_NULL)
+    started_on = models.DateTimeField(auto_now_add=True)
+    ended_on = models.DateTimeField(null=True, blank=True)

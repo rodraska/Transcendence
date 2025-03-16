@@ -1,45 +1,115 @@
-import "./spa/component.js";
-import UserProfile from "./user/user_profile.js";
-import HomePage from "./home/home_page.js";
+import Route, { normalizeRoute } from "./spa/route.js";
 import HeaderBar from "./header/header.js";
+import HomePage from "./home/home_page.js";
+import UserProfile from "./user/user_profile.js";
 import PongPage from "./pong/pong.js";
 import CurvePage from "./curve/curve.js";
 import LoginButtons from "./login/login.js";
-import Route from "./spa/route.js";
 import RegistrationForm from "./login/registration_form.js";
 import LoginForm from "./login/login_form.js";
 import FriendsPage from "./header/friends.js";
 import PlayGames from "./play_games/play_games.js";
+import Record from "./match/record.js";
+import Play from "./play_games/play.js";
+import ActiveMatch from "./match/active_match.js";
 
+const headerContainer = document.getElementById("header-container");
+const contentContainer = document.getElementById("content-container");
+
+if (!customElements.get("header-component")) {
+  customElements.define("header-component", HeaderBar);
+}
+headerContainer.appendChild(document.createElement("header-component"));
+
+function toggleHeader() {
+  let currentRoute = normalizeRoute(window.location.hash || "/");
+  if (
+    currentRoute === "/login" ||
+    currentRoute === "/login_form" ||
+    currentRoute === "/registration_form"
+  ) {
+    headerContainer.style.display = "none";
+  } else {
+    headerContainer.style.display = "block";
+  }
+}
+
+Route.setContentContainer(contentContainer);
 Route.subscribe("/", HomePage);
 Route.subscribe("/user", UserProfile);
-Route.subscribe("/header", HeaderBar);
 Route.subscribe("/pong", PongPage);
 Route.subscribe("/curve", CurvePage);
 Route.subscribe("/login", LoginButtons);
 Route.subscribe("/registration_form", RegistrationForm);
 Route.subscribe("/login_form", LoginForm);
 Route.subscribe("/friends", FriendsPage);
-Route.subscribe("/play-games", PlayGames);
+// Route.subscribe("/play-games", PlayGames);
+Route.subscribe("/record", Record);
+Route.subscribe("/play", Play);
+Route.subscribe("/active-match", ActiveMatch);
 
+window.addEventListener("hashchange", () => {
+  toggleHeader();
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+  toggleHeader();
+  checkLoginStatus();
+});
 
 function checkLoginStatus() {
-  fetch("/api/current_user/", {
-    credentials: "include",
-  })
-    .then((response) => response.json())
+  fetch("/api/current_user/", { credentials: "include" })
+    .then((r) => r.json())
     .then((data) => {
-      console.log("Login status:", data);
       if (data.logged_in) {
-        Route.go("/header");
+        window.loggedInUserName = data.username;
+        window.loggedInUserId = data.user_id;
+        window.loggedInAvatarUrl = data.avatar_url;
+        if (normalizeRoute(window.location.hash) === "/") {
+          Route.go("/play");
+        } else {
+          Route.go(window.location.hash);
+        }
       } else {
+        window.loggedInUserName = null;
+        window.loggedInUserId = null;
+        window.loggedInAvatarUrl = null;
         Route.go("/login");
       }
     })
-    .catch((error) => {
-      console.error("Error checking login status:", error);
+    .catch(() => {
+      window.loggedInUserName = null;
+      window.loggedInUserId = null;
+      window.loggedInAvatarUrl = null;
       Route.go("/login");
     });
 }
 
-window.addEventListener("DOMContentLoaded", checkLoginStatus);
+let activeSocket = null;
+
+export function getOrCreateSocket() {
+  if (activeSocket && activeSocket.readyState === WebSocket.OPEN) {
+    return activeSocket;
+  }
+  activeSocket = new WebSocket("ws://localhost:8000/ws/matchmaking/");
+  activeSocket.onopen = () => console.log("Global WebSocket connected.");
+  activeSocket.onclose = () => console.warn("Global WebSocket closed.");
+  activeSocket.onerror = (err) => console.error("Global WebSocket error:", err);
+  activeSocket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.event === "match_forfeited") {
+      alert(data.message || "Opponent forfeited.");
+      forceCloseAllModals();
+      window.currentMatchData = null;
+      window.location.hash = "#/play";
+    } else {
+      console.log("Global message:", data);
+    }
+  };
+  return activeSocket;
+}
+
+function forceCloseAllModals() {
+  document.body.classList.remove("modal-open");
+  document.querySelectorAll(".modal-backdrop").forEach((b) => b.remove());
+}
