@@ -201,24 +201,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         logger.error('chat receive')
-        text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-        username = self.scope["user"].username 
-
         try:
-            await self.save_message(message)
-        except Exception as e:
-            logger.error(f"Error saving message: {e}")
+            text_data_json = json.loads(text_data)
+            message = text_data_json['message']
 
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message,
-                'user': username,
-                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            }
-        )
+            if not message.strip():
+                return
+    
+            username = self.scope["user"].username 
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            try:
+                await self.save_message(message)
+            except Exception as e:
+                logger.error(f"Error saving message: {e}")
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message,
+                    'user': username,
+                    'timestamp': timestamp
+                }
+            )
+        except Exception as e:
+            logger.error(f"Error in receive: {e}")
 
     async def chat_message(self, event):
         logger.error('chat chatmessage')
