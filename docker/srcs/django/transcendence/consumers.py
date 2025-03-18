@@ -258,6 +258,139 @@ class ChatConsumer(AsyncWebsocketConsumer):
             for message in messages
         ]
 
+class PongConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.game_id = '24'
+        self.room_group_name = f'pong_{self.game_id}'
+
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        await.self.accept()
+
+        self.player_number = await self.get_next_player_number()
+
+        await self.send(text_data=json.dumps({
+            'type': 'player_assign',
+            'player_number': self.player_number
+        }))
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+        self.room_group_name,
+        self.channel_name
+    )
+
+    async def get_next_player_number(self):
+        if self.game_id not in PongConsumer.connected_players:
+            PongConsumer.connected_players[self.game_id] = 1
+            return 1
+    
+        elif PongConsumer.connected_players[self.game_id] == 1:
+            PongConsumer.connected_players[self.game_id] = 2
+        
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_ready'
+                }
+            )
+            return 2
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        message_type = data.get('type')
+
+        if message_type == 'paddle_move'
+            player = data.get('player')
+            position = data.get('position')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'paddle_move',
+                    'player': player,
+                    'position': position
+                }
+            )
+        
+        elif message_type == 'game_control':
+            action = data.get('action')
+    
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_control',
+                    'action': action
+                }
+            )
+
+        elif message_type == 'ball_update':
+            position = data.get('position')
+    
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'ball_update',
+                    'position': position
+                }
+            )
+        
+        elif message_type == 'score_update':
+            p1_score = data.get('p1_score')
+            p2_score = data.get('p2_score')
+    
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'score_update',
+                    'p1_score': p1_score,
+                    'p2_score': p2_score
+                }
+        )
+    
+    async def paddle_move(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'paddle_move',
+            'player': event['player'],
+            'position': event['position']
+        }))
+
+    async def game_control(self, event):
+        action = event.get('action')
+    
+        await self.send(text_data=json.dumps({
+            'type': 'game_control',
+            'action': action
+        }))
+
+    async def ball_update(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'ball_update',
+            'position': event['position']
+        }))
+
+    async def score_update(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'score_update',
+            'p1_score': event['p1_score'],
+            'p2_score': event['p2_score']
+        }))
+
+    async def player_assign(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'player_assign',
+            'player_number': event['player_number']
+        }))
+
+    async def game_ready(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_ready'
+        }))
+
+
 """
 class CurveConsumer(AsyncWebsocketConsumer):
     async def connect(self):

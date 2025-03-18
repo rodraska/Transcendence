@@ -10,7 +10,7 @@ class CurveMain extends Component
     onInit()
     {
         document.getElementById('button_create').addEventListener('click', () => {
-			window.location.href = '#/curve_lobby';
+			window.location.href = '#/curve_create';
 		});
 
         document.getElementById('button_join').addEventListener('click', () => {
