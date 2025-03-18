@@ -1,5 +1,4 @@
 import Component from "../spa/component.js"
-import Route from "../spa/route.js"
 
 class ChatRoom extends Component
 {
@@ -7,48 +6,64 @@ class ChatRoom extends Component
     {
         super('static/html/chat_room.html')
     }
-    onInit()
-    {
+    onInit() {
+        this.getElements(0)
+    }
+    
+    getElements(attempts) {
         const chatLog = document.getElementById('chat-log')
         const messageInput = document.getElementById('chat-message-input')
         const submitButton = document.getElementById('chat-message-submit')
-        const chatSocket = new WebSocket(`ws://localhost:8000/ws/chat_room/`);
+        
+        if (!chatLog || !messageInput || !submitButton) {
+            if (attempts < 5) {
+                setTimeout(() => this.getElements(attempts + 1), 300)
+            }
+            return
+        }
+        
+        this.setupChat(chatLog, messageInput, submitButton)
+    }
+    
+    setupChat(chatLog, messageInput, submitButton) {
+        const chatSocket = new WebSocket(`ws://localhost:8000/ws/chat_room/`)
+        
         chatSocket.onopen = function() {
-            console.log('chat socket open');
+            console.log('Chat socket open')
         }
-        chatSocket.onmessage = function(e)
-        {
-            const data = JSON.parse(e.data);
-            displayMessage(data.user, data.timestamp, data.message);
+        
+        chatSocket.onerror = function(e) {
+            console.error('Chat socket error:', e)
         }
-        function displayMessage(user, timestamp, message) {
-            const messageDiv = document.createElement('div');
-            const metaSpan = document.createElement('span');
-            const metaInfo = document.createTextNode(`${user} (${timestamp}): `);
-            metaSpan.style.fontWeight = 'bold';
-            metaSpan.appendChild(metaInfo);
-            const messageNode = document.createTextNode(message);
-            messageDiv.appendChild(metaSpan);
-            messageDiv.appendChild(messageNode);
-            chatLog.appendChild(messageDiv);
-            chatLog.scrollTop = chatLog.scrollHeight;
+        
+        chatSocket.onclose = function(e) {
+            console.log('Chat socket closed:', e.code, e.reason)
         }
-        function sendMessage() 
-        {
-            const message = messageInput.value;
-            const username = "You";
-            const timestamp = new Date().toLocaleString();
+        
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data)
+            const messageDiv = document.createElement('div')
+            const metaSpan = document.createElement('span')
+            metaSpan.style.fontWeight = 'bold'
+            metaSpan.textContent = `${data.user} (${data.timestamp}): `
+            messageDiv.appendChild(metaSpan)
+            messageDiv.appendChild(document.createTextNode(data.message))
+            chatLog.appendChild(messageDiv)
+            chatLog.scrollTop = chatLog.scrollHeight
+        }
+        
+        function sendMessage() {
+            const message = messageInput.value
             if (message) {
-                displayMessage(username, timestamp, message);
-                chatSocket.send(JSON.stringify({message: message}));
-                messageInput.value = '';
+                chatSocket.send(JSON.stringify({message: message}))
+                messageInput.value = ''
             }
         }
-        submitButton.onclick = sendMessage;
-        messageInput.onkeyup = function(e)
-        {
-            if (e.key == 'Enter') sendMessage();
-        };
+        
+        submitButton.onclick = sendMessage
+        messageInput.onkeyup = function(e) {
+            if (e.key === 'Enter') sendMessage()
+        }
     }
 }
 

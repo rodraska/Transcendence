@@ -1,5 +1,6 @@
 from transcendence.models import Matchmaking, Match, CustomUser, GameType, ChatRoom, Message
 from datetime import timedelta
+from datetime import datetime
 from django.utils import timezone
 from channels.db import database_sync_to_async
 import json
@@ -171,9 +172,9 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         }))
 
 class ChatConsumer(AsyncWebsocketConsumer):
-    logger.error('chat connect')
     async def connect(self):
-        self.room_id = self.scope['url_route']['kwargs']['room_id']
+        print("ChatConsumer connect")
+        self.room_id = '42'
         self.room_group_name = f'chat_{self.room_id}'
         self.user = self.scope["user"]
 
@@ -204,14 +205,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
         username = self.scope["user"].username 
 
-        await self.save_message(message)
+        try:
+            await self.save_message(message)
+        except Exception as e:
+            logger.error(f"Error saving message: {e}")
 
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
                 'message': message,
-                'user': user,
+                'user': username,
                 'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
         )
@@ -231,7 +235,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def save_message(self, message):
         room = ChatRoom.objects.get(id=self.room_id)
-        Message.objects.create(room=room, sender=self.user, contact=message)
+        Message.objects.create(room=room, sender=self.user, content=message)
 
     @database_sync_to_async
     def get_messages(self):

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 ]
 
 ASGI_APPLICATION = "transcendence.asgi.application"
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
