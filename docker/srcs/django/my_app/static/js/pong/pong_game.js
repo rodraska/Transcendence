@@ -1,15 +1,24 @@
 import Component from "../spa/component.js"
+import Ball from "./ball.js"
+import PongPlayer from "./player.js"
+import { update, ft_start, ft_pause, ft_stop } from "./script.js"
 
 class PongGame extends Component
 {
     constructor()
     {
+        console.log('constructor PongGame');
         super('static/html/pong_game.html');
 
         this.pongSocket = null;
         this.playerNumber = null;
         this.gameReady = false;
         this.scoreChanged = false;
+
+        this.map = null;
+        this.pong_ctx = null;
+        this.width = null;
+        this.height = null;
 
         this.b_radius = 7.5;
         this.b_vel_i = 6;
@@ -26,17 +35,23 @@ class PongGame extends Component
         this.animationID = null;
 
         this.ball = new Ball();
-        this.p1 = new PongPlayer([-width / 2 + this.p_width / 2 + this.p_offest, 0]);
-        this.p2 = new PongPlayer([width / 2 - this.p_width / 2 - this.p_offest, 0]);
+        this.p1 = new PongPlayer([-this.width / 2 + this.p_width / 2 + this.p_offest, 0]);
+        this.p2 = new PongPlayer([this.width / 2 - this.p_width / 2 - this.p_offest, 0]);
+    
+        this.update = update;
+        this.ft_start = ft_start;
+        this.ft_pause = ft_pause;
+        this.ft_stop = ft_stop;
     }
 
     onInit() {
+        window.pong_game = this;
         this.getElements(0)
     }
 
     getElements(attempts)
     {
-        map = document.getElementById('pong');
+        const map = document.getElementById('pong');
         if (!map) {
             if (attempts < 5) {
                 setTimeout(() => this.getElements(attempts + 1), 300)
@@ -70,12 +85,12 @@ class PongGame extends Component
             self.handleSocketMessage(data);
         };
         
-        pong_ctx = map.getContext('2d');
-        pong_ctx.fillStyle = 'black';
-        pong_ctx.fillRect(0, 0, map.clientWidth, map.height);
+        this.pong_ctx = map.getContext('2d');
+        this.pong_ctx.fillStyle = 'black';
+        this.pong_ctx.fillRect(0, 0, map.clientWidth, map.height);
 
-        width = map.width;
-        height = map.height;
+        this.width = map.width;
+        this.height = map.height;
     }
 
     handleSocketMessage(data)

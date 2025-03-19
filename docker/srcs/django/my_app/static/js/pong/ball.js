@@ -7,3 +7,5 @@ class Ball
         this.vel_t = 0;
     }
 }
+
+export default Ball;

@@ -8,3 +8,5 @@ class PongPlayer
         this.score = 0;
     }
 }
+
+export default PongPlayer;

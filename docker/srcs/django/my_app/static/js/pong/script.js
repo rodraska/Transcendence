@@ -1,12 +1,6 @@
-var map;
-var pong_ctx;
+import { initial_conditions, initial_ball } from "./initial.js";
 
-var width;
-var height;
-
-pong_game = new PongGame();
-
-FtPongGame.update = function()
+const update = function()
 {
     let x = this.check_goal();
     if (x === 1) return (this.ft_start());
@@ -17,17 +11,17 @@ FtPongGame.update = function()
     this.animationID = requestAnimationFrame(this.update.bind(this));
 }
 
-FtPongGame.ft_start = function()
+const ft_start = function()
 {
     if (this.isPaused === true) return (this.ft_pause());
     if (this.isStart === true) return ;
     this.isStart = true;
-    this.initial_conditions();
-    this.initial_ball();
+    initial_conditions();
+    initial_ball();
     requestAnimationFrame(this.update.bind(this));
 }
 
-FtPongGame.ft_pause = function()
+const ft_pause = function()
 {
     console.log('pause');
     if (!this.isStart) return ;
@@ -36,7 +30,7 @@ FtPongGame.ft_pause = function()
     else this.animationID = requestAnimationFrame(this.update.bind(this));
 }
 
-FtPongGame.ft_stop = function()
+const ft_stop = function()
 {
     console.log('stop');
     this.isStart = false;
@@ -46,3 +40,5 @@ FtPongGame.ft_stop = function()
     this.p1.score = 0;
     this.p2.score = 0;
 }
+
+export { update, ft_start, ft_pause, ft_stop }

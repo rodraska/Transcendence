@@ -3,15 +3,19 @@ export default class Component extends HTMLElement {
     super();
     fetch(template)
       .then(async (r) => {
+        console.log('Template fetch response:', r);
+        console.log('Template URL:', template);
         if (r.ok) {
           const html = await r.text();
           this.innerHTML = html;
           this.onInit();
         } else {
+          console.error('Template fetch failed:', r.status, r.statusText);
           this.innerHTML = "Not Found: " + template;
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error('Template fetch error:', error);
         this.innerHTML = "Error loading template.";
       });
   }
