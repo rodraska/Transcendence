@@ -268,7 +268,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        await.self.accept()
+        await self.accept()
 
         self.player_number = await self.get_next_player_number()
 
@@ -298,6 +298,8 @@ class PongConsumer(AsyncWebsocketConsumer):
                 }
             )
             return 2
+        
+        return 0
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -388,7 +390,7 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def game_ready(self, event):
         await self.send(text_data=json.dumps({
             'type': 'game_ready'
-        }))
+        cd}))
 
 
 """

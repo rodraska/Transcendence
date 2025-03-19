@@ -1,4 +1,4 @@
-class PongGame 
+class PongGame2 
 {
     constructor()
     {
@@ -21,4 +21,4 @@ class PongGame
     }
 }
 
-const FtPongGame = PongGame.prototype;
+const FtPongGame2 = PongGame2.prototype;
