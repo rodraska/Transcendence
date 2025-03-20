@@ -274,19 +274,29 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         self.player_number = await self.get_next_player_number()
 
-        await self.send(text_data=json.dumps({
-            'type': 'player_assign',
-            'player_number': self.player_number
-        }))
+        if self.player_number > 0:
+            await self.send(text_data=json.dumps({
+                'type': 'player_assign',
+                'player_number': self.player_number
+            }))
+        
+        if self.player_number == 2:
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_ready'
+                }
+            )
 
     async def disconnect(self, close_code):
-        if hasattr(self, 'game_id') and self.game_id in self.connected_players:
-            del self.connected_players[self.game_id]
+        if hasattr(self, 'game_id') and self.player_number > 0:
+            if self.game_id in self.connected_players:
+                self.connected_players.pop(self.game_id, None)
 
         await self.channel_layer.group_discard(
-        self.room_group_name,
-        self.channel_name
-    )
+            self.room_group_name,
+            self.channel_name
+        )
 
     async def get_next_player_number(self):
         if self.game_id not in self.connected_players:
@@ -295,13 +305,6 @@ class PongConsumer(AsyncWebsocketConsumer):
     
         elif self.connected_players[self.game_id] == 1:
             self.connected_players[self.game_id] = 2
-        
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'game_ready'
-                }
-            )
             return 2
         
         return 0
@@ -310,14 +313,14 @@ class PongConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         message_type = data.get('type')
 
-        if message_type == 'paddle_move':
+        if message_type == 'paddle_position':
             player = data.get('player')
             position = data.get('position')
 
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
-                    'type': 'paddle_move',
+                    'type': 'paddle_position',
                     'player': player,
                     'position': position
                 }
@@ -341,7 +344,8 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     'type': 'ball_update',
-                    'position': position
+                    'position': position,
+                    'velocity': velocity
                 }
             )
         
@@ -358,9 +362,9 @@ class PongConsumer(AsyncWebsocketConsumer):
                 }
         )
     
-    async def paddle_move(self, event):
+    async def paddle_position(self, event):
         await self.send(text_data=json.dumps({
-            'type': 'paddle_move',
+            'type': 'paddle_position',
             'player': event['player'],
             'position': event['position']
         }))
@@ -376,7 +380,8 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def ball_update(self, event):
         await self.send(text_data=json.dumps({
             'type': 'ball_update',
-            'position': event['position']
+            'position': event['position'],
+            'velocity': event['velocity']
         }))
 
     async def score_update(self, event):

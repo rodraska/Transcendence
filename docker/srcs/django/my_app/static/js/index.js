@@ -93,7 +93,7 @@ function checkLoginStatus() {
         if (normalizeRoute(window.location.hash) === "/") {
           Route.go("/home");
         } else {
-          Route.go(window.location.hash);
+          //Route.go(window.location.hash);
         }
       } else {
         window.loggedInUserName = null;

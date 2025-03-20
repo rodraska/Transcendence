@@ -1,68 +1,68 @@
-FtPongGame.paint_black = function()
+const paint_black = function()
 {
-    pong_ctx.fillStyle = 'black';
-    pong_ctx.fillRect(0, 0 , map.width, map.height);
+    this.pong_ctx.fillStyle = 'black';
+    this.pong_ctx.fillRect(0, 0 , this.map.width, this.map.height);
 }
 
-FtPongGame.paint_squares = function()
+const paint_squares = function()
 {
-    pong_ctx.fillStyle = 'white';
-    for (i = 0; i < 31; i++)
+    this.pong_ctx.fillStyle = 'white';
+    for (let i = 0; i < 31; i++)
     {
         if (i % 2 == 0)
         {
-            x = width / 2 - 10;
-            y = height / 31 * (i + 1);
-            pong_ctx.fillRect(x, y, 20, 30);
+            let x = this.width / 2 - 10;
+            let y = this.height / 31 * (i + 1);
+            this.pong_ctx.fillRect(x, y, 20, 30);
         }
     }
 }
 
-FtPongGame.paint_score = function()
+const paint_score = function()
 {
-    pong_ctx.font = "80px 'Press Start 2P', cursive";
-    pong_ctx.fillStyle = 'white';
-    pong_ctx.textAlign = "right";
-    pong_ctx.textBaseline = "bottom";
-    pong_ctx.fillText(this.p1.score, width / 2 - this.s_width, this.s_height);
-    pong_ctx.textAlign = "left";
-    pong_ctx.textBaseline = "bottom";
-    pong_ctx.fillText(this.p2.score, width / 2 + this.s_width, this.s_height);
+    this.pong_ctx.font = "80px 'Press Start 2P', cursive";
+    this.pong_ctx.fillStyle = 'white';
+    this.pong_ctx.textAlign = "right";
+    this.pong_ctx.textBaseline = "bottom";
+    this.pong_ctx.fillText(this.p1.score, this.width / 2 - this.s_width, this.s_height);
+    this.pong_ctx.textAlign = "left";
+    this.pong_ctx.textBaseline = "bottom";
+    this.pong_ctx.fillText(this.p2.score, this.width / 2 + this.s_width, this.s_height);
 }
 
-FtPongGame.paint_ball = function()
+const paint_ball = function()
 {
-    x = (this.ball.pos[0]) + width / 2;
-    y = (this.ball.pos[1]) + height / 2;
-    pong_ctx.beginPath();
-    pong_ctx.arc(x, y, this.b_radius, 0, 2 * Math.PI);
-    pong_ctx.fill();
+    let x = (this.ball.pos[0]) + this.width / 2;
+    let y = (this.ball.pos[1]) + this.height / 2;
+    this.pong_ctx.beginPath();
+    this.pong_ctx.arc(x, y, this.b_radius, 0, 2 * Math.PI);
+    this.pong_ctx.fill();
 }
 
-FtPongGame.paint_players = function()
+const paint_players = function()
 {
-    x = this.p1.pos[0] - this.p_width / 2 + width / 2;
-    y = this.p1.pos[1] - this.p_height / 2 + height / 2;
-    pong_ctx.fillRect(x, y, this.p_width, this.p_height);
+    let x = this.p1.pos[0] - this.p_width / 2 + this.width / 2;
+    let y = this.p1.pos[1] - this.p_height / 2 + this.height / 2;
+    this.pong_ctx.fillRect(x, y, this.p_width, this.p_height);
 
-    x = this.p2.pos[0] - this.p_width / 2 + width / 2;
-    y = this.p2.pos[1] - this.p_height / 2 + height / 2;
-    pong_ctx.fillRect(x, y, this.p_width, this.p_height);
+    x = this.p2.pos[0] - this.p_width / 2 + this.width / 2;
+    y = this.p2.pos[1] - this.p_height / 2 + this.height / 2;
+    this.pong_ctx.fillRect(x, y, this.p_width, this.p_height);
 }
 
-FtPongGame.paint_pong_gameover = function()
+const paint_pong_gameover = function()
 {
-    pong_ctx.textAlign = "right";
-    pong_ctx.textBaseline = "middle";
-    pong_ctx.fillText("GAME", width / 2 - this.s_width, height / 2);
-    pong_ctx.textAlign = "left";
-    pong_ctx.textBaseline = "middle";
-    pong_ctx.fillText("OVER", width / 2 + this.s_width, height / 2);
+    this.pong_ctx.textAlign = "right";
+    this.pong_ctx.textBaseline = "middle";
+    this.pong_ctx.fillText("GAME", this.width / 2 - this.s_width, this.height / 2);
+    this.pong_ctx.textAlign = "left";
+    this.pong_ctx.textBaseline = "middle";
+    this.pong_ctx.fillText("OVER", this.width / 2 + this.s_width, this.height / 2);
 }
 
-FtPongGame.paint_stop = function()
+const paint_stop = function()
 {
-    pong_ctx.clearRect(0, 0, map.width, map.height);
+    this.pong_ctx.clearRect(0, 0, this.map.width, this.map.height);
     this.paint_black();
     this.paint_squares();
     this.paint_score();
@@ -70,7 +70,7 @@ FtPongGame.paint_stop = function()
     this.paint_players();
 }
 
-FtPongGame.paint_loop = function()
+const paint_loop = function()
 {
     this.paint_black();
     this.paint_squares();
@@ -78,3 +78,5 @@ FtPongGame.paint_loop = function()
     this.paint_ball();
     this.paint_players();
 }
+
+export { paint_black, paint_squares, paint_score, paint_ball, paint_players, paint_pong_gameover, paint_stop, paint_loop }

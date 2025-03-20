@@ -2,12 +2,19 @@ import Component from "../spa/component.js"
 import Ball from "./ball.js"
 import PongPlayer from "./player.js"
 import { update, ft_start, ft_pause, ft_stop } from "./script.js"
+import { initial_conditions, initial_ball } from "./initial.js"
+import { update_positions, collision_2, collision_1, check_goal, collision_tb, collisions } from "./collisions.js" 
+import { paint_black, paint_squares, paint_score, paint_ball, paint_players, paint_pong_gameover, paint_stop, paint_loop } from "./paint.js"
+import "./events.js"
 
 class PongGame extends Component
 {
+    static instanceCount = 0;
     constructor()
     {
-        console.log('constructor PongGame');
+        PongGame.instanceCount++;
+        console.log(`Creating PongGame instance #${PongGame.instanceCount}`);
+        console.trace("PongGame constructor called");
         super('static/html/pong_game.html');
 
         this.pongSocket = null;
@@ -35,18 +42,57 @@ class PongGame extends Component
         this.animationID = null;
 
         this.ball = new Ball();
-        this.p1 = new PongPlayer([-this.width / 2 + this.p_width / 2 + this.p_offest, 0]);
-        this.p2 = new PongPlayer([this.width / 2 - this.p_width / 2 - this.p_offest, 0]);
+        this.p1 = new PongPlayer([0, 0]);
+        this.p2 = new PongPlayer([0, 0]);
     
         this.update = update;
         this.ft_start = ft_start;
         this.ft_pause = ft_pause;
         this.ft_stop = ft_stop;
+        this.initial_conditions = initial_conditions;
+        this.initial_ball = initial_ball;
+        this.update_positions = update_positions;
+        this.collision_2 = collision_2;
+        this.collision_1 = collision_1;
+        this.check_goal = check_goal;
+        this.collision_tb = collision_tb;
+        this.collisions = collisions;
+        this.paint_black = paint_black;
+        this.paint_squares = paint_squares;
+        this.paint_score = paint_score;
+        this.paint_ball = paint_ball;
+        this.paint_players = paint_players;
+        this.paint_pong_gameover = paint_pong_gameover;
+        this.paint_stop = paint_stop;
+        this.paint_loop = paint_loop;
     }
 
     onInit() {
         window.pong_game = this;
-        this.getElements(0)
+        this.getElements(0);
+
+        const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const stopBtn = document.getElementById('stop-btn');
+
+        if (startBtn) {
+            startBtn.addEventListener('click', () => {
+                this.sendGameControl('start');
+                this.ft_start();
+            });
+        }
+        if (pauseBtn) {
+            pauseBtn.addEventListener('click', () => {
+                this.sendGameControl('pause');
+                this.ft_pause();
+            });
+        }
+        if (stopBtn) {
+            stopBtn.addEventListener('click', () => {
+                this.sendGameControl('stop');
+                this.ft_stop();
+            });
+        }
     }
 
     getElements(attempts)
@@ -66,6 +112,7 @@ class PongGame extends Component
         const self = this;
 
         const pongSocket = new WebSocket(`ws://localhost:8000/ws/pong_game/`);
+        this.pongSocket = pongSocket;
 
         pongSocket.onopen = function() {
             console.log("Pong socket open");
@@ -81,16 +128,20 @@ class PongGame extends Component
 
         pongSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            console.log("Pong socket onmessage:", data);
+            //console.log("Pong socket onmessage:", data);
             self.handleSocketMessage(data);
         };
         
+        this.map = map;
         this.pong_ctx = map.getContext('2d');
         this.pong_ctx.fillStyle = 'black';
         this.pong_ctx.fillRect(0, 0, map.clientWidth, map.height);
 
         this.width = map.width;
         this.height = map.height;
+
+        this.p1.pos = [-this.width / 2 + this.p_width / 2 + this.p_offest, 0];
+        this.p2.pos = [this.width / 2 - this.p_width / 2 - this.p_offest, 0];
     }
 
     handleSocketMessage(data)
@@ -101,7 +152,7 @@ class PongGame extends Component
         {
             case 'player_assign':
                 this.playerNumber = data.player_number;
-                console.log('Assigned as player: ${this.playerNumber}');
+                console.log(`Assigned as player: ${this.playerNumber}`);
                 break;
 
             case 'game_ready':
@@ -109,7 +160,7 @@ class PongGame extends Component
                 this.gameReady = true;
                 break;
                 
-            case 'paddle_move':
+            case 'paddle_position':
                 const player = data.player;
                 const position = data.position;
 
@@ -123,13 +174,14 @@ class PongGame extends Component
             
             case 'ball_update':
                 if (this.playerNumber !== 1) {
-                    this.ariaBrailleLabel.pos = data.position;
+                    this.ball.pos = data.position;
+                    this.ball.vel_t = data.velocity;
                 }
                 break;
 
             case 'score_update':
-                this.p1.score = data.p1.score;
-                this.p2.score = data.p2.score;
+                this.p1.score = data.p1_score;
+                this.p2.score = data.p2_score;
                 break;
 
             case 'game_control':
@@ -152,7 +204,7 @@ class PongGame extends Component
         }
     }
 
-    sendPaddleMove(position) {
+    sendPaddlePosition(position) {
         if (!this.pongSocket || this.pongSocket.readyState !== WebSocket.OPEN) {
             console.error("Pong socket not connected");
             return;
@@ -164,13 +216,13 @@ class PongGame extends Component
         }
 
         this.pongSocket.send(JSON.stringify({
-            'type': 'paddle_move',
+            'type': 'paddle_position',
             'player': this.playerNumber,
             'position': position
         }))
     }
 
-    sendBallUpdate(position) {
+    sendBallUpdate(position, velocity) {
         if (!this.pongSocket || this.pongSocket.readyState !== WebSocket.OPEN) {
             console.error("Pong socket not connected");
             return;
@@ -181,7 +233,8 @@ class PongGame extends Component
 
         this.pongSocket.send(JSON.stringify({
             'type': 'ball_update',
-            'position': position
+            'position': position,
+            'velocity': velocity
         }))
     }
 

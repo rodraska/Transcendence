@@ -28,11 +28,13 @@ function setPage(url) {
 }
 
 window.addEventListener("load", () => {
+  console.log('new page load');
   const currentHash = window.location.hash || "/";
   setPage(currentHash);
 });
 
 window.addEventListener("hashchange", () => {
+  console.log('new hashchange');
   setPage(window.location.hash);
 });
 
