@@ -65,16 +65,21 @@ const check_goal = function()
     {
         this.p1.score += 1;
         this.isStart = false;
+        this.sendScoreUpdate(1, this.p1.score, this.p2.score);
         return (1);
     }
     if (this.ball.pos[0] + this.b_radius <=  - this.width / 2)
     {
         this.p2.score += 1;
         this.isStart = false;
+        this.sendScoreUpdate(1, this.p1.score, this.p2.score);
         return (1);
     }
     if (this.p1.score === this.win_score || this.p2.score === this.win_score)
+    {
+        this.sendScoreUpdate(2, this.p1.score, this.p2.score);
         return (2);
+    }
     return (0);
 }
 

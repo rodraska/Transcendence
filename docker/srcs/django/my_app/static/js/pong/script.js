@@ -7,9 +7,12 @@ const update = function()
     }
     else if (this.playerNumber === 2)
         this.sendPaddlePosition(this.p2.pos);
-    let x = this.check_goal();
-    if (x === 1) return (this.ft_start());
-    else if (x === 2) return (this.ft_stop());
+    if (this.playerNumber === 1)
+    {
+        let x = this.check_goal();
+        if (x === 1) return (this.ft_start());
+        else if (x === 2) return (this.ft_stop());
+    }
     this.update_positions();
     this.collisions();
     this.paint_loop();

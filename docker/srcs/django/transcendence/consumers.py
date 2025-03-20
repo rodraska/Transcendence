@@ -339,6 +339,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         elif message_type == 'ball_update':
             position = data.get('position')
+            velocity = data.get('velocity')
     
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -350,6 +351,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             )
         
         elif message_type == 'score_update':
+            signal = data.get('signal')
             p1_score = data.get('p1_score')
             p2_score = data.get('p2_score')
     
@@ -357,6 +359,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     'type': 'score_update',
+                    'signal': signal,
                     'p1_score': p1_score,
                     'p2_score': p2_score
                 }
@@ -381,12 +384,13 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'ball_update',
             'position': event['position'],
-            'velocity': event['velocity']
+                'velocity': event['velocity']
         }))
 
     async def score_update(self, event):
         await self.send(text_data=json.dumps({
             'type': 'score_update',
+            'signal': event['signal'],
             'p1_score': event['p1_score'],
             'p2_score': event['p2_score']
         }))

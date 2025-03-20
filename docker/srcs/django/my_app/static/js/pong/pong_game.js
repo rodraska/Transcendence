@@ -71,24 +71,20 @@ class PongGame extends Component
         window.pong_game = this;
         this.getElements(0);
 
-        const startBtn = document.getElementById('start-btn');
-        const pauseBtn = document.getElementById('pause-btn');
-        const stopBtn = document.getElementById('stop-btn');
-
-        if (startBtn) {
-            startBtn.addEventListener('click', () => {
+        if (this.startBtn) {
+            this.startBtn.addEventListener('click', () => {
                 this.sendGameControl('start');
                 this.ft_start();
             });
         }
-        if (pauseBtn) {
-            pauseBtn.addEventListener('click', () => {
+        if (this.pauseBtn) {
+            this.pauseBtn.addEventListener('click', () => {
                 this.sendGameControl('pause');
                 this.ft_pause();
             });
         }
-        if (stopBtn) {
-            stopBtn.addEventListener('click', () => {
+        if (this.stopBtn) {
+            this.stopBtn.addEventListener('click', () => {
                 this.sendGameControl('stop');
                 this.ft_stop();
             });
@@ -98,16 +94,19 @@ class PongGame extends Component
     getElements(attempts)
     {
         const map = document.getElementById('pong');
-        if (!map) {
-            if (attempts < 5) {
+        const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        if (!map || !startBtn || !pauseBtn || !stopBtn) {
+            if (attempts < 10) {
                 setTimeout(() => this.getElements(attempts + 1), 300)
             }
             return
         }
-        this.setupPong(map)
+        this.setupPong(map, startBtn, pauseBtn, stopBtn);
     }
 
-    setupPong(map)
+    setupPong(map, startBtn, pauseBtn, stopBtn)
     {
         const self = this;
 
@@ -131,7 +130,11 @@ class PongGame extends Component
             //console.log("Pong socket onmessage:", data);
             self.handleSocketMessage(data);
         };
-        
+
+
+        this.startBtn = startBtn;
+        this.pauseBtn = pauseBtn;
+        this.stopBtn = stopBtn;
         this.map = map;
         this.pong_ctx = map.getContext('2d');
         this.pong_ctx.fillStyle = 'black';
@@ -180,8 +183,13 @@ class PongGame extends Component
                 break;
 
             case 'score_update':
+                
                 this.p1.score = data.p1_score;
                 this.p2.score = data.p2_score;
+                if (data.signal == 1)
+                    this.ft_start();
+                else if (data.signal == 2)
+                    this.ft_stop()
                 break;
 
             case 'game_control':
@@ -238,7 +246,7 @@ class PongGame extends Component
         }))
     }
 
-    sendScoreUpdate(p1Score, p2Score) {
+    sendScoreUpdate(signal, p1Score, p2Score) {
         if (!this.pongSocket || this.pongSocket.readyState !== WebSocket.OPEN) {
             console.error("Pong socket not connected");
             return;
@@ -250,6 +258,7 @@ class PongGame extends Component
 
         this.pongSocket.send(JSON.stringify({
             'type': 'score_update',
+            'signal': signal,
             'p1_score': p1Score,
             'p2_score': p2Score
         }))
