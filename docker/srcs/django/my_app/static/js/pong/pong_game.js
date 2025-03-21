@@ -131,7 +131,6 @@ class PongGame extends Component
             self.handleSocketMessage(data);
         };
 
-
         this.startBtn = startBtn;
         this.pauseBtn = pauseBtn;
         this.stopBtn = stopBtn;

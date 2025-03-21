@@ -1,23 +1,23 @@
-FtGame.paint_gg = function()
+const paint_gg = function()
 {
-    ctx.fillStyle = "rgba(64, 64, 64, 0.8)";
-    ctx.fillRect(offset, height / 2 - 30, width - offset, 38);
-    ctx.font = "20px 'Press Start 2P', cursive";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "bottom";
+    this.ctx.fillStyle = "rgba(64, 64, 64, 0.8)";
+    this.ctx.fillRect(this.offset, this.height / 2 - 30, this.width - this.offset, 38);
+    this.ctx.font = "20px 'Press Start 2P', cursive";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "bottom";
     if (this.game_winner == 0)
     {
-        ctx.fillStyle = 'white';
-        ctx.fillText("Player " + this.round_winner + " Wins This Round", width / 2, height / 2);
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText("Player " + this.round_winner + " Wins This Round", this.width / 2, this.height / 2);
     }
     else
     {
-        ctx.fillStyle = this.players[this.game_winner - 1].color;
-        ctx.fillText("Player " + this.game_winner + " Wins The Game", width / 2, height / 2);
+        this.ctx.fillStyle = this.players[this.game_winner - 1].color;
+        this.ctx.fillText("Player " + this.game_winner + " Wins The Game", this.width / 2, this.height / 2);
     }    
 }
 
-FtGame.final_paint = function()
+const final_paint = function()
 {
     this.reset_paint();
     this.gamePaintHist();
@@ -27,35 +27,37 @@ FtGame.final_paint = function()
     this.paint_gg();
 }
 
-FtGame.paint_line = function(x_i, y_i, x_f, y_f)
+const paint_line = function(x_i, y_i, x_f, y_f)
 {
-    ctx.beginPath();
-    ctx.moveTo(x_i, y_i);
-    ctx.lineTo(x_f, y_f);
-    ctx.stroke();
+    this.ctx.beginPath();
+    this.ctx.moveTo(x_i, y_i);
+    this.ctx.lineTo(x_f, y_f);
+    this.ctx.stroke();
 }
 
-FtGame.paint_curve = function(x_i, y_i, x_m, y_m, x_f, y_f, w)
+const paint_curve = function(x_i, y_i, x_m, y_m, x_f, y_f, w)
 {
-    ctx.beginPath();
-    ctx.moveTo(x_i, y_i);
-    ctx.quadraticCurveTo(x_m, y_m, x_f, y_f);
-    ctx.lineWidth = w;
-    ctx.stroke();
+    this.ctx.beginPath();
+    this.ctx.moveTo(x_i, y_i);
+    this.ctx.quadraticCurveTo(x_m, y_m, x_f, y_f);
+    this.ctx.lineWidth = w;
+    this.ctx.stroke();
 }
 
-FtGame.paint_offset = function()
+const paint_offset = function()
 {
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, offset, canvas.height);
-    ctx.fillRect(canvas.width, 0, -offset, canvas.height);
-    ctx.fillRect(0, 0, canvas.width, offset);
-    ctx.fillRect(0, canvas.height, canvas.width, -offset);
+    this.ctx.fillStyle = 'white';
+    this.ctx.fillRect(0, 0, this.offset, this.height);
+    this.ctx.fillRect(this.width, 0, -this.offset, this.height);
+    this.ctx.fillRect(0, 0, this.width, this.offset);
+    this.ctx.fillRect(0, this.height, this.width, -this.offset);
 }
 
-FtGame.reset_paint = function()
+const reset_paint = function()
 {
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0 , width, height);
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.ctx.fillStyle = 'black';
+    this.ctx.fillRect(0, 0 , this.width, this.height);
 }
+
+export { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_paint }

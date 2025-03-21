@@ -166,7 +166,7 @@ const FtPower = PowerUp.prototype;
 
 FtPower.paint_powerup = function()
 {
-    ctx.fillStyle = game.powerColors[this.id];
+    ctx.fillStyle = this.powerColors[this.id];
     ctx.beginPath();
     ctx.arc((this.pos[0]) + width / 2, (this.pos[1]) + height / 2, 20, 0, 2 * Math.PI);
     ctx.fill();

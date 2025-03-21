@@ -25,14 +25,14 @@ FtPlayer.generalized_coordinates = function()
 
 FtPlayer.holes = function()
 {
-    if (game.currentIters.begin < 160 || game.currentIters[10] > 0 || this.god == true || this.stop == true) return ;
+    if (this.currentIters.begin < 160 || this.currentIters[10] > 0 || this.god == true || this.stop == true) return ;
     if (this.hole_iter > 0)
     {
         this.hole_iter--;
     }
     else
     {  
-        let ratio = game.baseValues.vel / this.vel_t;
+        let ratio = this.baseValues.vel / this.vel_t;
         if (Math.floor(Math.random() * this.hole_rate * ratio) == 0)
         {
             this.hole_iter = 12 * ratio;
@@ -42,10 +42,10 @@ FtPlayer.holes = function()
 
 FtPlayer.processCollision = function()
 {
-    game.give_points(this.id);
+    this.give_points(this.id);
     this.stop = true;
-    game.dead++;
-    if (game.dead >= game.numberPlayers - 1) game.roundWinner();
+    this.dead++;
+    if (this.dead >= this.numberPlayers - 1) this.roundWinner();
     this.powers = [];
 }
 
@@ -56,9 +56,9 @@ FtPlayer.checkCollision = function()
     {
         let x1 = Math.floor(this.truepos[0] + this.radius * this._cos(1 / 3 * i));
         let y1 = Math.floor(this.truepos[1] + this.radius * this._sin(1 / 3 * i));
-        for (let p = 0; p < game.players.length; p++)
+        for (let p = 0; p < this.players.length; p++)
         {
-            if (game.checkRGB([x1, y1], game.players[p].rgb))
+            if (this.checkRGB([x1, y1], this.players[p].rgb))
             {
                 console.log(i);
                 console.log('collision regular');
@@ -66,7 +66,7 @@ FtPlayer.checkCollision = function()
                 return ;
             }
         }
-        if (game.checkRGB([x1, y1], [255, 255, 255]))
+        if (this.checkRGB([x1, y1], [255, 255, 255]))
         {
             console.log('collision white');
             this.processCollision();
