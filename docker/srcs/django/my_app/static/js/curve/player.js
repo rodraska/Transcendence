@@ -1,4 +1,4 @@
-class CurvePlayer
+class Player
 {
     back = [0, 0];
     mid = [0, 0];
@@ -27,4 +27,4 @@ class CurvePlayer
     }
 }
 
-const FtCurvePlayer = CurvePlayer.prototype;
+const FtPlayer = Player.prototype;

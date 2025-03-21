@@ -139,72 +139,6 @@ class PowerBigTurn extends PowerUp
     }
 }
 
-class PowerReverse extends PowerUp
-{
-    constructor(id, pos, iters, player)
-    {
-        super(id, pos, iters, player);
-    }
-    powerApply() 
-    {
-        let tmp = this.player.right;
-        this.player.right = this.player.left;
-        this.player.left = tmp;
-    }
-    powerRemove() 
-    {
-        let tmp = this.player.right;
-        this.player.right = this.player.left;
-        this.player.left = tmp;
-    }
-}
-
-class PowerCheese extends PowerUp
-{
-    constructor(id, pos, iters, player)
-    {
-        super(id, pos, iters, player);
-    }
-    powerApply() 
-    {
-        this.player.hole_rate = 4
-    }
-    powerRemove() 
-    {
-        this.player.hole_rate = game.baseValues.hole;
-    }
-}
-
-class PowerBulb extends PowerUp
-{
-    constructor(id, pos, iters, player)
-    {
-        super(id, pos, iters, player);
-    }
-    powerApply() {}
-    powerRemove() {}
-}
-
-class PowerWalls extends PowerUp
-{
-    constructor(id, pos, iters, player)
-    {
-        super(id, pos, iters, player);
-    }
-    powerApply() {}
-    powerRemove() {}
-}
-
-class PowerMore extends PowerUp
-{
-    constructor(id, pos, iters, player)
-    {
-        super(id, pos, iters, player);
-    }
-    powerApply() {}
-    powerRemove() {}
-}
-
 class PowerRubber extends PowerUp
 {
     constructor(id, pos, iters, player)
@@ -215,7 +149,7 @@ class PowerRubber extends PowerUp
     powerRemove() {}
 }
 
-FtCurveGame.powerConstructors = {
+FtGame.powerConstructors = {
     1: PowerSpeed,
     2: PowerSlow,
     3: PowerThin,
@@ -225,12 +159,7 @@ FtCurveGame.powerConstructors = {
     7: PowerSlow,
     8: PowerBig,
     9: PowerBigTurn,
-    10: PowerReverse,
-    11: PowerCheese,
-    12: PowerBulb,
-    13: PowerWalls,
-    14: PowerMore,
-    15: PowerRubber
+    10: PowerRubber
 }
 
 const FtPower = PowerUp.prototype; 
@@ -243,9 +172,9 @@ FtPower.paint_powerup = function()
     ctx.fill();
 }
 
-FtCurveGame.new_powerup = function()
+FtGame.new_powerup = function()
 {
-    drop = (game.currentIters[14] == 0) ? 601 : 301;
+    drop = 301;
     if (Math.floor(Math.random() * drop) > 1) return;
     outer : while (1)
     {
@@ -257,9 +186,8 @@ FtCurveGame.new_powerup = function()
             if (this.dist([x, y], this.powers[j].pos) < 20) {continue outer};
         break ;
     }
-    //id = Math.floor(Math.random() * 15) + 1; //all the power ups
+    id = Math.floor(Math.random() * 10) + 1; //all the power ups
     //id = Math.floor(Math.random() * 2); //specific range
-    id = 11; //specific powerup
-    //this.powers.push(new PowerUp(id, [x, y], this.baseIters[id]));
-    this.powers.push(new this.powerConstructors[15](id, [x, y], this.baseIters[id], null));
+    //id = 11; //specific powerup
+    this.powers.push(new this.powerConstructors[10](id, [x, y], this.baseIters[id], null));
 }

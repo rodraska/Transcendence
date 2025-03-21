@@ -1,4 +1,4 @@
-FtCurvePlayer.paint_player = function()
+FtPlayer.paint_player = function()
 {
     ctx.fillStyle = 'rgb(' + (this.rgb[0]) + ',' + (this.rgb[1]) + ',' + (this.rgb[2]) + ',' + (1) + ')';
     ctx.beginPath();
@@ -7,7 +7,7 @@ FtCurvePlayer.paint_player = function()
     ctx.fill();
 }
 
-FtCurvePlayer.paint_hist = function()
+FtPlayer.paint_hist = function()
 {
     if (this.hole_iter > 0 || this.god == true) return ;
     let x_i = this.back[0];
@@ -21,7 +21,7 @@ FtCurvePlayer.paint_hist = function()
     game.paint_curve(x_i, y_i, x_m, y_m, x_f, y_f, w);
 }
 
-FtCurvePlayer.paint_arcs = function()
+FtPlayer.paint_arcs = function()
 {
     for (let i = 0; i < this.powers.length; i++)
     {
@@ -42,7 +42,7 @@ FtCurvePlayer.paint_arcs = function()
     }
 }
 
-FtCurvePlayer.paint_arrow = function()
+FtPlayer.paint_arrow = function()
 {
     ctx.fillStyle = this.color;
     ctx.strokeStyle = this.color;

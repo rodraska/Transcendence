@@ -1,7 +1,6 @@
-class CurveGame
+class Game
 {
-    isActive = false;
-    numberCurvePlayers = 2;
+    numberPlayers = 2;
     players = [];
     powers = [];
     round = 1;
@@ -45,22 +44,14 @@ class CurveGame
         7: 300,
         8: 420,
         9: 300,
-        10: 300,
-        11: 600,
-        12: 600,
-        13: 600,
-        14: 600,
-        15: 25,
+        10: 25
     }
 
     currentIters = {
         begin: 0,
         end: 0,
         load: 0,
-        12: 0,
-        13: 0,
-        14: 0,
-        15: 0
+        10: 0
     }
     
     playerColors = {
@@ -147,7 +138,7 @@ class CurveGame
         }
     } 
 
-    gamePaintCurvePlayer()
+    gamePaintPlayer()
     {
         for (let i = 0; i < this.players.length; i++)
         {
@@ -190,6 +181,31 @@ class CurveGame
     }
 }
 
-const FtCurveGame = CurveGame.prototype;
+const FtGame = Game.prototype;
 
-game = new CurveGame();
+game = new Game();
+
+playersPlay = document.getElementById('playersPlay');
+playersPlay.textContent = game.numberPlayers + ' Players';
+playerList = document.getElementById('playerList');
+for (let i = 0; i < game.numberPlayers; i++)
+{
+    playerNumber = i + 1;
+    //Create div element
+    playerDiv = document.createElement('div');
+    playerDiv.style.display = 'flex';
+    //Player Name
+    playerName = document.createElement('p');
+    playerName.textContent = 'Player ' + playerNumber;
+    playerName.style.justifyContent = 'left';
+    playerName.style.flexGrow = '1';
+    //Player Score
+    playerScore = document.createElement('p');
+    playerScore.textContent = '0';
+    playerScore.id = 'score' + playerNumber;
+    playerScore.style.justifyContent = 'left';
+    playerScore.style.flexGrow = '1';
+    playerDiv.appendChild(playerName);
+    playerDiv.appendChild(playerScore);
+    playerList.appendChild(playerDiv);
+}
