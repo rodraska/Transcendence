@@ -1,4 +1,7 @@
 import { _cos, _sin, trueIndex, check_powerup, count_powerup, hard_boundaries } from "./player_utils.js"
+import { paint_player, paint_hist, paint_arcs, paint_arrow } from "./player_paint.js"
+import { save_hist, generalized_coordinates, holes, processCollision, checkCollision } from "./player_iteration.js"
+import { pick_powerups, give_powerup, iter_power } from "./player_power.js"
 
 class Player
 {
@@ -19,6 +22,18 @@ class Player
         this.check_powerup = check_powerup;
         this.count_powerup = count_powerup;
         this.hard_boundaries = hard_boundaries;
+        this.paint_player = paint_player;
+        this.paint_hist = paint_hist;
+        this.paint_arcs = paint_arcs;
+        this.paint_arrow = paint_arrow;
+        this.save_hist = save_hist;
+        this.generalized_coordinates = generalized_coordinates;
+        this.holes = holes;
+        this.processCollision = processCollision;
+        this.checkCollision = checkCollision;
+        this.pick_powerups = pick_powerups;
+        this.give_powerup = give_powerup;
+        this.iter_power = iter_power;
 
         this.id = id;
         this.color = color;

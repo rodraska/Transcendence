@@ -7,7 +7,7 @@ const ft_round = function()
     document.getElementById("round").innerHTML = "Round " + this.round;
     this.powers = [];
     this.players = [];
-    ctx.reset();
+    this.ctx.reset();
     this.ft_start();
 }
 

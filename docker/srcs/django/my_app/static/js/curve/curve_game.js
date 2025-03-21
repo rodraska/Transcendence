@@ -3,6 +3,9 @@ import { players_free, begin_iter, curr_iter, end_iter, players_play, ft_start, 
 import { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_paint } from "./paint.js"
 import { ft_round, players_spawn, players_load, players_still, roundWinner } from "./round.js"
 import { gameCoordinates, gameSaveHist, gameHoles, gamePowers, gameCheckCollision, gamePaintHist, gamePaintPlayer, gamePaintArcs, gamePaintArrows, gamePaintPowers, saveCanvas, restoreCanvas } from "./game.js"
+import { dist, give_points, checkRGB } from "./utils.js"
+import { new_powerup } from "./powerup.js"
+import "./keys.js"
 
 class CurveGame extends Component
 {
@@ -131,6 +134,10 @@ class CurveGame extends Component
         this.gamePaintPowers = gamePaintPowers;
         this.saveCanvas = saveCanvas;
         this.restoreCanvas = restoreCanvas;
+        this.dist = dist;
+        this.give_points = give_points;
+        this.checkRGB = checkRGB;
+        this.new_powerup = new_powerup;
     }
 
     onInit() {

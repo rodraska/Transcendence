@@ -149,7 +149,7 @@ class PowerRubber extends PowerUp
     powerRemove() {}
 }
 
-FtGame.powerConstructors = {
+const powerConstructors = { //FtGame
     1: PowerSpeed,
     2: PowerSlow,
     3: PowerThin,
@@ -172,22 +172,24 @@ FtPower.paint_powerup = function()
     ctx.fill();
 }
 
-FtGame.new_powerup = function()
+const new_powerup = function()
 {
-    drop = 301;
+    let drop = 3001;
     if (Math.floor(Math.random() * drop) > 1) return;
     outer : while (1)
     {
-        x = Math.floor(Math.random() * width) - width / 2;
-        y = Math.floor(Math.random() * height) - height / 2;
+        let x = Math.floor(Math.random() * this.width) - width / 2;
+        let y = Math.floor(Math.random() * this.height) - height / 2;
         for (let i = 0; i < this.players.length; i++)
             if (this.dist([x, y], this.players[i].pos) < 50) {continue outer};
         for (let j = 0; j < this.powers.length; j++)
             if (this.dist([x, y], this.powers[j].pos) < 20) {continue outer};
         break ;
     }
-    id = Math.floor(Math.random() * 10) + 1; //all the power ups
+    let id = Math.floor(Math.random() * 10) + 1; //all the power ups
     //id = Math.floor(Math.random() * 2); //specific range
     //id = 11; //specific powerup
     this.powers.push(new this.powerConstructors[10](id, [x, y], this.baseIters[id], null));
 }
+
+export { new_powerup }

@@ -32,10 +32,10 @@ const count_powerup = function(id)
 const hard_boundaries = function()
 {
     var coords = this.pos;
-    if (coords[0] >= width / 2 - offset) return (1);
-    if (coords[0] <= - width / 2 + offset) return (1);
-    if (coords[1] >= height / 2 - offset) return (1);
-    if (coords[1] <= - height / 2 + offset) return (1);
+    if (coords[0] >= this.game.width / 2 - this.game.offset) return (1);
+    if (coords[0] <= - this.game.width / 2 + this.game.offset) return (1);
+    if (coords[1] >= this.game.height / 2 - this.game.offset) return (1);
+    if (coords[1] <= - this.game.height / 2 + this.game.offset) return (1);
     return (0);
 }
 

@@ -1,4 +1,4 @@
-FtPlayer.pick_powerups = function()
+const pick_powerups = function()
 {
     for (let i = 0; i < this.powers.length; i++)
     {
@@ -13,7 +13,7 @@ FtPlayer.pick_powerups = function()
     this.iter_power();
 }
 
-FtPlayer.give_powerup = function(id)
+const give_powerup = function(id)
 {
     if (id <= 4) //give me
     {
@@ -48,7 +48,7 @@ FtPlayer.give_powerup = function(id)
     }
 }
 
-FtPlayer.iter_power = function()
+const iter_power = function()
 {
     for (let i = 0; i < this.powers.length; i++)
     {
@@ -64,3 +64,5 @@ FtPlayer.iter_power = function()
         curr_power.iters--;
     }
 }
+
+export { pick_powerups, give_powerup, iter_power }
