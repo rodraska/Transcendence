@@ -11,14 +11,35 @@ class UserProfile extends Component
 
 		console.log("UserProfile carregado!");
 
-		document.getElementById('dname').value = window.loggedInUserName;
+		/* document.getElementById('dname').value = window.loggedInUserName;
 		document.getElementById('name1').value = window.loggedInFirstName || "";
     	document.getElementById('name2').value = window.loggedInLastName || "";
    		document.getElementById('email').value = window.loggedInEmail;
 
 		document.getElementById('profileImage').src = window.loggedInAvatarUrl || 
-		   "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
+		   "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg"; */
 
+		
+    // Buscar os dados do usuário pelo endpoint
+    fetch(`/api/user/${window.loggedInUserId}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error("Erro ao obter dados do usuário:", data.error);
+                return;
+            }
+
+            // Preenchendo os campos do formulário com os dados recebidos
+            document.getElementById('dname').value = data.username || "";
+            document.getElementById('name1').value = data.first_name || "";
+            document.getElementById('name2').value = data.last_name || "";
+            document.getElementById('email').value = data.email || "";
+
+            // Atualizar a imagem de perfil
+            document.getElementById('profileImage').src = data.avatar_url || 
+                "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
+        })
+        .catch(error => console.error("Error loading user:", error));
 
 	// Adiciona evento ao botão de salvar
     document.querySelector("form").addEventListener("submit", this.updateProfile.bind(this));
@@ -29,7 +50,7 @@ class UserProfile extends Component
 
 		// Capturar valores do formulário
 		const updatedData = {
-			username: document.getElementById("dname").value,  // Django usa 'username' em vez de 'displayName'
+			username: document.getElementById("dname").value, 
 			first_name: document.getElementById("name1").value,
 			last_name: document.getElementById("name2").value,
 			email: document.getElementById("email").value

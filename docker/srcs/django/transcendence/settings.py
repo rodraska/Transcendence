@@ -56,7 +56,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-SITE_ID = 4
+SITE_ID = 5
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

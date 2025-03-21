@@ -35,7 +35,7 @@ class HeaderBar extends Component {
       });
     }
 
-    const friendsButton = this.querySelector("#friends-button");
+    const friendsButton = this.querySelector("#friendbtn");
     if (friendsButton) {
       friendsButton.addEventListener("click", () => {
         Route.go("/friends");
