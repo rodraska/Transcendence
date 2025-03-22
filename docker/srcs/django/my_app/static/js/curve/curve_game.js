@@ -284,6 +284,20 @@ class CurveGame extends Component
                 this.gameReady = true;
                 break;
 
+            case 'player_state':
+                const player_pos = data.player_pos;
+                const player_truepos = data.player_truepos;
+                const player_number = data.player_number;
+                if (player_number === this.playerNumber) {
+                    //console.log('receive same player');
+                }
+                else {
+                    //console.log('receive different player');
+                    this.players[player_number - 1].pos = player_pos;
+                    this.players[player_number - 1].truepos = player_truepos;
+                }
+                break;
+
             case 'game_control':
                 const action = data.action;
                 switch (action) {
@@ -302,6 +316,26 @@ class CurveGame extends Component
             default:
                 console.log('Unkown message type:', type);
         }
+    }
+
+    sendPlayerState(player) {
+        if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
+            console.error("Curve socket not connected");
+            return;
+        }
+
+        if (!this.playerNumber) {
+            console.error("Player number not assigned");
+            return;
+        }
+
+        this.curveSocket.send(JSON.stringify({
+            'type': 'player_state',
+            'player_pos': player.pos,
+            'player_truepos': player.truepos,
+            'player_number': player.id
+
+        }))
     }
 
     sendGameControl(action) {

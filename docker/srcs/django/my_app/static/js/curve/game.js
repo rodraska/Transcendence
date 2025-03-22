@@ -2,7 +2,8 @@ const gameCoordinates = function()
 {
     for (let i = 0; i < this.players.length; i++)
     {
-        this.players[i].generalized_coordinates();
+        if (i == this.playerNumber - 1)
+            this.players[i].generalized_coordinates();
     }
 }
 

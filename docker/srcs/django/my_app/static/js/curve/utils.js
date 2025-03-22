@@ -14,7 +14,7 @@ const give_points = function(id)
 
 const new_powerup = function()
 {
-    let drop = 301;
+    let drop = 601;
     if (Math.floor(Math.random() * drop) > 1) return;
     outer : while (1)
     {
