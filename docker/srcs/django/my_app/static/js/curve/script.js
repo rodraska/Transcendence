@@ -58,7 +58,8 @@ const players_play = function()
 
 const ft_start = function()
 {
-    console.log('ft_start');
+    //console.log('ft_start');
+    console.trace("ft start called");
     this.reset_paint();
     this.players_spawn();
     this.players_load();

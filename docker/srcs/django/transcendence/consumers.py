@@ -472,6 +472,14 @@ class CurveConsumer(AsyncWebsocketConsumer):
                 }
             )
 
+    async def game_control(self, event):
+        action = event.get('action')
+    
+        await self.send(text_data=json.dumps({
+            'type': 'game_control',
+            'action': action
+        }))
+
     async def player_assign(self, event):
         await self.send(text_data=json.dumps({
             'type': 'player_assign',

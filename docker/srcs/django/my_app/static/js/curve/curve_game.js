@@ -13,6 +13,10 @@ class CurveGame extends Component
     {
         super('static/html/curve_game.html');
 
+        this.curveSocket = null;
+        this.playerNumber = null;
+        this.gameReady = null;
+
         this.numberPlayers = 2;
         this.players = [];
         this.powers = [];
@@ -160,20 +164,17 @@ class CurveGame extends Component
 
         if (this.startBtn) {
             this.startBtn.addEventListener('click', () => {
-                //this.sendGameControl('start');
-                this.ft_start();
+                this.sendGameControl('start');
             });
         }
         if (this.pauseBtn) {
             this.pauseBtn.addEventListener('click', () => {
-                //this.sendGameControl('pause');
-                this.ft_pause();
+                this.sendGameControl('pause');
             });
         }
         if (this.stopBtn) {
             this.stopBtn.addEventListener('click', () => {
-                //this.sendGameControl('stop');
-                this.ft_stop();
+                this.sendGameControl('stop');
             });
         }
     }
@@ -281,6 +282,21 @@ class CurveGame extends Component
             case 'game_ready':
                 console.log('Game is ready to start');
                 this.gameReady = true;
+                break;
+
+            case 'game_control':
+                const action = data.action;
+                switch (action) {
+                    case 'start':
+                        this.ft_start();
+                        break;
+                    case 'pause':
+                        this.ft_pause();
+                        break;
+                    case 'stop':
+                        this.ft_stop();
+                        break;
+                }
                 break;
                 
             default:

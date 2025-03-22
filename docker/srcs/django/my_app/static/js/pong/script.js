@@ -22,6 +22,7 @@ const update = function()
 const ft_start = function()
 {
     console.log('ft_start');
+    console.trace('ft start called');
     if (this.isPaused === true) return (this.ft_pause());
     if (this.isStart === true) return ;
     this.isStart = true;

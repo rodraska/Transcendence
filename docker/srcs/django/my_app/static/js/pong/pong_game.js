@@ -74,19 +74,16 @@ class PongGame extends Component
         if (this.startBtn) {
             this.startBtn.addEventListener('click', () => {
                 this.sendGameControl('start');
-                this.ft_start();
             });
         }
         if (this.pauseBtn) {
             this.pauseBtn.addEventListener('click', () => {
                 this.sendGameControl('pause');
-                this.ft_pause();
             });
         }
         if (this.stopBtn) {
             this.stopBtn.addEventListener('click', () => {
                 this.sendGameControl('stop');
-                this.ft_stop();
             });
         }
     }
