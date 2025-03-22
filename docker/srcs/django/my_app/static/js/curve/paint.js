@@ -60,4 +60,12 @@ const reset_paint = function()
     this.ctx.fillRect(0, 0 , this.width, this.height);
 }
 
-export { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_paint }
+const paint_powerup = function(power)
+    {
+        this.ctx.fillStyle = this.powerColors[power.id];
+        this.ctx.beginPath();
+        this.ctx.arc((power.pos[0]) + this.width / 2, (power.pos[1]) + this.height / 2, 20, 0, 2 * Math.PI);
+        this.ctx.fill();
+    }
+
+export { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_paint, paint_powerup }

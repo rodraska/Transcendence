@@ -12,6 +12,26 @@ const give_points = function(id)
     }
 }
 
+const new_powerup = function()
+{
+    let drop = 301;
+    if (Math.floor(Math.random() * drop) > 1) return;
+    outer : while (1)
+    {
+        var x = Math.floor(Math.random() * this.width) - this.width / 2;
+        var y = Math.floor(Math.random() * this.height) - this.height / 2;
+        for (let i = 0; i < this.players.length; i++)
+            if (this.dist([x, y], this.players[i].pos) < 50) {continue outer};
+        for (let j = 0; j < this.powers.length; j++)
+            if (this.dist([x, y], this.powers[j].pos) < 20) {continue outer};
+        break ;
+    }
+    let id = Math.floor(Math.random() * 10) + 1; //all the power ups
+    //id = Math.floor(Math.random() * 2); //specific range
+    //id = 11; //specific powerup
+    this.powers.push(new this.powerConstructors[10](id, [x, y], this.baseIters[id], null));
+}
+
 const checkRGB = function(pos, rgb)
 {
     var posData = this.ctx.getImageData(pos[0], pos[1], 1, 1).data;
@@ -19,4 +39,4 @@ const checkRGB = function(pos, rgb)
     return (1);
 }
 
-export { dist, give_points, checkRGB }
+export { dist, give_points, new_powerup, checkRGB }

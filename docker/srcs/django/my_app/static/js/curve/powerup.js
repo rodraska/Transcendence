@@ -149,47 +149,4 @@ class PowerRubber extends PowerUp
     powerRemove() {}
 }
 
-const powerConstructors = { //FtGame
-    1: PowerSpeed,
-    2: PowerSlow,
-    3: PowerThin,
-    4: PowerSmallTurn,
-    5: PowerGod,
-    6: PowerSpeed,
-    7: PowerSlow,
-    8: PowerBig,
-    9: PowerBigTurn,
-    10: PowerRubber
-}
-
-const FtPower = PowerUp.prototype; 
-
-FtPower.paint_powerup = function()
-{
-    ctx.fillStyle = this.powerColors[this.id];
-    ctx.beginPath();
-    ctx.arc((this.pos[0]) + width / 2, (this.pos[1]) + height / 2, 20, 0, 2 * Math.PI);
-    ctx.fill();
-}
-
-const new_powerup = function()
-{
-    let drop = 3001;
-    if (Math.floor(Math.random() * drop) > 1) return;
-    outer : while (1)
-    {
-        let x = Math.floor(Math.random() * this.width) - width / 2;
-        let y = Math.floor(Math.random() * this.height) - height / 2;
-        for (let i = 0; i < this.players.length; i++)
-            if (this.dist([x, y], this.players[i].pos) < 50) {continue outer};
-        for (let j = 0; j < this.powers.length; j++)
-            if (this.dist([x, y], this.powers[j].pos) < 20) {continue outer};
-        break ;
-    }
-    let id = Math.floor(Math.random() * 10) + 1; //all the power ups
-    //id = Math.floor(Math.random() * 2); //specific range
-    //id = 11; //specific powerup
-    this.powers.push(new this.powerConstructors[10](id, [x, y], this.baseIters[id], null));
-}
-
-export { new_powerup }
+export { PowerUp, PowerSpeed, PowerSlow, PowerThin, PowerSmallTurn, PowerGod, PowerBig, PowerBigTurn, PowerRubber }

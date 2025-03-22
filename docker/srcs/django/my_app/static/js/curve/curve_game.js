@@ -1,10 +1,10 @@
 import Component from "../spa/component.js"
 import { players_free, begin_iter, curr_iter, end_iter, players_play, ft_start, ft_pause, ft_stop } from "./script.js"
-import { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_paint } from "./paint.js"
+import { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_paint, paint_powerup } from "./paint.js"
 import { ft_round, players_spawn, players_load, players_still, roundWinner } from "./round.js"
 import { gameCoordinates, gameSaveHist, gameHoles, gamePowers, gameCheckCollision, gamePaintHist, gamePaintPlayer, gamePaintArcs, gamePaintArrows, gamePaintPowers, saveCanvas, restoreCanvas } from "./game.js"
-import { dist, give_points, checkRGB } from "./utils.js"
-import { new_powerup } from "./powerup.js"
+import { dist, give_points, new_powerup, checkRGB } from "./utils.js"
+import { PowerUp, PowerSpeed, PowerSlow, PowerThin, PowerSmallTurn, PowerGod, PowerBig, PowerBigTurn, PowerRubber } from "./powerup.js"
 import "./keys.js"
 
 class CurveGame extends Component
@@ -27,6 +27,19 @@ class CurveGame extends Component
         vel: 1.75,
         turn: 0.015,
         hole: 101
+        }
+
+        this.powerConstructors = { //FtGame
+            1: PowerSpeed,
+            2: PowerSlow,
+            3: PowerThin,
+            4: PowerSmallTurn,
+            5: PowerGod,
+            6: PowerSpeed,
+            7: PowerSlow,
+            8: PowerBig,
+            9: PowerBigTurn,
+            10: PowerRubber
         }
 
         this.powerColors = {
@@ -117,6 +130,7 @@ class CurveGame extends Component
         this.paint_curve = paint_curve;
         this.paint_offset = paint_offset;
         this.reset_paint = reset_paint;
+        this.paint_powerup = paint_powerup;
         this.ft_round = ft_round;
         this.players_spawn = players_spawn;
         this.players_load = players_load;

@@ -30,7 +30,7 @@ const paint_arcs = function()
         this.game.ctx.lineWidth = 4;
         if (curr_power.iters <= 0) continue ;
         this.game.ctx.beginPath();
-        this.game.ctx.arc(this.truepos[0], this.truepos[1], this.radius + this.baseValues.radius * 2 + i * this.baseValues.radius * 1.2, this.theta, this.theta + Math.PI * 2 * curr_power.iters / this.baseIters[curr_power.id], false);
+        this.game.ctx.arc(this.truepos[0], this.truepos[1], this.radius + this.game.baseValues.radius * 2 + i * this.game.baseValues.radius * 1.2, this.theta, this.theta + Math.PI * 2 * curr_power.iters / this.game.baseIters[curr_power.id], false);
         this.game.ctx.stroke();
         if (curr_power.id == 10)
         {

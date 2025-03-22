@@ -1,17 +1,3 @@
-/*const canvas = document.getElementById('curve');
-const ctx = canvas.getContext('2d');
-ctx.fillStyle = 'black';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-s_canvas = document.createElement("canvas");
-s_canvas.width = canvas.width;
-s_canvas.height = canvas.height;
-s_ctx = s_canvas.getContext('2d');
-
-const offset = 4;
-const width = canvas.width;
-const height = canvas.height;*/
-
 const players_free = function()
 {
     if (this.currentIters.begin == 150)
@@ -33,7 +19,7 @@ const players_free = function()
 
 const begin_iter = function()
 {
-    if (this.currentIters[10] > 0) this.currentIters[i]--;
+    if (this.currentIters[10] > 0) this.currentIters[10]--;
     this.paint_offset();
     this.new_powerup();
     this.restoreCanvas();
@@ -45,7 +31,7 @@ const curr_iter = function()
     this.gameCoordinates();
     this.gameHoles();
     this.gamePowers();
-    this.gameCheckCollision();
+    //this.gameCheckCollision();
     this.gamePaintHist();
     this.saveCanvas();
     this.gamePaintPlayer();
