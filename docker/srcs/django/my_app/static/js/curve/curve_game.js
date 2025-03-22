@@ -29,7 +29,7 @@ class CurveGame extends Component
         hole: 101
         }
 
-        this.powerConstructors = { //FtGame
+        this.powerConstructors = {
             1: PowerSpeed,
             2: PowerSlow,
             3: PowerThin,
@@ -273,16 +273,36 @@ class CurveGame extends Component
 
         switch (type)
         {
+            case 'player_assign':
+                this.playerNumber = data.player_number;
+                console.log(`Assigned as player: ${this.playerNumber}`);
+                break;
+
+            case 'game_ready':
+                console.log('Game is ready to start');
+                this.gameReady = true;
+                break;
+                
             default:
                 console.log('Unkown message type:', type);
         }
     }
 
-    sendMessage() 
-    {
-        console.log('ft sendMessage')
-            if (this.curveSocket && this.curveSocket.readyState === WebSocket.OPEN)
-                this.curveSocket.send(JSON.stringify({'type': 'message'}));
+    sendGameControl(action) {
+        if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
+            console.error("Curve socket not connected");
+            return;
+        }
+
+        if (!['start', 'pause', 'stop'].includes(action)) {
+            console.error("Invalid game control action: ", action);
+            return;
+        }
+
+        this.curveSocket.send(JSON.stringify({
+            'type': 'game_control',
+            'action': action
+        }))
     }
 }
 
