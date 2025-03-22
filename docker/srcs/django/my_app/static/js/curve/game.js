@@ -1,34 +1,21 @@
 const gameCoordinates = function()
 {
-    for (let i = 0; i < this.players.length; i++)
-    {
-        if (i == this.playerNumber - 1)
-            this.players[i].generalized_coordinates();
-    }
+    this.players[this.playerNumber - 1].generalized_coordinates();
 }
 
 const gameSaveHist = function()
 {
-    for (let i = 0; i < this.players.length; i++)
-    {
-        this.players[i].save_hist();
-    }
+    this.players[this.playerNumber - 1].save_hist();
 } 
 
 const gameHoles = function()
 {
-    for (let i = 0; i < this.players.length; i++)
-    {
-        this.players[i].holes();
-    }
+    this.players[this.playerNumber - 1].holes();
 }
 
 const gamePowers = function()
 {
-    for (let i = 0; i < this.players.length; i++)
-    {
-        this.players[i].pick_powerups();
-    }
+    this.players[this.playerNumber - 1].pick_powerups();
 }
 
 const gameCheckCollision = function()

@@ -28,7 +28,7 @@ class CurveGame extends Component
 
         this.baseValues = {
         radius: 4.20,
-        vel: 1.75,
+        vel: 0.75,
         turn: 0.015,
         hole: 101
         }
