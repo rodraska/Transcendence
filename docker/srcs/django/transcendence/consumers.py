@@ -462,17 +462,17 @@ class CurveConsumer(AsyncWebsocketConsumer):
         message_type = data.get('type')
 
         if message_type == 'player_state':
-            player_pos = data.get('player_pos')
-            player_truepos = data.get('player_truepos')
-            player_number = data.get('player_number')
+            pos = data.get('pos')
+            truepos = data.get('truepos')
+            _id = data.get('id')
 
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'player_state',
-                    'player_pos': player_pos,
-                    'player_truepos': player_truepos,
-                    'player_number': player_number
+                    'pos': pos,
+                    'truepos': truepos,
+                    'id': _id
                 }
             )
 
@@ -490,9 +490,9 @@ class CurveConsumer(AsyncWebsocketConsumer):
     async def player_state(self, event):
         await self.send(text_data=json.dumps({
             'type': 'player_state',
-            'player_pos': event['player_pos'],
-            'player_truepos': event['player_truepos'],
-            'player_number': event['player_number']
+            'pos': event['pos'],
+            'truepos': event['truepos'],
+            'id': event['id']
         }))
 
     async def game_control(self, event):

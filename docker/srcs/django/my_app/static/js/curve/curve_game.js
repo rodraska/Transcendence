@@ -285,16 +285,16 @@ class CurveGame extends Component
                 break;
 
             case 'player_state':
-                const player_pos = data.player_pos;
-                const player_truepos = data.player_truepos;
-                const player_number = data.player_number;
-                if (player_number === this.playerNumber) {
+                const pos = data.pos;
+                const truepos = data.truepos;
+                const id = data.id;
+                if (id === this.playerNumber) {
                     //console.log('receive same player');
                 }
                 else {
                     //console.log('receive different player');
-                    this.players[player_number - 1].pos = player_pos;
-                    this.players[player_number - 1].truepos = player_truepos;
+                    this.players[id - 1].pos = pos;
+                    this.players[id - 1].truepos = truepos;
                 }
                 break;
 
@@ -331,9 +331,9 @@ class CurveGame extends Component
 
         this.curveSocket.send(JSON.stringify({
             'type': 'player_state',
-            'player_pos': player.pos,
-            'player_truepos': player.truepos,
-            'player_number': player.id
+            'pos': player.pos,
+            'truepos': player.truepos,
+            'id': player.id
 
         }))
     }
