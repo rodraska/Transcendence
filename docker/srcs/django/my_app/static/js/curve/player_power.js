@@ -11,6 +11,7 @@ const pick_powerups = function()
             i--;
         }
     }
+    console.log('out of for loop');
     this.iter_power();
 }
 
@@ -18,7 +19,8 @@ const give_powerup = function(id)
 {
     if (id <= 4) //give me
     {
-        let power = new this.game.powerConstructors[id](id, [0, 0], this.game.baseIters[id], this);
+        console.log('give me');
+        let power = new this.game.powerConstructors[id](id, [0, 0], this.game.baseIters[id]);
         this.powers.push(power);
     }
     if (id == 5) //renew me
@@ -26,7 +28,7 @@ const give_powerup = function(id)
         let id_renew = this.check_powerup(id)
         if (id_renew == -1)
         {
-            let power = new this.game.powerConstructors[id](id, [0, 0], this.game.baseIters[id], this);
+            let power = new this.game.powerConstructors[id](id, [0, 0], this.game.baseIters[id]);
             this.powers.push(power);
         } 
         else this.powers[id_renew].iters = this.game.baseIters[id]; 
@@ -37,7 +39,7 @@ const give_powerup = function(id)
         {
             if (this.game.players[i].id != this.id)
             {
-                let power = new this.game.powerConstructors[id](id, [0, 0], this.game.baseIters[id], this.game.players[i]);
+                let power = new this.game.powerConstructors[id](id, [0, 0], this.game.baseIters[id]);
                 this.game.players[i].powers.push(power);
             } 
         }

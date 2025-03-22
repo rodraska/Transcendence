@@ -304,6 +304,7 @@ class CurveGame extends Component
                 break;
 
             case 'pick_power':
+                console.log('pick power case');
                 const i = data.i;
                 this.powers.splice(i, 1);
                 break;
