@@ -29,6 +29,11 @@ const begin_iter = function()
 
 const curr_iter = function()
 {
+    if (this.erase == true)
+    {
+        this.erase = false;
+        this.reset_paint();
+    }
     this.gameSaveHist();
     this.gameCoordinates();
     this.gameHoles();

@@ -55,6 +55,7 @@ const paint_offset = function()
 
 const reset_paint = function()
 {
+    console.log('reset paint');
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.ctx.fillStyle = 'black';
     this.ctx.fillRect(0, 0 , this.width, this.height);

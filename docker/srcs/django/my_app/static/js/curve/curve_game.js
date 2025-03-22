@@ -23,6 +23,7 @@ class CurveGame extends Component
         this.round = 1;
         this.dead = 0;
         this.stp = 0;
+        this.erase = false;
         this.round_winner = 0;
         this.game_winner = 0;
 
@@ -56,12 +57,7 @@ class CurveGame extends Component
             7: "orange",
             8: "brown",
             9: "purple",
-            10: "red",
-            11: "gold",
-            12: "lightgray",
-            13: "violet",
-            14: 'magenta',
-            15: "white",
+            10: "white"
         }
 
         this.baseIters = {
@@ -300,13 +296,28 @@ class CurveGame extends Component
             
             case 'new_power':
                 const power = data.power;
-                this.powers.push(new this.powerConstructors[10](power.id, power.pos, power.iters));
+                this.powers.push(new this.powerConstructors[power.id](power.id, power.pos, power.iters));
                 break;
 
             case 'pick_power':
-                console.log('pick power case');
                 const i = data.i;
-                this.powers.splice(i, 1);
+                const player_id = data.player_id
+                if (this.playerNumber !== player_id)
+                    this.powers.splice(i, 1);
+                break;
+
+            case 'pick_general':
+                const _player_id = data.player_id;
+                /*if (this.playerNumber !== _player_id)
+                {
+                    console.log('final destination');
+                    this.currentIters[10] = this.baseIters[10];
+                    this.reset_paint();
+                }*/
+                //console.log('final destination');
+                this.currentIters[10] = this.baseIters[10];
+                this.erase = true;
+                //this.reset_paint();
                 break;
 
             case 'game_control':
@@ -391,11 +402,7 @@ class CurveGame extends Component
         }))
     }
 
-    sendPickPowerGiveMe() {
-
-    }
-
-    sendPickPower(i) {
+    sendPickPower(i, player_id) {
         if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
             console.error("Curve socket not connected");
             return;
@@ -408,7 +415,25 @@ class CurveGame extends Component
 
         this.curveSocket.send(JSON.stringify({
             'type': 'pick_power',
-            'i': i
+            'i': i,
+            'player_id': player_id
+        }))
+    }
+
+    sendPickGeneral(player_id) {
+        if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
+            console.error("Curve socket not connected");
+            return;
+        }
+
+        if (!this.playerNumber) {
+            console.error("Player number not assigned");
+            return;
+        }
+
+        this.curveSocket.send(JSON.stringify({
+            'type': 'pick_general',
+            'player_id': player_id
         }))
     }
 

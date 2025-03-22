@@ -6,12 +6,11 @@ const pick_powerups = function()
         if (this.game.dist(this.pos, this.game.powers[i].pos) <= (this.radius + 20))
         {
             this.give_powerup(this.game.powers[i].id);
-            this.game.sendPickPower(i);
-            //this.game.powers.splice(i, 1);
+            this.game.powers.splice(i, 1);
+            this.game.sendPickPower(i, this.id);
             i--;
         }
     }
-    console.log('out of for loop');
     this.iter_power();
 }
 
@@ -19,11 +18,10 @@ const give_powerup = function(id)
 {
     if (id <= 4) //give me
     {
-        console.log('give me');
         let power = new this.game.powerConstructors[id](id, [0, 0], this.game.baseIters[id]);
         this.powers.push(power);
     }
-    if (id == 5) //renew me
+    else if (id == 5) //renew me
     {
         let id_renew = this.check_powerup(id)
         if (id_renew == -1)
@@ -33,7 +31,7 @@ const give_powerup = function(id)
         } 
         else this.powers[id_renew].iters = this.game.baseIters[id]; 
     }
-    if (id >= 6 && id <= 9) //give others
+    else if (id >= 6 && id <= 9) //give others
     {
         for (let i = 0; i < this.game.players.length; i++)
         {
@@ -44,10 +42,11 @@ const give_powerup = function(id)
             } 
         }
     }
-    if (id == 10) //general
+    else if (id == 10) //general
     {
-        this.game.currentIters[id] = this.game.baseIters[id];
-        this.game.reset_paint();
+        //this.game.currentIters[id] = this.game.baseIters[id];
+        //this.game.reset_paint();
+        this.game.sendPickGeneral(this.id);
     }
 }
 
