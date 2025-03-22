@@ -300,7 +300,7 @@ class CurveGame extends Component
             
             case 'new_power':
                 const power = data.power;
-                this.powers.push(new this.powerConstructors[10](power.id, power.pos, power.iters, power.player));
+                this.powers.push(new this.powerConstructors[10](power.id, power.pos, power.iters));
                 break;
 
             case 'game_control':
@@ -376,8 +376,7 @@ class CurveGame extends Component
         const powerProperties = {
             id: power.id,
             pos: power.pos,
-            iters: power.iters,
-            player: power.player
+            iters: power.iters
         }
 
         this.curveSocket.send(JSON.stringify({

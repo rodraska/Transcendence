@@ -54,10 +54,10 @@ const iter_power = function()
     {
         let curr_power = this.powers[i];
         if (curr_power.iters == this.game.baseIters[curr_power.id] && this.count_powerup(curr_power.id) < 4)
-            curr_power.powerApply();
+            curr_power.powerApply(this);
         if (curr_power.iters == -1)
         {
-            curr_power.powerRemove();
+            curr_power.powerRemove(this);
             this.powers.splice(i, 1);
             i--;
         }
