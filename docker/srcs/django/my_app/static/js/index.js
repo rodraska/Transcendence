@@ -35,8 +35,8 @@ function toggleHeader() {
 }
 
 Route.setContentContainer(contentContainer);
-Route.subscribe('/home', HomePage);
-Route.subscribe('/profile', UserProfile);
+Route.subscribe("/home", HomePage);
+Route.subscribe("/profile", UserProfile);
 //Route.subscribe("/user", UserProfile);
 Route.subscribe("/pong", PongPage);
 Route.subscribe("/curve", CurvePage);
@@ -67,7 +67,7 @@ function checkLoginStatus() {
         window.loggedInUserId = data.user_id;
         window.loggedInAvatarUrl = data.avatar_url;
         if (normalizeRoute(window.location.hash) === "/") {
-          Route.go("/home");
+          Route.go("/play");
         } else {
           Route.go(window.location.hash);
         }

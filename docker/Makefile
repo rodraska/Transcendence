@@ -3,16 +3,16 @@ NAME = transcendence
 all: build up collectstatic
 
 build:
-	docker-compose -f srcs/docker-compose.yml build
+	docker compose -f srcs/docker-compose.yml build
 
 up:
-	docker-compose -f srcs/docker-compose.yml up -d
+	docker compose -f srcs/docker-compose.yml up -d
 
 down:
-	docker-compose -f srcs/docker-compose.yml down
+	docker compose -f srcs/docker-compose.yml down
 
 collectstatic:
-	docker-compose -f srcs/docker-compose.yml exec web python3 manage.py collectstatic --noinput
+	docker compose -f srcs/docker-compose.yml exec web python3 manage.py collectstatic --noinput
 
 clean: down
 	docker system prune -af
