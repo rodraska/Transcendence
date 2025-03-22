@@ -471,6 +471,17 @@ class CurveConsumer(AsyncWebsocketConsumer):
                     'player': player
                 }
             )
+        
+        elif message_type == 'new_power':
+            power = data.get('power')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'new_power',
+                    'power': power
+                }
+            )
 
         elif message_type == 'game_control':
             action = data.get('action')
@@ -487,6 +498,12 @@ class CurveConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'player_state',
             'player': event['player']
+        }))
+
+    async def new_power(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'new_power',
+            'power': event['power']
         }))
 
     async def game_control(self, event):

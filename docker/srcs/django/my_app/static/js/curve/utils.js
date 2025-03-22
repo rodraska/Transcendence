@@ -14,6 +14,7 @@ const give_points = function(id)
 
 const new_powerup = function()
 {
+    if (this.playerNumber !== 1) return;
     let drop = 601;
     if (Math.floor(Math.random() * drop) > 1) return;
     outer : while (1)
@@ -29,7 +30,8 @@ const new_powerup = function()
     let id = Math.floor(Math.random() * 10) + 1; //all the power ups
     //id = Math.floor(Math.random() * 2); //specific range
     //id = 11; //specific powerup
-    this.powers.push(new this.powerConstructors[10](id, [x, y], this.baseIters[id], null));
+    this.sendNewPower(new this.powerConstructors[10](id, [x, y], this.baseIters[id], null));
+    //this.powers.push(new this.powerConstructors[10](id, [x, y], this.baseIters[id], null));
 }
 
 const checkRGB = function(pos, rgb)

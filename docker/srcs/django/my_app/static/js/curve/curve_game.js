@@ -297,6 +297,11 @@ class CurveGame extends Component
                     Object.assign(targetPlayer, player);
                 }
                 break;
+            
+            case 'new_power':
+                const power = data.power;
+                this.powers.push(new this.powerConstructors[10](power.id, power.pos, power.iters, power.player));
+                break;
 
             case 'game_control':
                 const action = data.action;
@@ -329,6 +334,8 @@ class CurveGame extends Component
             return;
         }
 
+        //const playerProperties = { ...player };
+
         const playerProperties = {
             id: player.id,
             pos: player.pos,
@@ -352,6 +359,30 @@ class CurveGame extends Component
             'type': 'player_state',
             'player': playerProperties
 
+        }))
+    }
+
+    sendNewPower(power) {
+        if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
+            console.error("Curve socket not connected");
+            return;
+        }
+
+        if (!this.playerNumber) {
+            console.error("Player number not assigned");
+            return;
+        }
+
+        const powerProperties = {
+            id: power.id,
+            pos: power.pos,
+            iters: power.iters,
+            player: power.player
+        }
+
+        this.curveSocket.send(JSON.stringify({
+            'type': 'new_power',
+            'power': powerProperties
         }))
     }
 

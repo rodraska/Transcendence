@@ -2,11 +2,9 @@ const pick_powerups = function()
 {
     for (let i = 0; i < this.game.powers.length; i++)
     {
-        //console.log(' for loop ');
         if (this.stop == true) break;
         if (this.game.dist(this.pos, this.game.powers[i].pos) <= (this.radius + 20))
         {
-            //console.log('pick_powerups');
             this.give_powerup(this.game.powers[i].id);
             this.game.powers.splice(i, 1);
             i--;
