@@ -27,11 +27,11 @@ const new_powerup = function()
             if (this.dist([x, y], this.powers[j].pos) < 20) {continue outer};
         break ;
     }
-    let id = Math.floor(Math.random() * 10) + 1; //all the power ups
+    //let id = Math.floor(Math.random() * 10) + 1; //all the power ups
     //id = Math.floor(Math.random() * 2); //specific range
-    //id = 11; //specific powerup
-    //this.sendNewPower(new this.powerConstructors[10](id, [x, y], this.baseIters[id]));
-    this.powers.push(new this.powerConstructors[10](id, [x, y], this.baseIters[id]));
+    let id = 1; //specific powerup
+    this.sendNewPower(new this.powerConstructors[10](id, [x, y], this.baseIters[id]));
+    //this.powers.push(new this.powerConstructors[10](id, [x, y], this.baseIters[id]));
 }
 
 const checkRGB = function(pos, rgb)

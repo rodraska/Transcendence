@@ -6,7 +6,8 @@ const pick_powerups = function()
         if (this.game.dist(this.pos, this.game.powers[i].pos) <= (this.radius + 20))
         {
             this.give_powerup(this.game.powers[i].id);
-            this.game.powers.splice(i, 1);
+            this.game.sendPickPower(i);
+            //this.game.powers.splice(i, 1);
             i--;
         }
     }
