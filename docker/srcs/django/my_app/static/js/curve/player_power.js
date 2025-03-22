@@ -44,9 +44,7 @@ const give_powerup = function(id)
     }
     else if (id == 10) //general
     {
-        //this.game.currentIters[id] = this.game.baseIters[id];
-        //this.game.reset_paint();
-        this.game.sendPickGeneral(this.id);
+        this.game.sendPickGeneral();
     }
 }
 

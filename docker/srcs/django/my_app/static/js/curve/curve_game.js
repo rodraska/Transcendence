@@ -307,17 +307,8 @@ class CurveGame extends Component
                 break;
 
             case 'pick_general':
-                const _player_id = data.player_id;
-                /*if (this.playerNumber !== _player_id)
-                {
-                    console.log('final destination');
-                    this.currentIters[10] = this.baseIters[10];
-                    this.reset_paint();
-                }*/
-                //console.log('final destination');
                 this.currentIters[10] = this.baseIters[10];
                 this.erase = true;
-                //this.reset_paint();
                 break;
 
             case 'game_control':
@@ -420,7 +411,7 @@ class CurveGame extends Component
         }))
     }
 
-    sendPickGeneral(player_id) {
+    sendPickGeneral() {
         if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
             console.error("Curve socket not connected");
             return;
@@ -432,8 +423,7 @@ class CurveGame extends Component
         }
 
         this.curveSocket.send(JSON.stringify({
-            'type': 'pick_general',
-            'player_id': player_id
+            'type': 'pick_general'
         }))
     }
 
