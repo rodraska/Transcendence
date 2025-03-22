@@ -285,16 +285,16 @@ class CurveGame extends Component
                 break;
 
             case 'player_state':
-                const pos = data.pos;
-                const truepos = data.truepos;
-                const id = data.id;
+                const player = data.player;
+                const id = player.id;
+
                 if (id === this.playerNumber) {
                     //console.log('receive same player');
                 }
                 else {
                     //console.log('receive different player');
-                    this.players[id - 1].pos = pos;
-                    this.players[id - 1].truepos = truepos;
+                    const targetPlayer = this.players[id - 1];
+                    Object.assign(targetPlayer, player);
                 }
                 break;
 
@@ -329,11 +329,28 @@ class CurveGame extends Component
             return;
         }
 
+        const playerProperties = {
+            id: player.id,
+            pos: player.pos,
+            truepos: player.truepos,
+            back: player.back,
+            mid: player.mid,
+            powers: player.powers,
+            vel: player.vel,
+            hole_iter: player.hole_iter,
+            turning: player.turning,
+            god: player.god,
+            stop: player.stop,
+            theta: player.theta,
+            vel_t: player.vel_t,
+            radius: player.radius,
+            turn_rate: player.turn_rate,
+            hole_rate: player.hole_rate
+        }
+
         this.curveSocket.send(JSON.stringify({
             'type': 'player_state',
-            'pos': player.pos,
-            'truepos': player.truepos,
-            'id': player.id
+            'player': playerProperties
 
         }))
     }
