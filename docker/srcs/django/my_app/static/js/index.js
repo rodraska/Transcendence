@@ -2,8 +2,6 @@ import Route, { normalizeRoute } from "./spa/route.js";
 import HeaderBar from "./header/header.js";
 import HomePage from "./home/home_page.js";
 import UserProfile from "./header/profile.js";
-import PongPage from "./pong/pong.js";
-import CurvePage from "./curve/curve.js";
 import LoginButtons from "./login/login.js";
 import RegistrationForm from "./login/registration_form.js";
 import LoginForm from "./login/login_form.js";
@@ -41,8 +39,8 @@ Route.setContentContainer(contentContainer);
 Route.subscribe("/home", HomePage);
 Route.subscribe("/profile", UserProfile);
 //Route.subscribe("/user", UserProfile);
-Route.subscribe("/pong", PongPage);
-Route.subscribe("/curve", CurvePage);
+Route.subscribe("/pong", PongGame);
+Route.subscribe("/curve", CurveGame);
 Route.subscribe("/header", HeaderBar);
 Route.subscribe("/login", LoginButtons);
 Route.subscribe("/registration_form", RegistrationForm);
@@ -52,8 +50,6 @@ Route.subscribe("/record", Record);
 Route.subscribe("/play", Play);
 Route.subscribe("/active-match", ActiveMatch);
 Route.subscribe("/play-games", PlayGames);
-Route.subscribe('/pong_game', PongGame);
-Route.subscribe('/curve_game', CurveGame);
 Route.subscribe('/chat_room', ChatRoom);
 
 window.addEventListener("hashchange", () => {
