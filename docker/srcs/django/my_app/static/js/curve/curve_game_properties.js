@@ -6,6 +6,7 @@ import { dist, give_points, new_powerup, checkRGB } from "./utils.js"
 import { PowerUp, PowerSpeed, PowerSlow, PowerThin, PowerSmallTurn, PowerGod, PowerBig, PowerBigTurn, PowerRubber } from "./powerup.js"
 import { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendGameControl } from "./curve_socket_messages.js"
 import { curveGameControlEvents } from "./keys.js"
+import { getCurveHtmlElements } from "./curve_html_elements.js"
 
 const initializeCurveGameProperties = function()
 {
@@ -157,7 +158,8 @@ const initializeCurveGameProperties = function()
         sendPickPower: sendPickPower,
         sendPickOthers: sendPickOthers,
         sendPickGeneral: sendPickGeneral,
-        sendGameControl: sendGameControl
+        sendGameControl: sendGameControl,
+        getCurveHtmlElements: getCurveHtmlElements
     }
 }
 
