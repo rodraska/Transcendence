@@ -12,17 +12,8 @@ import PlayGames from "./play_games/play_games.js";
 import Record from "./match/record.js";
 import Play from "./play_games/play.js";
 import ActiveMatch from "./match/active_match.js";
-import PongMain from "./pong/pong_main.js"
-import PongCreate from "./pong/pong_create.js"
-import PongJoin from "./pong/pong_join.js"
 import PongGame from "./pong/pong_game.js"
-import PongLobby from "./pong/pong_lobby.js"
-import CurveMain from "./curve/curve_main.js"
 import CurveGame from "./curve/curve_game.js"
-import CurveCreate from "./curve/curve_create.js"
-import CurveJoin from "./curve/curve_join.js"
-import CurveHistory from "./curve/curve_history.js"
-import CurveLobby from "./curve/curve_lobby.js"
 import ChatRoom from "./chat/chat_room.js";
 
 const headerContainer = document.getElementById("header-container");
@@ -60,17 +51,8 @@ Route.subscribe("/record", Record);
 Route.subscribe("/play", Play);
 Route.subscribe("/active-match", ActiveMatch);
 Route.subscribe("/play-games", PlayGames);
-Route.subscribe('/pong_main', PongMain);
-Route.subscribe('/pong_create', PongCreate);
-Route.subscribe('/pong_join', PongJoin);
 Route.subscribe('/pong_game', PongGame);
-Route.subscribe('/pong_lobby', PongLobby);
-Route.subscribe('/curve_main', CurveMain);
 Route.subscribe('/curve_game', CurveGame);
-Route.subscribe('/curve_create', CurveCreate);
-Route.subscribe('/curve_join', CurveJoin);
-Route.subscribe('/curve_history', CurveHistory);
-Route.subscribe('/curve_lobby', CurveLobby);
 Route.subscribe('/chat_room', ChatRoom);
 
 window.addEventListener("hashchange", () => {
