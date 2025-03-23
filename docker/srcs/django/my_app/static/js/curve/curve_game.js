@@ -311,11 +311,8 @@ class CurveGame extends Component
                 const _power_id = data.power_id;
                 const _player_id = data.player_id;
                 if (this.playerNumber !== _player_id) {
-                    console.log('before power construct');
                     let power = new this.powerConstructors[_power_id](_power_id, [0, 0], this.baseIters[_power_id])
-                    console.log('after power construct');
                     this.players[this.playerNumber - 1].powers.push(power);
-                    console.log('after power push');
                 }
                 break;
                     

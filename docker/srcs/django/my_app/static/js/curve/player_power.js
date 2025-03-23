@@ -33,15 +33,7 @@ const give_powerup = function(id)
     }
     else if (id >= 6 && id <= 9) //give others
     {
-        for (let i = 0; i < this.game.players.length; i++)
-        {
-            if (this.game.players[i].id != this.id)
-            {
-                this.game.sendPickOthers(id, this.id);
-                //let power = new this.game.powerConstructors[id](id, [0, 0], this.game.baseIters[id]);
-                //this.game.players[i].powers.push(power);
-            } 
-        }
+        this.game.sendPickOthers(id, this.id);
     }
     else if (id == 10) //general
     {
