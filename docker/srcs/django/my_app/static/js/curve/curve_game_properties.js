@@ -1,11 +1,11 @@
-import { players_free, begin_iter, curr_iter, end_iter, players_play, ft_start, ft_pause, ft_stop } from "./script.js"
-import { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_paint, paint_powerup } from "./paint.js"
-import { ft_round, players_spawn, players_load, players_still, roundWinner } from "./round.js"
-import { gameCoordinates, gameSaveHist, gameHoles, gamePowers, gameCheckCollision, gamePaintHist, gamePaintPlayer, gamePaintArcs, gamePaintArrows, gamePaintPowers, saveCanvas, restoreCanvas } from "./game.js"
-import { dist, give_points, new_powerup, checkRGB } from "./utils.js"
-import { PowerUp, PowerSpeed, PowerSlow, PowerThin, PowerSmallTurn, PowerGod, PowerBig, PowerBigTurn, PowerRubber } from "./powerup.js"
+import { players_free, begin_iter, curr_iter, end_iter, players_play, ft_start, ft_pause, ft_stop } from "./curve_script.js"
+import { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_paint, paint_powerup } from "./curve_paint.js"
+import { ft_round, players_spawn, players_load, players_still, roundWinner } from "./curve_round.js"
+import { gameCoordinates, gameSaveHist, gameHoles, gamePowers, gameCheckCollision, gamePaintHist, gamePaintPlayer, gamePaintArcs, gamePaintArrows, gamePaintPowers, saveCanvas, restoreCanvas } from "./curve_game_functions.js"
+import { dist, give_points, new_powerup, checkRGB } from "./curve_utils.js"
+import { PowerUp, PowerSpeed, PowerSlow, PowerThin, PowerSmallTurn, PowerGod, PowerBig, PowerBigTurn, PowerRubber } from "./curve_powerup.js"
 import { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendGameControl } from "./curve_socket_messages.js"
-import { curveGameControlEvents } from "./keys.js"
+import { curveGameControlEvents } from "./curve_events.js"
 import { getCurveHtmlElements } from "./curve_html_elements.js"
 
 const initializeCurveGameProperties = function()

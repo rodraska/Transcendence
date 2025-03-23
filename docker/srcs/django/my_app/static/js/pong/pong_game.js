@@ -1,6 +1,6 @@
 import Component from "../spa/component.js"
 import { initializePongGameProperties } from "./pong_game_properties.js"
-import "./events.js"
+import "./pong_events.js"
 
 class PongGame extends Component
 {

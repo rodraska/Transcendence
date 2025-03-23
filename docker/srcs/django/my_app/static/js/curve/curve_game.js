@@ -1,6 +1,6 @@
 import Component from "../spa/component.js"
 import { initializeCurveGameProperties } from "./curve_game_properties.js"
-import "./keys.js"
+import "./curve_events.js"
 
 class CurveGame extends Component
 {

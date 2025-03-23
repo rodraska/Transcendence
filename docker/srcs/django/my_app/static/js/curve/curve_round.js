@@ -1,4 +1,4 @@
-import Player from "./player.js"
+import Player from "./curve_player.js"
 
 const ft_round = function()
 {

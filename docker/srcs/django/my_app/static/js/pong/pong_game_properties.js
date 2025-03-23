@@ -1,11 +1,11 @@
-import Ball from "./ball.js"
-import PongPlayer from "./player.js"
-import { update, ft_start, ft_pause, ft_stop } from "./script.js"
-import { initial_conditions, initial_ball } from "./initial.js"
-import { update_positions, collision_2, collision_1, check_goal, collision_tb, collisions } from "./collisions.js" 
-import { paint_black, paint_squares, paint_score, paint_ball, paint_players, paint_pong_gameover, paint_stop, paint_loop } from "./paint.js"
+import Ball from "./pong_ball.js"
+import PongPlayer from "./pong_player.js"
+import { update, ft_start, ft_pause, ft_stop } from "./pong_script.js"
+import { initial_conditions, initial_ball } from "./pong_initial.js"
+import { update_positions, collision_2, collision_1, check_goal, collision_tb, collisions } from "./pong_collisions.js" 
+import { paint_black, paint_squares, paint_score, paint_ball, paint_players, paint_pong_gameover, paint_stop, paint_loop } from "./pong_paint.js"
 import { handleSocketMessage, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl } from "./pong_socket_messages.js"
-import { gameControlEvents } from "./events.js"
+import { gameControlEvents } from "./pong_events.js"
 import { getPongHtmlElements } from "./pong_html_elements.js"
 
 const initializePongGameProperties = function()
