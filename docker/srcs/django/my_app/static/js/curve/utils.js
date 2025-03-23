@@ -29,7 +29,7 @@ const new_powerup = function()
     }
     //let id = Math.floor(Math.random() * 10) + 1; //all the power ups
     //id = Math.floor(Math.random() * 2); //specific range
-    let id = 10; //specific powerup
+    let id = 6; //specific powerup
     this.sendNewPower(new this.powerConstructors[id](id, [x, y], this.baseIters[id]));
     //this.powers.push(new this.powerConstructors[10](id, [x, y], this.baseIters[id]));
 }

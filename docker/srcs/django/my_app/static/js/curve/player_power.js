@@ -37,8 +37,9 @@ const give_powerup = function(id)
         {
             if (this.game.players[i].id != this.id)
             {
-                let power = new this.game.powerConstructors[id](id, [0, 0], this.game.baseIters[id]);
-                this.game.players[i].powers.push(power);
+                this.game.sendPickOthers(id, this.id);
+                //let power = new this.game.powerConstructors[id](id, [0, 0], this.game.baseIters[id]);
+                //this.game.players[i].powers.push(power);
             } 
         }
     }

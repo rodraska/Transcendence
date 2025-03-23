@@ -496,6 +496,19 @@ class CurveConsumer(AsyncWebsocketConsumer):
                 }
             )
 
+        elif message_type == 'pick_others':
+            power_id = data.get('power_id')
+            player_id = data.get('player_id')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'pick_others',
+                    'power_id': power_id,
+                    'player_id': player_id
+                }
+            )
+
         elif message_type == 'pick_general':
 
             await self.channel_layer.group_send(
@@ -532,6 +545,13 @@ class CurveConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'pick_power',
             'i': event['i'],
+            'player_id': event['player_id']
+        }))
+
+    async def pick_others(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'pick_others',
+            'power_id': event['power_id'],
             'player_id': event['player_id']
         }))
 
