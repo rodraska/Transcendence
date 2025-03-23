@@ -25,6 +25,9 @@ const initializeCurveGameProperties = function()
         erase: false,
         round_winner: 0,
         game_winner: 0,
+        isPaused: false,
+        isStart: false,
+        animationID: null,
 
         baseValues: {
         radius: 4.20,

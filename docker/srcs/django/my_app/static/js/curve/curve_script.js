@@ -60,7 +60,7 @@ const players_play = function()
     this.begin_iter();
     this.curr_iter();
     this.end_iter();
-    requestAnimationFrame(this.players_play.bind(this));
+    this.animationID = requestAnimationFrame(this.players_play.bind(this));
 }
 
 const ft_start = function()
@@ -73,8 +73,18 @@ const ft_start = function()
     this.players_still();
 }
 
-const ft_pause = function() {}
+const ft_pause = function()
+{
+    console.log('ft_pause: ', this.isPaused);
+    //if (!this.isStart) return;
+    this.isPaused = !this.isPaused;
+    if (this.isPaused) cancelAnimationFrame(this.animationID);
+    else this.animationID = requestAnimationFrame(this.players_play.bind(this));
+}
 
-const ft_stop = function() {}
+const ft_stop = function()
+{
+
+}
 
 export { players_free, begin_iter, curr_iter, end_iter, players_play, ft_start, ft_pause, ft_stop }
