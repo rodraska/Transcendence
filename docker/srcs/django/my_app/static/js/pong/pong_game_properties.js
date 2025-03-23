@@ -4,7 +4,7 @@ import { update, ft_start, ft_pause, ft_stop } from "./script.js"
 import { initial_conditions, initial_ball } from "./initial.js"
 import { update_positions, collision_2, collision_1, check_goal, collision_tb, collisions } from "./collisions.js" 
 import { paint_black, paint_squares, paint_score, paint_ball, paint_players, paint_pong_gameover, paint_stop, paint_loop } from "./paint.js"
-import { handleSocketMessage, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl } from "./socket_messages.js"
+import { handleSocketMessage, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl } from "./pong_socket_messages.js"
 import { gameControlEvents } from "./events.js"
 
 const initializePongGameProperties = function()

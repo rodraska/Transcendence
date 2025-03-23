@@ -25,3 +25,25 @@ document.addEventListener('keyup', function(event)
         }
     }
 });
+
+const curveGameControlEvents = function() {
+    if (!window.curve_game) return;
+    const curve = window.curve_game;
+    if (curve.startBtn) {
+        curve.startBtn.addEventListener('click', () => {
+            curve.sendGameControl('start');
+        });
+    }
+    if (curve.pauseBtn) {
+        curve.pauseBtn.addEventListener('click', () => {
+            curve.sendGameControl('pause');
+        });
+    }
+    if (curve.stopBtn) {
+        curve.stopBtn.addEventListener('click', () => {
+            curve.sendGameControl('stop');
+        });
+    }
+}
+
+export { curveGameControlEvents }
