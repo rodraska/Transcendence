@@ -51,3 +51,25 @@ document.addEventListener('keyup', function(event)
         }
     }
 });
+
+const gameControlEvents = function() {
+    if (!window.pong_game) return;
+    const pong = window.pong_game;
+    if (pong.startBtn) {
+        pong.startBtn.addEventListener('click', () => {
+            pong.sendGameControl('start');
+        });
+    }
+    if (pong.pauseBtn) {
+        pong.pauseBtn.addEventListener('click', () => {
+            pong.sendGameControl('pause');
+        });
+    }
+    if (pong.stopBtn) {
+        pong.stopBtn.addEventListener('click', () => {
+            pong.sendGameControl('stop');
+        });
+    }
+}
+
+export { gameControlEvents }
