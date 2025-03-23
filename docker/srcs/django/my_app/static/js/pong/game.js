@@ -20,5 +20,3 @@ class PongGame2
         this.p2 = new PongPlayer([width / 2 - this.p_width / 2 - this.p_offest, 0]);
     }
 }
-
-const FtPongGame2 = PongGame2.prototype;
