@@ -52,10 +52,11 @@ const gamePaintArcs = function()
 
 const gamePaintArrows = function()
 {
-    for (let i = 0; i < this.players.length; i++)
+    /*for (let i = 0; i < this.players.length; i++)
     {
         this.players[i].paint_arrow();
-    }
+    }*/
+    this.players[this.playerNumber - 1].paint_arrow();
 } 
 
 const gamePaintPowers = function()

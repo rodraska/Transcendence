@@ -102,6 +102,7 @@ const sendPlayerState = function(player) {
         god: player.god,
         stop: player.stop,
         theta: player.theta,
+        trig: player.trig,
         vel_t: player.vel_t,
         radius: player.radius,
         turn_rate: player.turn_rate,

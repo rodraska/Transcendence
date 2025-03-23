@@ -65,8 +65,10 @@ const players_play = function()
 
 const ft_start = function()
 {
-    //console.log('ft_start');
     console.trace("ft start called");
+    if (this.isPaused === true) return (this.ft_pause());
+    if (this.isStart === true) return;
+    this.isStart = true;
     this.reset_paint();
     this.players_spawn();
     this.players_load();
@@ -76,7 +78,8 @@ const ft_start = function()
 const ft_pause = function()
 {
     console.log('ft_pause: ', this.isPaused);
-    //if (!this.isStart) return;
+    if (this.currentIters.begin < 150) return;
+    if (!this.isStart) return;
     this.isPaused = !this.isPaused;
     if (this.isPaused) cancelAnimationFrame(this.animationID);
     else this.animationID = requestAnimationFrame(this.players_play.bind(this));
@@ -84,7 +87,10 @@ const ft_pause = function()
 
 const ft_stop = function()
 {
-
+    this.isStart = false;
+    cancelAnimationFrame(this.animationID);
+    this.game_winner = 1;
+    this.paint_gg();
 }
 
 export { players_free, begin_iter, curr_iter, end_iter, players_play, ft_start, ft_pause, ft_stop }
