@@ -7,6 +7,7 @@ import { PowerUp, PowerSpeed, PowerSlow, PowerThin, PowerSmallTurn, PowerGod, Po
 import { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendGameControl } from "./curve_socket_messages.js"
 import { curveGameControlEvents } from "./curve_events.js"
 import { getCurveHtmlElements } from "./curve_html_elements.js"
+import { setupCurveSocket } from "./curve_socket_setup.js"
 
 const initializeCurveGameProperties = function()
 {
@@ -159,7 +160,8 @@ const initializeCurveGameProperties = function()
         sendPickOthers: sendPickOthers,
         sendPickGeneral: sendPickGeneral,
         sendGameControl: sendGameControl,
-        getCurveHtmlElements: getCurveHtmlElements
+        getCurveHtmlElements: getCurveHtmlElements,
+        setupCurveSocket: setupCurveSocket
     }
 }
 
