@@ -64,6 +64,8 @@ class Match(models.Model):
         CustomUser, null=True, blank=True, on_delete=models.SET_NULL)
     started_on = models.DateTimeField(auto_now_add=True)
     ended_on = models.DateTimeField(null=True, blank=True)
+    points_to_win = models.IntegerField(default=10)
+    powerups_enabled = models.BooleanField(default=False)
 
 class ChatRoom(models.Model):
     name = models.CharField(max_length=100)
@@ -100,5 +102,3 @@ class Player(models.Model):
         self.game = None
         self.joined_at = None
         self.save()
-    points_to_win = models.IntegerField(default=10)
-    powerups_enabled = models.BooleanField(default=False)
