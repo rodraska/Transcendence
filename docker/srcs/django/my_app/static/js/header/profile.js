@@ -1,153 +1,158 @@
-import Component from "../spa/component.js"
+import Component from "../spa/component.js";
 
-class UserProfile extends Component
-{
-	constructor()
-	{
-		super('static/html/profile.html')
-	}
+class UserProfile extends Component {
+    constructor() {
+        super('static/html/profile.html');
+        this.selectedFile = null; // Armazena o arquivo do upload
+    }
 
-	onInit(){
+    onInit() {
+        console.log("UserProfile carregado!");
 
-		console.log("UserProfile carregado!");
+        // Buscar os dados do usuário pelo endpoint
+        fetch(`/api/user/${window.loggedInUserId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error("Erro ao obter dados do usuário:", data.error);
+                    return;
+                }
 
-		/* document.getElementById('dname').value = window.loggedInUserName;
-		document.getElementById('name1').value = window.loggedInFirstName || "";
-    	document.getElementById('name2').value = window.loggedInLastName || "";
-   		document.getElementById('email').value = window.loggedInEmail;
+                // Preenchendo os campos do formulário com os dados recebidos
+                document.getElementById('dname').value = data.username || "";
+                document.getElementById('name1').value = data.first_name || "";
+                document.getElementById('name2').value = data.last_name || "";
+                document.getElementById('email').value = data.email || "";
 
-		document.getElementById('profileImage').src = window.loggedInAvatarUrl || 
-		   "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg"; */
+                // Atualizar a imagem de perfil
+                document.getElementById('profileImage').src = data.avatar_url ||
+                    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
+            })
+            .catch(error => console.error("Erro ao carregar usuário:", error));
 
-		
-    // Buscar os dados do usuário pelo endpoint
-    fetch(`/api/user/${window.loggedInUserId}/`)
+        // Eventos dos botões
+        document.getElementById("changeImageBtn").addEventListener("click", this.openAvatarSelection.bind(this));
+        document.getElementById("resetImageBtn").addEventListener("click", this.resetAvatar.bind(this));
+
+        // Evento para salvar perfil
+        document.querySelector("form").addEventListener("submit", this.updateProfile.bind(this));
+    }
+
+    // 📌 Função para abrir o modal de seleção de avatar
+    openAvatarSelection() {
+        const avatarModalElement = document.getElementById('avatarModal');
+        if (!avatarModalElement) {
+            console.error("Erro: Modal não encontrado!");
+            return;
+        }
+
+        const avatarModal = new bootstrap.Modal(avatarModalElement);
+        avatarModal.show(); // Exibe o modal
+
+        // Evento para selecionar avatar da lista
+        document.querySelectorAll(".avatar-option").forEach(option => {
+            option.addEventListener("click", () => {
+                document.getElementById("profileImage").src = option.dataset.avatarUrl;
+                this.selectedFile = null; // Reseta o arquivo se escolher da lista
+            });
+        });
+
+        // Evento para upload de arquivo
+        const uploadInput = document.getElementById("uploadAvatarBtn");
+        if (uploadInput) {
+            uploadInput.addEventListener("change", this.handleFileUpload.bind(this));
+        }
+
+        // Evento para salvar avatar escolhido
+        document.getElementById("saveAvatarBtn").addEventListener("click", () => {
+            const selectedAvatarUrl = document.getElementById("profileImage").src;
+            this.updateAvatar(selectedAvatarUrl);
+            avatarModal.hide(); // Fechar modal
+        });
+    }
+
+    // 📌 Função para processar o arquivo de avatar enviado
+    handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) {
+            console.error("No file selected.");
+            return;
+        }
+
+        this.selectedFile = file; // Armazena o arquivo
+
+        // Ler e exibir pré-visualização
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById("profileImage").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // 📌 Atualiza o avatar no servidor
+    updateAvatar(selectedAvatarUrl = null) {
+        const formData = new FormData();
+
+        if (this.selectedFile) { // Upload de novo avatar
+            formData.append("avatar", this.selectedFile);
+        } else if (selectedAvatarUrl) { // Seleção de um avatar da lista
+            formData.append("avatar_url", selectedAvatarUrl);
+        } else {
+            console.error("No avatar selected.");
+            return;
+        }
+
+        fetch(`/api/user/${window.loggedInUserId}/update_avatar/`, {
+            method: "POST",
+            body: formData,
+            credentials: "include"
+        })
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                console.error("Erro ao obter dados do usuário:", data.error);
-                return;
+                alert("Error updating avatar: " + data.error);
+            } else {
+                alert("Updated Avatar!");
+                document.getElementById("profileImage").src = data.avatar_url;
+				document.querySelector(".header #headerProfileImage").src = data.avatar_url;
             }
-
-            // Preenchendo os campos do formulário com os dados recebidos
-            document.getElementById('dname').value = data.username || "";
-            document.getElementById('name1').value = data.first_name || "";
-            document.getElementById('name2').value = data.last_name || "";
-            document.getElementById('email').value = data.email || "";
-
-            // Atualizar a imagem de perfil
-            document.getElementById('profileImage').src = data.avatar_url || 
-                "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
         })
-        .catch(error => console.error("Error loading user:", error));
-
-	// Adiciona evento ao botão de salvar
-    document.querySelector("form").addEventListener("submit", this.updateProfile.bind(this));
+        .catch(error => console.error("Error updating avatar: ", error));
     }
 
-	updateProfile(event) {
-		event.preventDefault(); // Evita que o formulário recarregue a página
+    // 📌 Resetar avatar para o padrão
+    resetAvatar() {
+        const defaultAvatar = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
+        document.getElementById("profileImage").src = defaultAvatar;
+        this.updateAvatar(defaultAvatar);
+    }
 
-		// Capturar valores do formulário
-		const updatedData = {
-			username: document.getElementById("dname").value, 
-			first_name: document.getElementById("name1").value,
-			last_name: document.getElementById("name2").value,
-			email: document.getElementById("email").value
-    };
+    // 📌 Atualizar perfil do usuário
+    updateProfile(event) {
+        event.preventDefault();
 
-	fetch(`/api/user/${window.loggedInUserId}/update/`, {
-			method: "PATCH",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(updatedData),
-			credentials: "include" // Garante que os cookies de autenticação do Django são enviados
-		})
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            alert("Erro ao atualizar: " + data.error);
-        } else {
-            alert("Profile updated!");
+        const updatedData = {
+            first_name: document.getElementById("name1").value,
+            last_name: document.getElementById("name2").value,
+            email: document.getElementById("email").value
+        };
 
-            // Atualizar os valores no window para refletir as mudanças
-            window.loggedInUserName = updatedData.username;
-            window.loggedInFirstName = updatedData.first_name;
-            window.loggedInLastName = updatedData.last_name;
-            window.loggedInEmail = updatedData.email;
-
-            // Atualiza o header/nav com os novos dados
-            document.getElementById("userName").textContent = updatedData.username;
-        }
-    })
-    .catch(error => console.error("Erro ao atualizar perfil:", error));
-	}
-
-
-
-/* 		
-		// Alterar imagem para a escolhida
-		document.getElementById('changeImageBtn').addEventListener('click', function() {
-			const input = document.createElement('input');
-			input.type = 'file';
-			input.accept = 'image/*';
-			input.click();
-		
-			input.addEventListener('change', function() {
-			const file = input.files[0];
-			const reader = new FileReader();
-			reader.onload = function(e) {
-				document.getElementById('profileImage').src = e.target.result;
-			};
-			reader.readAsDataURL(file);
-			});
-	  	});
-	
-		// Resetar para imagem padrão
-		document.getElementById('resetImageBtn').addEventListener('click', function() {
-			document.getElementById('profileImage').src = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
-		});
-	}*/
-
-	
-} 
+        fetch(`/api/user/${window.loggedInUserId}/update/`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedData),
+            credentials: "include"
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert("Error updating profile: " + data.error);
+            } else {
+                alert("Updated profile!");
+            }
+        })
+        .catch(error => console.error("Error updating profile: ", error));
+    }
+}
 
 export default UserProfile;
-
-
-/* 
-		const dataset = {
-			displayName: "João Silva",
-			firstName: "João",
-			lastName: "Silva",
-			email: "joao.silva@email.com"
-		  };
-		
-		  // Preenchendo os campos do formulário com os dados do dataset
-		  document.getElementById('dname').value = dataset.displayName;
-		  document.getElementById('name1').value = dataset.firstName;
-		  document.getElementById('name2').value = dataset.lastName;
-		  document.getElementById('email').value = dataset.email;
-		  */
-	/* 	  fetch("/api/current_user/", { credentials: "include" })
-			.then((response) => response.json())
-			.then((data) => {
-				if (data.logged_in) {
-					document.getElementById('dname').value = data.username;
-					document.getElementById('name1').value = data.first_name; 
-					document.getElementById('name2').value = data.last_name;  
-					document.getElementById('email').value = data.email;  
-					document.getElementById('profileImage').src = data.avatar_url || 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg';
-				} else if (data.error) {
-						alert("Error getting user!");
-					}
-				})
-			.catch(error => console.error("Error loading profile:", error));
-		// Função para obter CSRF Token
-		function getCsrfToken() {
-			return document.cookie.split("; ")
-				.find(row => row.startsWith("csrftoken="))
-				?.split("=")[1];
-		}
- */
