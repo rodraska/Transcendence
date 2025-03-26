@@ -3,17 +3,7 @@ const handleSocketMessage = function(data)
     const type = data.type;
 
     switch (type)
-    {
-        case 'player_assign':
-            this.playerNumber = data.player_number;
-            console.log(`Assigned as player: ${this.playerNumber}`);
-            break;
-
-        case 'game_ready':
-            console.log('Game is ready to start');
-            //this.gameReady = true;
-            break;
-            
+    {  
         case 'paddle_position':
             const player = data.player;
             const position = data.position;
