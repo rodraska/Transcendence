@@ -24,10 +24,10 @@ const paint_score = function()
     this.pong_ctx.fillStyle = 'white';
     this.pong_ctx.textAlign = "right";
     this.pong_ctx.textBaseline = "bottom";
-    this.pong_ctx.fillText(this.p1.score, this.width / 2 - this.s_width, this.s_height);
+    this.pong_ctx.fillText(this.p2.score, this.width / 2 - this.s_width, this.s_height);
     this.pong_ctx.textAlign = "left";
     this.pong_ctx.textBaseline = "bottom";
-    this.pong_ctx.fillText(this.p2.score, this.width / 2 + this.s_width, this.s_height);
+    this.pong_ctx.fillText(this.p1.score, this.width / 2 + this.s_width, this.s_height);
 }
 
 const paint_ball = function()
@@ -41,12 +41,12 @@ const paint_ball = function()
 
 const paint_players = function()
 {
-    let x = this.p1.pos[0] - this.p_width / 2 + this.width / 2;
-    let y = this.p1.pos[1] - this.p_height / 2 + this.height / 2;
+    let x = this.p2.pos[0] - this.p_width / 2 + this.width / 2;
+    let y = this.p2.pos[1] - this.p_height / 2 + this.height / 2;
     this.pong_ctx.fillRect(x, y, this.p_width, this.p_height);
 
-    x = this.p2.pos[0] - this.p_width / 2 + this.width / 2;
-    y = this.p2.pos[1] - this.p_height / 2 + this.height / 2;
+    x = this.p1.pos[0] - this.p_width / 2 + this.width / 2;
+    y = this.p1.pos[1] - this.p_height / 2 + this.height / 2;
     this.pong_ctx.fillRect(x, y, this.p_width, this.p_height);
 }
 

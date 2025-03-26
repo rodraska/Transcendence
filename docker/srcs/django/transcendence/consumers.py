@@ -27,6 +27,7 @@ def get_match_info(match_id):
         "player2": match.player2.username,
         "powerups_enabled": match.powerups_enabled,
         "points_to_win": match.points_to_win,
+        "game_type": match.game_type.name,
     }
 
 
@@ -182,6 +183,16 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             # Optionally handle canceling a search.
             await self.handle_error("Cancel search not implemented.")
 
+        elif action == "start_game":
+            game_type = data.get("game_type")
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'start_game',
+                    'game_type': game_type
+                }
+            )
+
     async def custom_invite(self, event):
         # This event is sent to the opponent for a custom game invite.
         await self.send(json.dumps({
@@ -211,6 +222,13 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         await self.send(json.dumps({
             "event": "match_forfeited",
             "message": event["message"],
+        }))
+    
+    async def start_game(self, event):
+        
+        await self.send(json.dumps({
+            "event": "start_game",
+            "game_type": event["game_type"]
         }))
 
     @database_sync_to_async
@@ -380,7 +398,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         ]
 
 class PongConsumer(AsyncWebsocketConsumer):
-    connected_players = {}
+    #connected_players = {}
 
     async def connect(self):
         self.game_id = '24'
@@ -393,6 +411,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
+        """
         self.player_number = await self.get_next_player_number()
 
         if self.player_number > 0:
@@ -408,17 +427,21 @@ class PongConsumer(AsyncWebsocketConsumer):
                     'type': 'game_ready'
                 }
             )
+        """
 
     async def disconnect(self, close_code):
+        """
         if hasattr(self, 'game_id') and self.player_number > 0:
             if self.game_id in self.connected_players:
                 self.connected_players.pop(self.game_id, None)
+        """
 
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
 
+    """
     async def get_next_player_number(self):
         if self.game_id not in self.connected_players:
             self.connected_players[self.game_id] = 1
@@ -429,6 +452,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             return 2
         
         return 0
+    """
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -485,6 +509,17 @@ class PongConsumer(AsyncWebsocketConsumer):
                     'p2_score': p2_score
                 }
         )
+
+        elif message_type == 'match_data':
+            match_data = data.get('match_data')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'match_data',
+                    'match_data': match_data
+                }
+            )
     
     async def paddle_position(self, event):
         await self.send(text_data=json.dumps({
@@ -525,6 +560,12 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def game_ready(self, event):
         await self.send(text_data=json.dumps({
             'type': 'game_ready'
+        }))
+
+    async def match_data(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'match_data',
+            'match_data': event['match_data']
         }))
 
 class CurveConsumer(AsyncWebsocketConsumer):

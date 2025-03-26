@@ -78,6 +78,7 @@ class Play extends Component {
           player2: d.player2,
           powerups_enabled: d.powerups_enabled,
           points_to_win: d.points_to_win,
+          game_type: d.game_type,
         };
         this.modalInstance.show();
       } else if (d.waiting_invite) {
@@ -97,6 +98,7 @@ class Play extends Component {
           player2: window.loggedInUserName,
           powerups_enabled: d.powerups_enabled,
           points_to_win: d.points_to_win,
+          game_type: d.game_type,
         };
         this.inviteModalInstance.show();
       } else if (d.match_accepted) {
@@ -105,8 +107,12 @@ class Play extends Component {
           matchId: d.match_id,
           player1: d.player1,
           player2: d.player2,
+          game_type: d.game_type,
         };
-        Route.go("/active-match");
+        if (d.game_type === "Pong")
+          Route.go("/pong");
+        else if (d.game_type === "Curve")
+          Route.go("/curve");
       } else if (d.error) {
         alert(`Error: ${d.message}`);
       } else if (d.event === "match_forfeited") {

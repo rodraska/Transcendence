@@ -22,8 +22,8 @@ const getPongHtmlElements = function(attempts)
     this.width = map.width;
     this.height = map.height;
 
-    this.p1.pos = [-this.width / 2 + this.p_width / 2 + this.p_offest, 0];
-    this.p2.pos = [this.width / 2 - this.p_width / 2 - this.p_offest, 0];
+    this.p1.pos = [this.width / 2 - this.p_width / 2 - this.p_offest, 0];
+    this.p2.pos = [-this.width / 2 + this.p_width / 2 + this.p_offest, 0];
 }
 
 export { getPongHtmlElements }

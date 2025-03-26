@@ -11,7 +11,7 @@ const handleSocketMessage = function(data)
 
         case 'game_ready':
             console.log('Game is ready to start');
-            this.gameReady = true;
+            //this.gameReady = true;
             break;
             
         case 'paddle_position':
@@ -57,6 +57,14 @@ const handleSocketMessage = function(data)
                     break;
             }
             break;
+
+        case 'match_data':
+            this.matchData = data.match_data;
+            if (window.loggedInUserName === this.matchData.player1)
+                this.playerNumber = 1;
+            else if (window.loggedInUserName === this.matchData.player2)
+                this.playerNumber = 2;
+            console.log('matchData: ', this.matchData);
 
         default:
             console.log('Unknown message type:', type);
@@ -132,4 +140,21 @@ const sendGameControl = function(action) {
     }))
 }
 
-export { handleSocketMessage, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl }
+const sendMatchData = function(attemps) {
+    if (!this.pongSocket || this.pongSocket.readyState !== WebSocket.OPEN) {
+        console.error("Pong socket not connected");
+        if (attemps < 10) {
+            setTimeout(() => this.sendMatchData(attemps + 1), 300)
+        }
+        return;
+    }
+
+    console.log('sendMatchData');
+
+    this.pongSocket.send(JSON.stringify({
+        'type': 'match_data',
+        'match_data': this.matchData,
+    }))
+}
+
+export { handleSocketMessage, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl, sendMatchData }

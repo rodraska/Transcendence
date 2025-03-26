@@ -7,14 +7,19 @@ class PongGame extends Component
     constructor()
     {
         super('static/html/pong_game.html');
-
+    
         Object.assign(this, initializePongGameProperties());
+
+        console.log('username: ', window.loggedInUserName);
+
+        this.matchData = window.currentMatchData;
     }
 
     onInit() {
         window.pong_game = this;
         this.getPongHtmlElements(0);
         this.setupPongSocket();
+        this.sendMatchData(0);
         this.gameControlEvents();
     }
 }
