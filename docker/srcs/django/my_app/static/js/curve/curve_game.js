@@ -8,9 +8,12 @@ class CurveGame extends Component
     {
         super('static/html/curve_game.html');
 
+        this.matchData = window.currentMatchData;
+
         Object.assign(this, initializeCurveGameProperties());
 
-        this.matchData = window.currentMatchData;
+        this.points_to_win = this.matchData.points_to_win;
+
     }
 
     onInit() {

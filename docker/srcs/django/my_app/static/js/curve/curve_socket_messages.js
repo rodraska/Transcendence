@@ -60,6 +60,8 @@ const handleSocketMessage = function(data)
             console.log('receive collision');
             const player_id_ = data.player_id;
             this.players[player_id_ - 1].processCollision();
+            document.getElementById("score1").innerHTML = this.playerScores[1];
+            document.getElementById("score2").innerHTML = this.playerScores[2];
             break;
 
         case 'game_control':
@@ -83,6 +85,9 @@ const handleSocketMessage = function(data)
                 this.playerNumber = 1;
             else if (window.loggedInUserName === this.matchData.player2)
                 this.playerNumber = 2;
+            this.getElementById("name1").innerHTML = this.matchData.player1;
+            this.getElementById("name2").innerHTML = this.matchData.player2;
+            this.getElementById("pointToWin").innerHTML = "Point to Win: " + this.matchData.points_to_win;
             console.log('matchData: ', this.matchData);
             
         default:

@@ -13,7 +13,6 @@ const initializeCurveGameProperties = function()
 {
     return {
         curveSocket: null,
-        matchData: null,
         playerNumber: null,
         gameReady: null,
 
@@ -26,6 +25,7 @@ const initializeCurveGameProperties = function()
         erase: false,
         round_winner: 0,
         game_winner: 0,
+        points_to_win: 0,
         isPaused: false,
         isStart: false,
         animationID: null,

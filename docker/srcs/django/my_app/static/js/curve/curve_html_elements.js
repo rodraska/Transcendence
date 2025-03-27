@@ -32,7 +32,7 @@ const getCurveHtmlElements = function(attempts)
 
     this.numberCurvePlayers = 2;
         
-    for (let i = 0; i < this.numberCurvePlayers; i++)
+    /*for (let i = 0; i < this.numberCurvePlayers; i++)
     {
         let playerNumber = i + 1;
         //Create div element
@@ -52,7 +52,7 @@ const getCurveHtmlElements = function(attempts)
         playerDiv.appendChild(playerName);
         playerDiv.appendChild(playerScore);
         this.playerList.appendChild(playerDiv);
-    }
+    }*/
 }
 
 export { getCurveHtmlElements }

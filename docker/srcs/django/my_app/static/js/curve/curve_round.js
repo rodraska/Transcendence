@@ -56,7 +56,7 @@ const roundWinner = function()
         if (this.playerScores[i] > this.playerScores[top_scorer]) top_scorer = i;
     }
     if (this.numberPlayers == 1) this.round_winner = 1;
-    if (top_scorer != 0 && this.playerScores[top_scorer] >= this.numberPlayers * 1) this.game_winner = top_scorer;
+    if (top_scorer != 0 && this.playerScores[top_scorer] >= this.points_to_win) this.game_winner = top_scorer;
 }
 
 export { ft_round, players_spawn, players_load, players_still, roundWinner }
