@@ -85,38 +85,28 @@ const initializeCurveGameProperties = function()
     
         playerColors: {
             1: "blue",
-            2: "red",
-            3: "yellow",
-            4: "green"
+            2: "red"
         },
     
         playerRGB: {
             1: [0, 0, 255],
-            2: [255, 0, 0],
-            3: [255, 255, 0],
-            4: [0, 255, 0]
+            2: [255, 0, 0]
         },
     
         playerControls: {
             1: ["ArrowUp", "ArrowLeft"],
-            2: ["d", "a"],
-            3: ["3", "1"],
-            4: ["m", "b"]
+            2: ["d", "a"]
         },
     
         playerArrows: {
             1: ["Up", "Left"],
-            2: ["D", "A"],
-            3: ["3", "1"],
-            4: ["M", "B"]
+            2: ["D", "A"]
         },
     
         playerScores: {
             0: 0,
             1: 0,
-            2: 0,
-            3: 0,
-            4: 0
+            2: 0
         },
 
         players_free: players_free,
