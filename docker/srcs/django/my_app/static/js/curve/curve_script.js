@@ -63,11 +63,12 @@ const players_play = function()
     this.animationID = requestAnimationFrame(this.players_play.bind(this));
 }
 
-const ft_start = function()
+const ft_start = function(bool)
 {
-    console.trace("ft start called");
+    //console.trace("ft start called");
+    console.log('ft_start');
     if (this.isPaused === true) return (this.ft_pause());
-    if (this.isStart === true) return;
+    if (this.isStart === true && bool == false) return;
     this.isStart = true;
     this.reset_paint();
     this.players_spawn();

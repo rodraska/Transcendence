@@ -66,7 +66,7 @@ const handleSocketMessage = function(data)
             const action = data.action;
             switch (action) {
                 case 'start':
-                    this.ft_start();
+                    this.ft_start(false);
                     break;
                 case 'pause':
                     this.ft_pause();

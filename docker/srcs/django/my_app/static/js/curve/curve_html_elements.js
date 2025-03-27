@@ -1,12 +1,11 @@
 const getCurveHtmlElements = function(attempts)
 {
     const canvas = document.getElementById('curve');
-    const playersPlay = document.getElementById('playersPlay');
     const playerList = document.getElementById('playerList');
     const startBtn = document.getElementById('start_btn');
     const pauseBtn = document.getElementById('pause_btn');
     const stopBtn = document.getElementById('stop_btn');
-    if (!canvas || !playersPlay || !playerList || !startBtn || !pauseBtn || !stopBtn) {
+    if (!canvas || !playerList || !startBtn || !pauseBtn || !stopBtn) {
         if (attempts < 10) {
             setTimeout(() => this.getCurveHtmlElements(attempts + 1), 300)
         }
@@ -17,7 +16,6 @@ const getCurveHtmlElements = function(attempts)
     this.pauseBtn = pauseBtn;
     this.stopBtn = stopBtn;
     this.canvas = canvas;
-    this.playersPlay = playersPlay;
     this.playerList = playerList;
     this.ctx = canvas.getContext('2d');
     this.ctx.fillStyle = 'black';
@@ -33,8 +31,6 @@ const getCurveHtmlElements = function(attempts)
     this.height = canvas.height;
 
     this.numberCurvePlayers = 2;
-
-    this.playersPlay.textContent = this.numberCurvePlayers + ' CurvePlayers';
         
     for (let i = 0; i < this.numberCurvePlayers; i++)
     {

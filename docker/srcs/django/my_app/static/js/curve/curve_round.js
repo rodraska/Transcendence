@@ -8,7 +8,7 @@ const ft_round = function()
     this.powers = [];
     this.players = [];
     this.ctx.reset();
-    this.ft_start();
+    this.ft_start(true);
 }
 
 const players_spawn = function()
