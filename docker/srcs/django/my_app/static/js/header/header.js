@@ -48,6 +48,7 @@ class HeaderBar extends Component {
       userNameElement.textContent = window.loggedInUserName;
     }
 
+    document.querySelector("header").component = this;
 
     this.updateHeader(
       window.loggedInUserName || "Guest",

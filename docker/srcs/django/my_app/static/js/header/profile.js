@@ -114,7 +114,13 @@ class UserProfile extends Component {
             } else {
                 alert("Updated Avatar!");
                 document.getElementById("profileImage").src = data.avatar_url;
-				document.querySelector(".header #headerProfileImage").src = data.avatar_url;
+                window.loggedInAvatarUrl = data.avatar_url;
+
+                // ✅ Atualiza dinamicamente a navbar chamando o método do HeaderBar
+                const headerComponent = document.querySelector("header");
+                if (headerComponent && headerComponent.component) {
+                    headerComponent.component.updateHeader(window.loggedInUserName, data.avatar_url);
+                }
             }
         })
         .catch(error => console.error("Error updating avatar: ", error));
