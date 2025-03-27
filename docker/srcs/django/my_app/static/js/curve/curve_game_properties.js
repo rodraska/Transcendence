@@ -4,7 +4,7 @@ import { ft_round, players_spawn, players_load, players_still, roundWinner } fro
 import { gameCoordinates, gameSaveHist, gameHoles, gamePowers, gameCheckCollision, gamePaintHist, gamePaintPlayer, gamePaintArcs, gamePaintArrows, gamePaintPowers, saveCanvas, restoreCanvas } from "./curve_game_functions.js"
 import { dist, give_points, new_powerup, checkRGB } from "./curve_utils.js"
 import { PowerUp, PowerSpeed, PowerSlow, PowerThin, PowerSmallTurn, PowerGod, PowerBig, PowerBigTurn, PowerRubber } from "./curve_powerup.js"
-import { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendGameControl } from "./curve_socket_messages.js"
+import { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendGameControl, sendMatchData } from "./curve_socket_messages.js"
 import { curveGameControlEvents } from "./curve_events.js"
 import { getCurveHtmlElements } from "./curve_html_elements.js"
 import { setupCurveSocket } from "./curve_socket_setup.js"
@@ -13,6 +13,7 @@ const initializeCurveGameProperties = function()
 {
     return {
         curveSocket: null,
+        matchData: null,
         playerNumber: null,
         gameReady: null,
 
@@ -164,7 +165,8 @@ const initializeCurveGameProperties = function()
         sendPickGeneral: sendPickGeneral,
         sendGameControl: sendGameControl,
         getCurveHtmlElements: getCurveHtmlElements,
-        setupCurveSocket: setupCurveSocket
+        setupCurveSocket: setupCurveSocket,
+        sendMatchData: sendMatchData
     }
 }
 

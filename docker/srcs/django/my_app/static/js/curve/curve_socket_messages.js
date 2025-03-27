@@ -70,6 +70,14 @@ const handleSocketMessage = function(data)
                     break;
             }
             break;
+
+        case 'match_data':
+            this.matchData = data.match_data;
+            if (window.loggedInUserName === this.matchData.player1)
+                this.playerNumber = 1;
+            else if (window.loggedInUserName === this.matchData.player2)
+                this.playerNumber = 2;
+            console.log('matchData: ', this.matchData);
             
         default:
             console.log('Unkown message type:', type);
@@ -208,4 +216,21 @@ const sendGameControl = function(action) {
     }))
 }
 
-export { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendGameControl }
+const sendMatchData = function(attempts) {
+    if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
+        console.error("Curve socket not connected");
+        if (attempts < 10) {
+            setTimeout(() => this.sendMatchData(attempts + 1), 300)
+        }
+        return;
+    }
+
+    console.log('sendMatchData');
+
+    this.curveSocket.send(JSON.stringify({
+        'type': 'match_data',
+        'match_data': this.matchData,
+    }))
+}
+
+export { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendGameControl, sendMatchData }

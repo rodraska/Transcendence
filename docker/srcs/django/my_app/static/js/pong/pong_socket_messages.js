@@ -130,11 +130,11 @@ const sendGameControl = function(action) {
     }))
 }
 
-const sendMatchData = function(attemps) {
+const sendMatchData = function(attempts) {
     if (!this.pongSocket || this.pongSocket.readyState !== WebSocket.OPEN) {
         console.error("Pong socket not connected");
-        if (attemps < 10) {
-            setTimeout(() => this.sendMatchData(attemps + 1), 300)
+        if (attempts < 10) {
+            setTimeout(() => this.sendMatchData(attempts + 1), 300)
         }
         return;
     }

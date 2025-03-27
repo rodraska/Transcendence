@@ -9,12 +9,15 @@ class CurveGame extends Component
         super('static/html/curve_game.html');
 
         Object.assign(this, initializeCurveGameProperties());
+
+        this.matchData = window.currentMatchData;
     }
 
     onInit() {
         window.curve_game = this;
         this.getCurveHtmlElements(0);
         this.setupCurveSocket();
+        this.sendMatchData(0);
         this.curveGameControlEvents();
     }
 }
