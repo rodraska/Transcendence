@@ -38,7 +38,7 @@ const curr_iter = function()
     this.gameCoordinates();
     this.gameHoles();
     this.gamePowers();
-    this.gameCheckCollision();
+    if (this.playerNumber == 1) this.gameCheckCollision();
     this.gamePaintHist();
     this.saveCanvas();
     this.gamePaintPlayer();

@@ -62,20 +62,23 @@ const checkCollision = function()
             {
                 console.log(i);
                 console.log('collision regular');
-                this.processCollision();
+                this.game.sendCollision(this.id);
+                //this.processCollision();
                 return ;
             }
         }
         if (this.game.checkRGB([x1, y1], [255, 255, 255]))
         {
             console.log('collision white');
-            this.processCollision();
+            this.game.sendCollision(this.id);
+            //this.processCollision();
             return ;
         }
         if (this.hard_boundaries())
         {
             console.log('collision out');
-            this.processCollision();
+            this.game.sendCollision(this.id);
+            //this.processCollision();
             return ;
         }
     }

@@ -502,7 +502,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'ball_update',
             'position': event['position'],
-                'velocity': event['velocity']
+            'velocity': event['velocity']
         }))
 
     async def score_update(self, event):
@@ -637,6 +637,17 @@ class CurveConsumer(AsyncWebsocketConsumer):
                 }
             )
 
+        elif message_type == 'collision':
+            player_id = data.get('player_id')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'collision',
+                    'player_id': player_id
+                }
+            )
+
         elif message_type == 'game_control':
             action = data.get('action')
     
@@ -688,6 +699,12 @@ class CurveConsumer(AsyncWebsocketConsumer):
     async def pick_general(self, event):
         await self.send(text_data=json.dumps({
             'type': 'pick_general'
+        }))
+
+    async def collision(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'collision',
+            'player_id': event['player_id']
         }))
 
     async def game_control(self, event):

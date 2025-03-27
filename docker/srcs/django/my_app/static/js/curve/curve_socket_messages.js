@@ -56,6 +56,12 @@ const handleSocketMessage = function(data)
             this.erase = true;
             break;
 
+        case 'collision':
+            console.log('receive collision');
+            const player_id_ = data.player_id;
+            this.players[player_id_ - 1].processCollision();
+            break;
+
         case 'game_control':
             const action = data.action;
             switch (action) {
@@ -199,6 +205,25 @@ const sendPickGeneral = function() {
     }))
 }
 
+const sendCollision = function(player_id) {
+    if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
+        console.error("Curve socket not connected");
+        return;
+    }
+
+    if (!this.playerNumber) {
+        console.error("Player number not assigned");
+        return;
+    }
+
+    console.log('sendCollision');
+
+    this.curveSocket.send(JSON.stringify({
+        'type': 'collision',
+        'player_id': player_id
+    }))
+}
+
 const sendGameControl = function(action) {
     if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
         console.error("Curve socket not connected");
@@ -233,4 +258,4 @@ const sendMatchData = function(attempts) {
     }))
 }
 
-export { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendGameControl, sendMatchData }
+export { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendCollision, sendGameControl, sendMatchData }
