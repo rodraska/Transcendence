@@ -61,9 +61,6 @@
       window.loggedInUserName = "{{ user.username|escapejs }}";
       window.loggedInAvatarUrl =
         "{{ user.avatar_url|default:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg'|escapejs }}";
-      window.loggedInFirstName = "{{ user.first_name|escapejs }}";
-      window.loggedInLastName = "{{ user.last_name|escapejs }}";
-      window.loggedInEmail = "{{ user.email|escapejs }}";
     </script>
   </body>
 </html>

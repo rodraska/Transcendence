@@ -1,5 +1,6 @@
 from datetime import timedelta, timezone
 import json
+import os
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
@@ -8,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from transcendence.models import Matchmaking, Relationship, CustomUser, GameType, Match
 from django.db.models import Q
+from django.core.files.storage import default_storage 
+from django.core.files.base import ContentFile
 
 def index(request):
     return render(request, "my_index.html")
@@ -385,7 +388,7 @@ def get_user_by_id(request, user_id):
     }
     return JsonResponse(data)
 
-@csrf_exempt
+""" @csrf_exempt
 @login_required
 def update_user_info(request, user_id):
     if request.method not in ["PUT", "PATCH"]:
@@ -397,8 +400,6 @@ def update_user_info(request, user_id):
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON"}, status=400)
     
-    if "username" in data:
-        request.user.username = data["username"]
     if "email" in data:
         request.user.email = data["email"]
     if "first_name" in data:
@@ -413,7 +414,66 @@ def update_user_info(request, user_id):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
     
+    return JsonResponse({"message": "User updated successfully."}) """
+
+@csrf_exempt
+@login_required
+def update_user_info(request, user_id):
+    if request.method not in ["PUT", "PATCH"]:
+        return JsonResponse({"error": "Only PUT/PATCH is allowed."}, status=405)
+    if request.user.id != user_id:
+        return JsonResponse({"error": "You cannot update another user's information."}, status=403)
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    
+    if "email" in data:
+        request.user.email = data["email"]
+    if "first_name" in data:
+        request.user.first_name = data["first_name"]
+    if "last_name" in data:
+        request.user.last_name = data["last_name"]
+    
+    try:
+        request.user.save()
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    
     return JsonResponse({"message": "User updated successfully."})
+
+
+@csrf_exempt
+@login_required
+def update_avatar(request, user_id):
+    user = request.user
+
+    if request.method == "POST":
+        if "avatar_url" in request.POST:
+            # O usuário selecionou um avatar da lista
+            avatar_url = request.POST["avatar_url"]
+            user.avatar_url = avatar_url
+            user.save()
+            return JsonResponse({"avatar_url": avatar_url})
+
+        elif "avatar" in request.FILES:
+            # O usuário fez upload de um arquivo
+            avatar = request.FILES["avatar"]
+            avatar_filename = f"{user.username}_{avatar.name}"
+            avatar_path = os.path.join("staticfiles", "avatars", avatar_filename)
+
+            # Salvar o arquivo
+            saved_path = default_storage.save(avatar_path, ContentFile(avatar.read()))
+            avatar_url = f"/static/avatars/{avatar_filename}"  # Gera a URL da imagem
+
+            # Atualizar no perfil do usuário
+            user.avatar_url = avatar_url
+            user.save()
+
+            return JsonResponse({"avatar_url": avatar_url})
+
+    return JsonResponse({"error": "Nenhum avatar enviado ou selecionado."}, status=400)
+
 
 @csrf_exempt
 @login_required

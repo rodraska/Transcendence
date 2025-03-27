@@ -18,9 +18,9 @@
     textarea {
       resize: vertical; /* Permite redimensionar a área de texto apenas verticalmente */
     }
-  </style>
+</style>
   
-  <div class="container-fluid mt-5">
+ <div class="container-fluid mt-5">
     <div class="row">
       <!-- Parte Esquerda: Cartão com Imagem de Perfil e Botões -->
       <div class="col-md-4 d-flex justify-content-center">
@@ -32,13 +32,40 @@
           </div>
         </div>
       </div>
+
+
+      <!-- Modal para seleção de avatar -->
+      <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="avatarModalLabel">Choose your Avatar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="avatar-options">
+                        <img src="/static/avatars/avatar1.png" alt="Avatar 1" class="avatar-option" data-avatar-url="/static/avatars/avatar1.png">
+                        <img src="/static/avatars/avatar2.png" alt="Avatar 2" class="avatar-option" data-avatar-url="/static/avatars/avatar2.png">
+                        <img src="/static/avatars/avatar3.png" alt="Avatar 3" class="avatar-option" data-avatar-url="/static/avatars/avatar3.png">
+                    </div>
+                    <hr>
+                    <label for="uploadAvatarBtn">Upload your image:</label>
+                    <input type="file" id="uploadAvatarBtn" accept="image/*">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveAvatarBtn">Save Avatar</button>
+                </div>
+            </div>
+        </div>
+      </div>
+
   
       <!-- Parte Direita: Formulário para Inserir Dados de Perfil -->
       <div class="col-md-7">
         <form>
           <div class="mb-3">
             <label for="dname" class="form-label">Display Name</label>
-            <input type="text" class="form-control" id="dname" placeholder="">
+            <input type="text" class="form-control" id="dname" placeholder="" readonly>
           </div>
           <div class="mb-3">
             <label for="name1" class="form-label">First Name</label>
@@ -55,5 +82,7 @@
           <button type="submit" class="btn bg-accent-color">Save Changes</button>
         </form>
       </div>
+      
     </div>
-  </div>
+
+  </div> 
