@@ -32,7 +32,7 @@ const players_load = function()
     this.reset_paint();
     this.paint_offset();
     this.gamePaintPlayer();
-    this.gamePaintArrows();
+    this.myPlayer.paint_arrow();
 }
 
 const players_still = function()
@@ -41,7 +41,7 @@ const players_still = function()
     this.reset_paint();
     this.paint_offset();
     this.gamePaintPlayer();
-    this.gamePaintArrows();
+    this.myPlayer.paint_arrow();
     this.currentIters.load++;
     requestAnimationFrame(this.players_still.bind(this));
 }

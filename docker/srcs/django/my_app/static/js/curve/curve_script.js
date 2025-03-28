@@ -9,10 +9,10 @@ const players_free = function()
     }
     this.currentIters.load = 0;
     this.reset_paint();
-    this.gameSaveHist();
-    this.gameCoordinates();
+    this.myPlayer.save_hist();
+    this.myPlayer.generalized_coordinates();
     this.gamePaintPlayer();
-    this.gamePaintArrows();
+    this.myPlayer.paint_arrow();
     this.paint_offset();
     this.currentIters.begin++;
     requestAnimationFrame(this.players_free.bind(this));
@@ -34,10 +34,10 @@ const curr_iter = function()
         this.erase = false;
         this.reset_paint();
     }
-    this.gameSaveHist();
-    this.gameCoordinates();
-    this.gameHoles();
-    this.gamePowers();
+    this.myPlayer.save_hist();
+    this.myPlayer.generalized_coordinates();
+    this.myPlayer.holes();
+    this.myPlayer.pick_powerups();
     if (this.playerNumber == 1) this.gameCheckCollision();
     this.gamePaintHist();
     this.saveCanvas();

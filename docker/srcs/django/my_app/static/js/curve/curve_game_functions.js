@@ -1,22 +1,21 @@
 const gameCoordinates = function()
 {
-    //this.players[this.playerNumber - 1].generalized_coordinates();
     this.myPlayer.generalized_coordinates();
 }
 
 const gameSaveHist = function()
 {
-    this.players[this.playerNumber - 1].save_hist();
+    this.myPlayer.save_hist();
 } 
 
 const gameHoles = function()
 {
-    this.players[this.playerNumber - 1].holes();
+    this.myPlayer.holes();
 }
 
 const gamePowers = function()
 {
-    this.players[this.playerNumber - 1].pick_powerups();
+    this.myPlayer.pick_powerups();
 }
 
 const gameCheckCollision = function()
@@ -53,7 +52,7 @@ const gamePaintArcs = function()
 
 const gamePaintArrows = function()
 {
-    this.players[this.playerNumber - 1].paint_arrow();
+    this.myPlayer.paint_arrow();
 } 
 
 const gamePaintPowers = function()
