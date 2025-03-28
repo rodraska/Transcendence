@@ -26,7 +26,7 @@ const handleSocketMessage = function(data)
             const power_id = data.power_id;
             if (this.playerNumber !== data.player_id) {
                 let power = new this.powerConstructors[power_id](power_id, [0, 0], this.baseIters[power_id])
-                this.players[this.playerNumber - 1].powers.push(power);
+                this.myPlayer.powers.push(power);
             }
             break;
                 

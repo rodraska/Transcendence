@@ -21,7 +21,7 @@ const players_spawn = function()
         this.players.push(new Player(i, this.playerColors[i], this.playerRGB[i], [x, y], t, this.playerControls[i][0], this.playerControls[i][1], this));
     }
     this.myPlayer = this.players[this.playerNumber - 1];
-    this.sendPlayerState(this.players[this.playerNumber - 1]);
+    this.sendPlayerState(this.myPlayer);
 }
 
 const players_load = function()

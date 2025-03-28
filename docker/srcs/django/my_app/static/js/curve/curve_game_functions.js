@@ -1,11 +1,3 @@
-const gameCheckCollision = function()
-{
-    for (let i = 0; i < this.players.length; i++)
-    {
-        this.players[i].checkCollision();
-    }
-}
-
 const gamePaintHist = function()
 {
     for (let i = 0; i < this.players.length; i++)
@@ -48,4 +40,4 @@ const restoreCanvas = function()
     this.ctx.drawImage(this.s_canvas, 0, 0, this.canvas.width, this.canvas.height, 0, 0, this.canvas.width, this.canvas.height)
 }
 
-export { gameCheckCollision, gamePaintHist, gamePaintPlayer, gamePaintArcs, gamePaintPowers, saveCanvas, restoreCanvas }
+export { gamePaintHist, gamePaintPlayer, gamePaintArcs, gamePaintPowers, saveCanvas, restoreCanvas }

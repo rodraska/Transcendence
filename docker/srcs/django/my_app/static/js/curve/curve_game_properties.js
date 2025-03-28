@@ -1,7 +1,7 @@
 import { players_free, begin_iter, curr_iter, end_iter, players_play, ft_start, ft_pause, ft_stop } from "./curve_script.js"
 import { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_paint, paint_powerup } from "./curve_paint.js"
 import { ft_round, players_spawn, players_load, players_still } from "./curve_round.js"
-import { gameCheckCollision, gamePaintHist, gamePaintPlayer, gamePaintArcs, gamePaintPowers, saveCanvas, restoreCanvas } from "./curve_game_functions.js"
+import { gamePaintHist, gamePaintPlayer, gamePaintArcs, gamePaintPowers, saveCanvas, restoreCanvas } from "./curve_game_functions.js"
 import { dist, new_powerup, checkRGB } from "./curve_utils.js"
 import { PowerUp, PowerSpeed, PowerSlow, PowerThin, PowerSmallTurn, PowerGod, PowerBig, PowerBigTurn, PowerRubber } from "./curve_powerup.js"
 import { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendCollision, sendGameControl, sendMatchData } from "./curve_socket_messages.js"
@@ -127,7 +127,6 @@ const initializeCurveGameProperties = function()
         players_spawn: players_spawn,
         players_load: players_load,
         players_still: players_still,
-        gameCheckCollision: gameCheckCollision,
         gamePaintHist: gamePaintHist,
         gamePaintPlayer: gamePaintPlayer,
         gamePaintArcs: gamePaintArcs,
