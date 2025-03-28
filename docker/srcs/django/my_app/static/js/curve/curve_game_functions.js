@@ -6,7 +6,7 @@ const gamePaintHist = function()
     }
 } 
 
-const gamePaintPlayer = function()
+const gamePaintPlayers = function()
 {
     for (let i = 0; i < this.players.length; i++)
     {
@@ -40,4 +40,4 @@ const restoreCanvas = function()
     this.ctx.drawImage(this.s_canvas, 0, 0, this.canvas.width, this.canvas.height, 0, 0, this.canvas.width, this.canvas.height)
 }
 
-export { gamePaintHist, gamePaintPlayer, gamePaintArcs, gamePaintPowers, saveCanvas, restoreCanvas }
+export { gamePaintHist, gamePaintPlayers, gamePaintArcs, gamePaintPowers, saveCanvas, restoreCanvas }

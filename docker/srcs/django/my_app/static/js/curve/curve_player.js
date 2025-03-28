@@ -14,7 +14,7 @@ class Player
     god = false;
     stop = false;
 
-    constructor(id, color, rgb, pos, theta, right, left, game)
+    constructor(id, name, color, rgb, pos, theta, right, left, game)
     {
         this._cos=_cos;
         this._sin = _sin;
@@ -35,6 +35,7 @@ class Player
         this.iter_power = iter_power;
 
         this.id = id;
+        this.name = name;
         this.color = color;
         this.rgb = rgb;
         this.pos = pos;

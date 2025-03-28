@@ -57,10 +57,14 @@ const handleSocketMessage = function(data)
 
         case 'match_data':
             this.matchData = data.match_data;
-            if (window.loggedInUserName === this.matchData.player1)
+            if (window.loggedInUserName === this.matchData.player1) {
                 this.playerNumber = 1;
-            else if (window.loggedInUserName === this.matchData.player2)
+                this.name = this.matchData.player1;
+            }
+            else if (window.loggedInUserName === this.matchData.player2) {
                 this.playerNumber = 2;
+                this.name = this.matchData.player2;
+            }
             this.myPlayer = this.players[this.playerNumber - 1];
             this.points_to_win = this.matchData.points_to_win;
             this.getElementById("name1").innerHTML = this.matchData.player1;
@@ -86,6 +90,7 @@ const sendPlayerState = function(player) {
 
     const playerProperties = {
         id: player.id,
+        name: player.name,
         pos: player.pos,
         truepos: player.truepos,
         back: player.back,

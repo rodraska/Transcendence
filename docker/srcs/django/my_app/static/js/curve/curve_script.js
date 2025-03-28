@@ -11,7 +11,7 @@ const players_free = function()
     this.reset_paint();
     this.myPlayer.save_hist();
     this.myPlayer.generalized_coordinates();
-    this.gamePaintPlayer();
+    this.gamePaintPlayers();
     this.myPlayer.paint_arrow();
     this.paint_offset();
     this.currentIters.begin++;
@@ -41,7 +41,7 @@ const curr_iter = function()
     this.myPlayer.checkCollision();
     this.gamePaintHist();
     this.saveCanvas();
-    this.gamePaintPlayer();
+    this.gamePaintPlayers();
     this.gamePaintPowers();
 }
 
