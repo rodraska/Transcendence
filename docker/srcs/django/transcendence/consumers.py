@@ -545,14 +545,12 @@ class CurveConsumer(AsyncWebsocketConsumer):
 
         if message_type == 'player_state':
             player = data.get('player')
-            player_dest_id = data.get('player_dest_id')
 
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'player_state',
-                    'player': player,
-                    'player_dest_id': player_dest_id
+                    'player': player
                 }
             )
         
@@ -638,8 +636,7 @@ class CurveConsumer(AsyncWebsocketConsumer):
     async def player_state(self, event):
         await self.send(text_data=json.dumps({
             'type': 'player_state',
-            'player': event['player'],
-            'player_dest_id': event['player_dest_id']
+            'player': event['player']
         }))
 
     async def new_power(self, event):

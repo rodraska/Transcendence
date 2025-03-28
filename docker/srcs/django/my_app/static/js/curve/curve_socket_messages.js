@@ -16,11 +16,9 @@ const handleSocketMessage = function(data)
 
         case 'player_state':
             const player = data.player;
-            const player_dest_id = data.player_dest_id;
-            const id = player.id;
 
-            if (player_dest_id === this.playerNumber) {
-                const targetPlayer = this.players[id - 1];
+            if (player.id !== this.playerNumber) {
+                const targetPlayer = this.players[player.id - 1];
                 Object.assign(targetPlayer, player);
             }
             break;
@@ -92,7 +90,7 @@ const handleSocketMessage = function(data)
     }
 }
 
-const sendPlayerState = function(player_src, player_dest_id) {
+const sendPlayerState = function(player) {
     if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
         console.error("Curve socket not connected");
         return;
@@ -104,29 +102,28 @@ const sendPlayerState = function(player_src, player_dest_id) {
     }
 
     const playerProperties = {
-        id: player_src.id,
-        pos: player_src.pos,
-        truepos: player_src.truepos,
-        back: player_src.back,
-        mid: player_src.mid,
-        powers: player_src.powers,
-        vel: player_src.vel,
-        hole_iter: player_src.hole_iter,
-        turning: player_src.turning,
-        god: player_src.god,
-        stop: player_src.stop,
-        theta: player_src.theta,
-        trig: player_src.trig,
-        vel_t: player_src.vel_t,
-        radius: player_src.radius,
-        turn_rate: player_src.turn_rate,
-        hole_rate: player_src.hole_rate
+        id: player.id,
+        pos: player.pos,
+        truepos: player.truepos,
+        back: player.back,
+        mid: player.mid,
+        powers: player.powers,
+        vel: player.vel,
+        hole_iter: player.hole_iter,
+        turning: player.turning,
+        god: player.god,
+        stop: player.stop,
+        theta: player.theta,
+        trig: player.trig,
+        vel_t: player.vel_t,
+        radius: player.radius,
+        turn_rate: player.turn_rate,
+        hole_rate: player.hole_rate
     }
 
     this.curveSocket.send(JSON.stringify({
         'type': 'player_state',
-        'player': playerProperties,
-        'player_dest_id': player_dest_id
+        'player': playerProperties
 
     }))
 }
