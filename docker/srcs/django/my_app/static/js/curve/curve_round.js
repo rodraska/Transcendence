@@ -26,6 +26,12 @@ const players_spawn = function()
         let t = Math.floor(Math.random() * 361) * Math.PI / 180;
         this.players.push(new Player(i, this.playerColors[i], this.playerRGB[i], [x, y], t, this.playerControls[i][0], this.playerControls[i][1], this));
     }
+    if (this.playerNumber === 1) {
+        this.sendPlayerState(this.players[0], 2);
+    }
+    else {
+        this.sendPlayerState(this.players[1], 1);
+    }
 }
 
 const players_load = function()
@@ -33,6 +39,7 @@ const players_load = function()
     for (let key in this.currentIters) this.currentIters[key] = 0;
     this.round_winner = 0;
     this.stp = 0;
+    this.reset_paint();
     this.paint_offset();
     this.gamePaintPlayer();
     this.gamePaintArrows();
@@ -41,6 +48,10 @@ const players_load = function()
 const players_still = function()
 {
     if (this.currentIters.load == 150) return (this.players_free());
+    this.reset_paint();
+    this.paint_offset();
+    this.gamePaintPlayer();
+    this.gamePaintArrows();
     this.currentIters.load++;
     requestAnimationFrame(this.players_still.bind(this));
 }

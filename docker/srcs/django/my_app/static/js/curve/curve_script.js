@@ -1,6 +1,9 @@
 const players_free = function()
 {
-    this.sendPlayerState(this.players[this.playerNumber - 1]);
+    if (this.playerNumber == 1)
+        this.sendPlayerState(this.players[this.playerNumber - 1], 2);
+    else
+        this.sendPlayerState(this.players[this.playerNumber - 1], 1);
     if (this.currentIters.begin == 150)
     {
         this.reset_paint();
@@ -20,7 +23,10 @@ const players_free = function()
 
 const begin_iter = function()
 {
-    this.sendPlayerState(this.players[this.playerNumber - 1]);
+    if (this.playerNumber == 1)
+        this.sendPlayerState(this.players[this.playerNumber - 1], 2);
+    else
+        this.sendPlayerState(this.players[this.playerNumber - 1], 1);
     if (this.currentIters[10] > 0) this.currentIters[10]--;
     this.paint_offset();
     this.new_powerup();

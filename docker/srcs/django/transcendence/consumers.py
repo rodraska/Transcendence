@@ -520,7 +520,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         }))
 
 class CurveConsumer(AsyncWebsocketConsumer):
-    #connected_players = {}
 
     async def connect(self):
         self.game_id = '48'
@@ -532,49 +531,13 @@ class CurveConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-
-        """
-        self.player_number = await self.get_next_player_number()
-
-        if self.player_number > 0:
-            await self.send(text_data=json.dumps({
-                'type': 'player_assign',
-                'player_number': self.player_number
-            }))
-        
-        if self.player_number == 2:
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'game_ready'
-                }
-            )
-        """
     
     async def disconnect(self, close_code):
-        """
-        if hasattr(self, 'game_id') and self.player_number > 0:
-            if self.game_id in self.connected_players:
-                self.connected_players.pop(self.game_id, None)
 
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
-        """
-
-    """
-    async def get_next_player_number(self):
-        if self.game_id not in self.connected_players:
-            self.connected_players[self.game_id] = 1
-            return 1
-    
-        elif self.connected_players[self.game_id] == 1:
-            self.connected_players[self.game_id] = 2
-            return 2
-        
-        return 0
-    """
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -582,12 +545,14 @@ class CurveConsumer(AsyncWebsocketConsumer):
 
         if message_type == 'player_state':
             player = data.get('player')
+            player_dest_id = data.get('player_dest_id')
 
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'player_state',
-                    'player': player
+                    'player': player,
+                    'player_dest_id': player_dest_id
                 }
             )
         
@@ -673,7 +638,8 @@ class CurveConsumer(AsyncWebsocketConsumer):
     async def player_state(self, event):
         await self.send(text_data=json.dumps({
             'type': 'player_state',
-            'player': event['player']
+            'player': event['player'],
+            'player_dest_id': event['player_dest_id']
         }))
 
     async def new_power(self, event):
@@ -714,20 +680,6 @@ class CurveConsumer(AsyncWebsocketConsumer):
             'type': 'game_control',
             'action': action
         }))
-
-    """
-    async def player_assign(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'player_assign',
-            'player_number': event['player_number']
-        }))
-    
-
-    async def game_ready(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'game_ready'
-        }))
-    """
 
     async def match_data(self, event):
         await self.send(text_data=json.dumps({
