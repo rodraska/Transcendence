@@ -45,7 +45,7 @@ const processCollision = function()
     this.game.give_points(this.id);
     this.stop = true;
     this.game.dead++;
-    if (this.game.dead >= this.game.numberPlayers - 1) this.game.roundWinner();
+    if (this.game.dead >= 1) this.game.roundWinner();
     this.powers = [];
 }
 
@@ -63,7 +63,7 @@ const checkCollision = function()
                 console.log(i);
                 console.log('collision regular');
                 this.game.sendCollision(this.id);
-                //this.processCollision();
+
                 return ;
             }
         }
@@ -71,14 +71,12 @@ const checkCollision = function()
         {
             console.log('collision white');
             this.game.sendCollision(this.id);
-            //this.processCollision();
             return ;
         }
         if (this.hard_boundaries())
         {
             console.log('collision out');
             this.game.sendCollision(this.id);
-            //this.processCollision();
             return ;
         }
     }

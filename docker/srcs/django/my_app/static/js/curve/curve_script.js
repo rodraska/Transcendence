@@ -55,7 +55,7 @@ const end_iter = function()
 
 const players_play = function()
 {
-    if (this.stp == 1) this.currentIters.end++;
+    if (this.dead >= 1) this.currentIters.end++;
     if (this.currentIters.end > 300) return (this.ft_round());
     this.begin_iter();
     this.curr_iter();

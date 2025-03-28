@@ -13,16 +13,10 @@ const ft_round = function()
 
 const players_spawn = function()
 {
-    for (let i = 1; i <= this.numberPlayers; i++)
+    for (let i = 1; i <= 2; i++)
     {
-        outer: while (1)
-        {
-            var x = Math.floor(Math.random() * 3 * this.width / 4) - 3 * this.width / 8;
-            var y = Math.floor(Math.random() * 3 * this.height / 4) - 3 * this.height / 8;
-            for (let p = 0; p < this.players.length; p++)
-                if (this.dist([x, y], this.players[p].pos) < 100) {continue outer};
-            break ;
-        }
+        var x = Math.floor(Math.random() * 3 * this.width / 4) - 3 * this.width / 8;
+        var y = Math.floor(Math.random() * 3 * this.height / 4) - 3 * this.height / 8;
         let t = Math.floor(Math.random() * 361) * Math.PI / 180;
         this.players.push(new Player(i, this.playerColors[i], this.playerRGB[i], [x, y], t, this.playerControls[i][0], this.playerControls[i][1], this));
     }
@@ -33,7 +27,7 @@ const players_load = function()
 {
     for (let key in this.currentIters) this.currentIters[key] = 0;
     this.round_winner = 0;
-    this.stp = 0;
+    this.dead = 0;
     this.reset_paint();
     this.paint_offset();
     this.gamePaintPlayer();
@@ -53,7 +47,6 @@ const players_still = function()
 
 const roundWinner = function()
 {
-    this.stp = 1;
     let top_scorer = 0;
     for (let i = 1; i <= this.players.length; i++)
     {

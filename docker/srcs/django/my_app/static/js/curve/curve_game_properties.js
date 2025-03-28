@@ -21,7 +21,6 @@ const initializeCurveGameProperties = function()
         powers: [],
         round: 1,
         dead: 0,
-        stp: 0,
         erase: false,
         round_winner: 0,
         game_winner: 0,
