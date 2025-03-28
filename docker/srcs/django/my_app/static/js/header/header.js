@@ -41,8 +41,7 @@ class HeaderBar extends Component {
         Route.go("/friends");
       });
     }
-    
-   
+
     const userNameElement = this.querySelector("#userName");
     if (userNameElement && window.loggedInUserName) {
       userNameElement.textContent = window.loggedInUserName;

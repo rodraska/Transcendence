@@ -1,215 +1,237 @@
 <style>
-    /* Estilos personalizados */
-    body {
-      overflow-x: hidden;
-    }
-  
-    .menu-container {
-      position: relative;
-    }
-  
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: nowrap;
-      height: 60px; /* Garante que a altura da navbar seja constante */
-      position: relative;
-    }
-  
-    .navbar-nav {
-      display: flex;
-      align-items: center; /* Alinha os itens da navbar verticalmente */
-      height: 100%;
-      margin: 0; /* Remove qualquer margem no menu */
-    }
-  
-    .nav-item {
-      display: flex;
-      align-items: center;
-    }
-  
-    #navbar a:hover {
-      color: var(--accent-color);
+  /* Estilos personalizados */
+  body {
+    overflow-x: hidden;
+  }
+
+  .menu-container {
+    position: relative;
+  }
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 60px; /* Garante que a altura da navbar seja constante */
+    position: relative;
+  }
+
+  .navbar-nav {
+    display: flex;
+    align-items: center; /* Alinha os itens da navbar verticalmente */
+    height: 100%;
+    margin: 0; /* Remove qualquer margem no menu */
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+  }
+
+  #navbar a:hover {
+    color: var(--accent-color);
       cursor: pointer;
+  }
+
+  #logoutbtn:hover {
+    background-color: var(--accent-color); /* Cor de fundo ao passar o mouse */
+    color: white !important; /* Garante que a cor do texto do botão de logout tenha mais prioridade */
+    transform: scale(1.1); /* Efeito de aumento */
+    transition: transform 0.3s; /* Suaviza o efeito */
+  }
+
+  .navbar-nav .nav-item .nav-link {
+    padding-top: 4px; /* Ajusta o padding superior */
+    padding-bottom: 4px; /* Ajusta o padding inferior */
+  }
+
+  /* Ajuste para telas menores que 992px */
+  @media (max-width: 992px) {
+    /* Garante que a navbar ainda use flexbox para os itens */
+    .navbar {
+      flex-wrap: wrap; /* Permite que a navbar se ajuste em linhas quando necessário */
+      justify-content: space-between;
     }
-  
-    #logoutbtn:hover {
-      background-color: var(--accent-color);  /* Cor de fundo ao passar o mouse */
-      color: white !important;  /* Garante que a cor do texto do botão de logout tenha mais prioridade */
-      transform: scale(1.1);  /* Efeito de aumento */
-      transition: transform 0.3s;  /* Suaviza o efeito */
+
+    /* O menu deve expandir verticalmente */
+    .navbar-nav {
+      flex-direction: column;
+      width: 100%;
+      margin-top: 10px;
+      text-align: center;
     }
-  
-  
-    .navbar-nav .nav-item .nav-link {
-      padding-top: 4px; /* Ajusta o padding superior */
-      padding-bottom: 4px; /* Ajusta o padding inferior */
-    }
-  
-    /* Ajuste para telas menores que 992px */
-    @media (max-width: 992px) {
-      /* Garante que a navbar ainda use flexbox para os itens */
-      .navbar {
-        flex-wrap: wrap; /* Permite que a navbar se ajuste em linhas quando necessário */
-        justify-content: space-between;
-      }
-  
-      /* O menu deve expandir verticalmente */
-      .navbar-nav {
-        flex-direction: column;
-        width: 100%;
-        margin-top: 10px;
-        text-align: center;
-      }
-  
-      /* Itens de navegação no menu */
-      .navbar-nav .nav-item {
-        width: 100%;
-        text-align: center;
+
+    /* Itens de navegação no menu */
+    .navbar-nav .nav-item {
+      width: 100%;
+      text-align: center;
         cursor: pointer;
-      }
-  
-       /* Estilo do botão do menu hambúrguer */
-      .menu-btn {
-        background-color: var(--secondary-color);
-        border: none;
-        border-radius: 5px;
-        padding: 5px 10px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-  
-      .menu-btn:hover {
-        background-color: var(--accent-color);
-      }
-  
-      /* Nome e imagem de perfil fixos na parte direita */
-      .navbar .d-flex {
-        position: absolute;
-        right: 10px; /* Garante que a área do nome e imagem fiquem à direita */
-        top: 50%; /* Centraliza verticalmente */
-        transform: translateY(-50%); /* Alinha perfeitamente ao centro */
-        display: flex;
-        align-items: center;
-        z-index: 10; /* Garante que fiquem acima do menu colapsado */
-      }
-  
-      .navbar .d-flex img {
-        width: 30px; /* Tamanho da imagem */
-        height: 30px;
-        border-radius: 50%; /* Imagem redonda */
-      }
-  
-      .navbar .d-flex span {
-        font-size: 14px;
-        color: white;
-        margin-left: 10px; /* Espaço entre o nome e a foto */
-      }
-  
-      /* Ajusta o botão do menu */
-      .navbar-toggler {
-        padding: 0.5rem 1rem;
-      }
     }
-  
-    /* Ajuste para telas menores que 575px */
-    @media (max-width: 575px) {
-      .navbar {
-        flex-direction: row; /* Garante que o nome e a imagem fiquem na mesma linha */
-        justify-content: space-between;
-      }
-  
-      /* Menu expandido de forma limpa */
-      .navbar-nav {
-        flex-direction: column;
-        width: 100%;
-        text-align: center;
-        margin-top: 10px;
-      }
-  
-      .navbar-nav .nav-item {
-        width: 100%;
-        text-align: center;
-      }
-  
-      .navbar .d-flex {
-        position: absolute;
-        right: 10px; /* Garante que a área do nome e imagem fiquem à direita */
-        top: 50%; /* Centraliza verticalmente */
-        transform: translateY(-50%); /* Alinha perfeitamente ao centro */
-        display: flex;
-        align-items: center;
-        z-index: 10; /* Garante que fiquem acima do menu expandido */
-      }
-  
-      .navbar .d-flex img {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-      }
-  
-      .navbar .d-flex span {
-        font-size: 14px;
-        color: white;
-        margin-left: 10px;
-      }
+
+    /* Estilo do botão do menu hambúrguer */
+    .menu-btn {
+      background-color: var(--secondary-color);
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
     }
-  </style>
-  
-  <header>
-    <nav class="navbar navbar-expand-lg fixed-top bg-primary-color" id="navbar" style="height: 60px;">
-      <div class="container-fluid">
-        <button
-          class="navbar-toggler"
-          id="menu-btn"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbar-items"
-          aria-controls="navbar-items"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+
+    .menu-btn:hover {
+      background-color: var(--accent-color);
+    }
+
+    /* Nome e imagem de perfil fixos na parte direita */
+    .navbar .d-flex {
+      position: absolute;
+      right: 10px; /* Garante que a área do nome e imagem fiquem à direita */
+      top: 50%; /* Centraliza verticalmente */
+      transform: translateY(-50%); /* Alinha perfeitamente ao centro */
+      display: flex;
+      align-items: center;
+      z-index: 10; /* Garante que fiquem acima do menu colapsado */
+    }
+
+    .navbar .d-flex img {
+      width: 30px; /* Tamanho da imagem */
+      height: 30px;
+      border-radius: 50%; /* Imagem redonda */
+    }
+
+    .navbar .d-flex span {
+      font-size: 14px;
+      color: white;
+      margin-left: 10px; /* Espaço entre o nome e a foto */
+    }
+
+    /* Ajusta o botão do menu */
+    .navbar-toggler {
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  /* Ajuste para telas menores que 575px */
+  @media (max-width: 575px) {
+    .navbar {
+      flex-direction: row; /* Garante que o nome e a imagem fiquem na mesma linha */
+      justify-content: space-between;
+    }
+
+    /* Menu expandido de forma limpa */
+    .navbar-nav {
+      flex-direction: column;
+      width: 100%;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .navbar-nav .nav-item {
+      width: 100%;
+      text-align: center;
+    }
+
+    .navbar .d-flex {
+      position: absolute;
+      right: 10px; /* Garante que a área do nome e imagem fiquem à direita */
+      top: 50%; /* Centraliza verticalmente */
+      transform: translateY(-50%); /* Alinha perfeitamente ao centro */
+      display: flex;
+      align-items: center;
+      z-index: 10; /* Garante que fiquem acima do menu expandido */
+    }
+
+    .navbar .d-flex img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+
+    .navbar .d-flex span {
+      font-size: 14px;
+      color: white;
+      margin-left: 10px;
+    }
+  }
+  .navbar-nav .nav-link {
+    cursor: pointer;
+  }
+
+  #logoutbtn {
+    cursor: pointer;
+  }
+</style>
+
+<header>
+  <nav
+    class="navbar navbar-expand-lg fixed-top bg-primary-color"
+    id="navbar"
+    style="height: 60px"
+  >
+    <div class="container-fluid">
+      <button
+        class="navbar-toggler"
+        id="menu-btn"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbar-items"
+        aria-controls="navbar-items"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="bi bi-list"></i>
+      </button>
+
+      <!-- Menu colapsável (Itens do menu) -->
+      <div class="collapse navbar-collapse" id="navbar-items">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" id="homebtn">Home</a>
+          </li>
+          <li class="nav-item mx-2">
+            <a class="nav-link" id="profilebtn">Profile</a>
+          </li>
+          <li class="nav-item mx-2">
+            <a class="nav-link" id="friendbtn">Friends</a>
+          </li>
+          <li class="nav-item mx-2">
+            <a class="nav-link" id="playgamebtn">Play Game</a>
+          </li>
+          <li class="nav-item mx-2">
+            <a class="nav-link" id="statbtn">Game Stats</a>
+          </li>
+
+          <!-- Logout visível dentro do menu colapsado -->
+          <li class="nav-item mx-2">
+            <a
+              class="nav-link btn bg-accent-color"
+              id="logoutbtn"
+              href="#"
+              onclick="window.location.href = '/accounts/logout/'; return false;"
+              ><i class="bi bi-box-arrow-right"></i>Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Nome e Imagem fixos à direita, sempre visíveis -->
+      <div class="d-flex align-items-center ms-auto">
+        <!-- Nome -->
+        <span id="userName" class="me-2 text-white">Name</span>
+
+        <!-- Foto -->
+        <div
+          class="rounded-circle overflow-hidden"
+          style="width: 40px; height: 40px; border: 2px solid #ccc"
         >
-          <i class="bi bi-list"></i>
-        </button>
-  
-        <!-- Menu colapsável (Itens do menu) -->
-        <div class="collapse navbar-collapse" id="navbar-items">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" id="homebtn">Home</a>
-            </li>
-            <li class="nav-item mx-2">
-              <a class="nav-link" id="profilebtn">Profile</a>
-            </li>
-            <li class="nav-item mx-2">
-              <a class="nav-link" id="friendbtn">Friends</a>
-            </li>
-            <li class="nav-item mx-2">
-              <a class="nav-link" id="playgamebtn">Play Game</a>
-            </li>
-            <li class="nav-item mx-2">
-              <a class="nav-link" id="statbtn">Game Stats</a>
-            </li>
-            
-            <!-- Logout visível dentro do menu colapsado -->
-            <li class="nav-item mx-2">
-              <a class="nav-link btn bg-accent-color" id="logoutbtn" href="#" onclick="window.location.href = '/accounts/logout/'; return false;"><i class="bi bi-box-arrow-right"></i>Logout</a>
-            </li>
-          </ul>
-        </div>
-  
-        <!-- Nome e Imagem fixos à direita, sempre visíveis -->
-        <div class="d-flex align-items-center ms-auto">
-          <!-- Nome -->
-          <span id="userName" class="me-2 text-white">Name</span>
-  
-          <!-- Foto -->
-          <div class="rounded-circle overflow-hidden" style="width: 40px; height: 40px; border: 2px solid #ccc;">
-            <img id= "headerProfileImage" src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg" alt="Profile"
-              style="width: 100%; height: 100%; object-fit: cover;">
-          </div>
+          <img id= "headerProfileImage"
+            src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg"
+            alt="Profile"
+            style="width: 100%; height: 100%; object-fit: cover"
+          />
         </div>
       </div>
-    </nav>
-  </header>
+    </div>
+  </nav>
+</header>

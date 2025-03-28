@@ -39,14 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'django.contrib.sites',
+    'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-	'transcendence',
-	'transcendence.providers',
-	'transcendence.providers.fortytwo',
-	'my_app',
+    'transcendence',
+    'transcendence.providers',
+    'transcendence.providers.fortytwo',
+    'my_app',
 ]
 
 ASGI_APPLICATION = "transcendence.asgi.application"
@@ -72,7 +72,6 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_LOGOUT_ON_GET = True
 
 # settings.py
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -83,7 +82,7 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG',  # Capta todos os logs, incluindo INFO e DEBUG
+        'level': 'DEBUG',  # captures DEBUG and above messages
     },
     'loggers': {
         'django': {
@@ -101,6 +100,18 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        # Add a logger for Channels to capture async errors
+        'channels': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        # Optionally also add one for Daphne
+        'daphne': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     },
 }
 
@@ -112,7 +123,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'allauth.account.middleware.AccountMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'transcendence.urls'
@@ -192,7 +203,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "my_app/static"),  # Your static files directory
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Collects all static files here
+# Collects all static files here
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Default primary key field type
