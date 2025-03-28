@@ -4,19 +4,8 @@ const handleSocketMessage = function(data)
 
     switch (type)
     {
-        case 'player_assign':
-            this.playerNumber = data.player_number;
-            console.log(`Assigned as player: ${this.playerNumber}`);
-            break;
-
-        case 'game_ready':
-            console.log('Game is ready to start');
-            this.gameReady = true;
-            break;
-
         case 'player_state':
             const player = data.player;
-
             if (player.id !== this.playerNumber) {
                 const targetPlayer = this.players[player.id - 1];
                 Object.assign(targetPlayer, player);
@@ -29,18 +18,14 @@ const handleSocketMessage = function(data)
             break;
 
         case 'pick_power':
-            const i = data.i;
-            const player_id = data.player_id
-            if (this.playerNumber !== player_id)
-                this.powers.splice(i, 1);
+            if (this.playerNumber !== data.player_id)
+                this.powers.splice(data.i, 1);
             break;
         
         case 'pick_others':
-            console.log('pick_others');
-            const _power_id = data.power_id;
-            const _player_id = data.player_id;
-            if (this.playerNumber !== _player_id) {
-                let power = new this.powerConstructors[_power_id](_power_id, [0, 0], this.baseIters[_power_id])
+            const power_id = data.power_id;
+            if (this.playerNumber !== data.player_id) {
+                let power = new this.powerConstructors[power_id](power_id, [0, 0], this.baseIters[power_id])
                 this.players[this.playerNumber - 1].powers.push(power);
             }
             break;
@@ -53,15 +38,11 @@ const handleSocketMessage = function(data)
 
         case 'collision':
             console.log('receive collision');
-            const player_id_ = data.player_id;
-            this.players[player_id_ - 1].processCollision();
-            document.getElementById("score1").innerHTML = this.playerScores[1];
-            document.getElementById("score2").innerHTML = this.playerScores[2];
+            this.players[data.player_id - 1].processCollision();
             break;
 
         case 'game_control':
-            const action = data.action;
-            switch (action) {
+            switch (data.action) {
                 case 'start':
                     this.ft_start(false);
                     break;
@@ -151,7 +132,7 @@ const sendNewPower = function(power) {
     }))
 }
 
-const sendPickPower = function(i, player_id) {
+const sendPickPower = function(power_index, player_id) {
     if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
         console.error("Curve socket not connected");
         return;
@@ -164,7 +145,7 @@ const sendPickPower = function(i, player_id) {
 
     this.curveSocket.send(JSON.stringify({
         'type': 'pick_power',
-        'i': i,
+        'power_index': power_index,
         'player_id': player_id
     }))
 }

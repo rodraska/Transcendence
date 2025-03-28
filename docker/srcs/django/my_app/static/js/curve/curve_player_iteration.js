@@ -42,14 +42,19 @@ const holes = function()
 
 const processCollision = function()
 {
-    this.game.give_points(this.id);
     this.stop = true;
     this.game.dead++;
     for (let i = 1; i <= 2; i++) {
-        if (this.game.players[i - 1].stop == false) this.game.round_winner = i;
-        if (this.game.playerScores[i] >= this.game.points_to_win) this.game.game_winner = i;
+        if (this.game.players[i - 1].stop == false) {
+            this.game.round_winner = i;
+            this.game.playerScores[i]++;
+        }
+        if (this.game.playerScores[i] >= this.game.points_to_win) 
+            this.game.game_winner = i;
     }
     this.powers = [];
+    document.getElementById("score1").innerHTML = this.game.playerScores[1];
+    document.getElementById("score2").innerHTML = this.game.playerScores[2];
 }
 
 const checkCollision = function()

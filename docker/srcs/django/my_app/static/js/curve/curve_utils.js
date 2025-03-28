@@ -3,15 +3,6 @@ const dist = function([x1, y1], [x2, y2])
     return (Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)));
 }
 
-const give_points = function(id)
-{
-    for (let i = 0; i < this.players.length; i++)
-    {
-        (i != (id - 1) && this.players[i].stop == false) ? this.playerScores[i + 1] += 1 : null; 
-        //document.getElementById("score" + (i + 1)).innerHTML = this.playerScores[i + 1];
-    }
-}
-
 const new_powerup = function()
 {
     if (this.playerNumber !== 1) return;
@@ -41,4 +32,4 @@ const checkRGB = function(pos, rgb)
     return (1);
 }
 
-export { dist, give_points, new_powerup, checkRGB }
+export { dist, new_powerup, checkRGB }
