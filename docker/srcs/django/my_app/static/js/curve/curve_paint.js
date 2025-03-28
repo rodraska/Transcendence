@@ -8,13 +8,11 @@ const paint_gg = function()
     if (this.game_winner == 0)
     {
         this.ctx.fillStyle = 'white';
-        //this.ctx.fillText("Player " + this.round_winner + " Wins This Round", this.width / 2, this.height / 2);
         this.ctx.fillText(this.players[this.round_winner - 1].name + " Wins This Round", this.width / 2, this.height / 2);
     }
     else
     {
         this.ctx.fillStyle = this.players[this.game_winner - 1].color;
-        //this.ctx.fillText("Player " + this.game_winner + " Wins The Game", this.width / 2, this.height / 2);
         this.ctx.fillText(this.players[this.game_winner - 1].name + " Wins The Game", this.width / 2, this.height / 2);
     }    
 }
