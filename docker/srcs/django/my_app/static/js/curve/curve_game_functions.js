@@ -1,6 +1,7 @@
 const gameCoordinates = function()
 {
-    this.players[this.playerNumber - 1].generalized_coordinates();
+    //this.players[this.playerNumber - 1].generalized_coordinates();
+    this.myPlayer.generalized_coordinates();
 }
 
 const gameSaveHist = function()
@@ -52,10 +53,6 @@ const gamePaintArcs = function()
 
 const gamePaintArrows = function()
 {
-    /*for (let i = 0; i < this.players.length; i++)
-    {
-        this.players[i].paint_arrow();
-    }*/
     this.players[this.playerNumber - 1].paint_arrow();
 } 
 

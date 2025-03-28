@@ -14,6 +14,7 @@ const initializeCurveGameProperties = function()
     return {
         curveSocket: null,
         playerNumber: null,
+        myPlayer: null,
         gameReady: null,
 
         players: [],

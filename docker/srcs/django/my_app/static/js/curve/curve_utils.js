@@ -15,14 +15,12 @@ const new_powerup = function()
         for (let i = 0; i < this.players.length; i++)
             if (this.dist([x, y], this.players[i].pos) < 50) {continue outer};
         for (let j = 0; j < this.powers.length; j++)
-            if (this.dist([x, y], this.powers[j].pos) < 20) {continue outer};
+            if (this.dist([x, y], this.powers[j].pos) < 50) {continue outer};
         break ;
     }
     //let id = Math.floor(Math.random() * 10) + 1; //all the power ups
-    //id = Math.floor(Math.random() * 2); //specific range
     let id = 6; //specific powerup
     this.sendNewPower(new this.powerConstructors[id](id, [x, y], this.baseIters[id]));
-    //this.powers.push(new this.powerConstructors[10](id, [x, y], this.baseIters[id]));
 }
 
 const checkRGB = function(pos, rgb)

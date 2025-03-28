@@ -61,9 +61,11 @@ const handleSocketMessage = function(data)
                 this.playerNumber = 1;
             else if (window.loggedInUserName === this.matchData.player2)
                 this.playerNumber = 2;
+            this.myPlayer = this.players[this.playerNumber - 1];
+            this.points_to_win = this.matchData.points_to_win;
             this.getElementById("name1").innerHTML = this.matchData.player1;
             this.getElementById("name2").innerHTML = this.matchData.player2;
-            this.getElementById("pointToWin").innerHTML = "Point to Win: " + this.matchData.points_to_win;
+            this.getElementById("pointToWin").innerHTML = "Point to Win: " + this.points_to_win;
             console.log('matchData: ', this.matchData);
             
         default:

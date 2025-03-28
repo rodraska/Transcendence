@@ -8,12 +8,6 @@ const _sin = function(factor)
     return (Math.sin(this.theta + factor * Math.PI));
 }
 
-const trueIndex = function(id)
-{
-    for (let i = 0; i < this.powers.length; i++) {if (this.powers[i].id == id) return (i)}
-    return (-1);
-}
-
 const check_powerup = function(id)
 {
     for (let i = 0; i < this.powers.length; i++)
@@ -39,4 +33,4 @@ const hard_boundaries = function()
     return (0);
 }
 
-export { _cos, _sin, trueIndex, check_powerup, count_powerup, hard_boundaries }
+export { _cos, _sin, check_powerup, count_powerup, hard_boundaries }

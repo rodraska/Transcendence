@@ -20,6 +20,7 @@ const players_spawn = function()
         let t = Math.floor(Math.random() * 361) * Math.PI / 180;
         this.players.push(new Player(i, this.playerColors[i], this.playerRGB[i], [x, y], t, this.playerControls[i][0], this.playerControls[i][1], this));
     }
+    this.myPlayer = this.players[this.playerNumber - 1];
     this.sendPlayerState(this.players[this.playerNumber - 1]);
 }
 
