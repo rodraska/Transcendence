@@ -45,17 +45,4 @@ const players_still = function()
     requestAnimationFrame(this.players_still.bind(this));
 }
 
-const roundWinner = function()
-{
-    let top_scorer = 0;
-    for (let i = 1; i <= this.players.length; i++)
-    {
-        if (this.players[i - 1].stop == false) this.round_winner = i;
-        if (this.playerScores[i] == this.playerScores[top_scorer]) top_scorer = 0;
-        if (this.playerScores[i] > this.playerScores[top_scorer]) top_scorer = i;
-    }
-    if (this.numberPlayers == 1) this.round_winner = 1;
-    if (top_scorer != 0 && this.playerScores[top_scorer] >= this.points_to_win) this.game_winner = top_scorer;
-}
-
-export { ft_round, players_spawn, players_load, players_still, roundWinner }
+export { ft_round, players_spawn, players_load, players_still }

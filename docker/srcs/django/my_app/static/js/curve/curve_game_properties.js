@@ -1,6 +1,6 @@
 import { players_free, begin_iter, curr_iter, end_iter, players_play, ft_start, ft_pause, ft_stop } from "./curve_script.js"
 import { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_paint, paint_powerup } from "./curve_paint.js"
-import { ft_round, players_spawn, players_load, players_still, roundWinner } from "./curve_round.js"
+import { ft_round, players_spawn, players_load, players_still } from "./curve_round.js"
 import { gameCoordinates, gameSaveHist, gameHoles, gamePowers, gameCheckCollision, gamePaintHist, gamePaintPlayer, gamePaintArcs, gamePaintArrows, gamePaintPowers, saveCanvas, restoreCanvas } from "./curve_game_functions.js"
 import { dist, give_points, new_powerup, checkRGB } from "./curve_utils.js"
 import { PowerUp, PowerSpeed, PowerSlow, PowerThin, PowerSmallTurn, PowerGod, PowerBig, PowerBigTurn, PowerRubber } from "./curve_powerup.js"
@@ -31,7 +31,7 @@ const initializeCurveGameProperties = function()
 
         baseValues: {
         radius: 4.20,
-        vel: 0.75,
+        vel: 1.5,
         turn: 0.015,
         hole: 101
         },
@@ -127,7 +127,6 @@ const initializeCurveGameProperties = function()
         players_spawn: players_spawn,
         players_load: players_load,
         players_still: players_still,
-        roundWinner: roundWinner,
         gameCoordinates: gameCoordinates,
         gameSaveHist: gameSaveHist,
         gameHoles: gameHoles,
