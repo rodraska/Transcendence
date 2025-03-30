@@ -25,7 +25,7 @@ const generalized_coordinates = function()
 
 const holes = function()
 {
-    if (this.game.currentIters.begin < 160 || this.game.currentIters[10] > 0 || this.god == true || this.stop == true) return ;
+    if (this.game.currentIters.begin < 160 || this.game.currentIters[6] > 0 || this.god == true || this.stop == true) return ;
     if (this.hole_iter > 0)
     {
         this.hole_iter--;

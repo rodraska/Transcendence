@@ -600,6 +600,17 @@ class CurveConsumer(AsyncWebsocketConsumer):
                 }
             )
 
+        elif message_type == 'game_powers':
+            powers = data.get('powers')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_powers',
+                    'powers': powers
+                }
+            )
+
         elif message_type == 'collision':
             player_id = data.get('player_id')
 
@@ -668,6 +679,12 @@ class CurveConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'collision',
             'player_id': event['player_id']
+        }))
+    
+    async def game_powers(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_powers',
+            'powers': event['powers']
         }))
 
     async def game_control(self, event):

@@ -3,8 +3,8 @@ import { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_pai
 import { ft_round, players_spawn, players_load, players_still } from "./curve_round.js"
 import { gamePaintHist, gamePaintPlayers, gamePaintArcs, gamePaintPowers, saveCanvas, restoreCanvas } from "./curve_game_functions.js"
 import { dist, new_powerup, checkRGB } from "./curve_utils.js"
-import { PowerUp, PowerSpeed, PowerSlow, PowerThin, PowerSmallTurn, PowerGod, PowerBig, PowerBigTurn, PowerRubber } from "./curve_powerup.js"
-import { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendCollision, sendGameControl, sendMatchData } from "./curve_socket_messages.js"
+import { PowerUp, PowerSpeed, PowerSlow, PowerGod, PowerRubber } from "./curve_powerup.js"
+import { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendCollision, sendGamePowers, sendGameControl, sendMatchData } from "./curve_socket_messages.js"
 import { curveGameControlEvents } from "./curve_events.js"
 import { getCurveHtmlElements } from "./curve_html_elements.js"
 import { setupCurveSocket } from "./curve_socket_setup.js"
@@ -40,47 +40,35 @@ const initializeCurveGameProperties = function()
         powerConstructors: {
             1: PowerSpeed,
             2: PowerSlow,
-            3: PowerThin,
-            4: PowerSmallTurn,
-            5: PowerGod,
-            6: PowerSpeed,
-            7: PowerSlow,
-            8: PowerBig,
-            9: PowerBigTurn,
-            10: PowerRubber
+            3: PowerGod,
+            4: PowerSpeed,
+            5: PowerSlow,
+            6: PowerRubber
         },
 
         powerColors: {
             1: "lime",
             2: "yellow",
-            3: "cyan",
-            4: "blue",
-            5: "pink",
-            6: "lime",
-            7: "yellow",
-            8: "brown",
-            9: "purple",
-            10: "white"
+            3: "pink",
+            4: "lime",
+            5: "yellow",
+            6: "white"
         },
 
         baseIters: {
             1: 180,
             2: 600,
-            3: 900,
-            4: 900,
-            5: 360,
-            6: 180,
-            7: 300,
-            8: 420,
-            9: 300,
-            10: 25
+            3: 360,
+            4: 180,
+            5: 300,
+            6: 25,
         },
 
         currentIters: {
             begin: 0,
             end: 0,
             load: 0,
-            10: 0
+            6: 0
         },
     
         playerColors: {
@@ -146,6 +134,7 @@ const initializeCurveGameProperties = function()
         sendPickOthers: sendPickOthers,
         sendPickGeneral: sendPickGeneral,
         sendCollision: sendCollision,
+        sendGamePowers: sendGamePowers,
         sendGameControl: sendGameControl,
         getCurveHtmlElements: getCurveHtmlElements,
         setupCurveSocket: setupCurveSocket,

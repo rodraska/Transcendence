@@ -18,6 +18,7 @@ const handleSocketMessage = function(data)
             break;
 
         case 'pick_power':
+            console.log('receive pick power');
             if (this.playerNumber !== data.player_id)
                 this.powers.splice(data.i, 1);
             break;
@@ -32,13 +33,22 @@ const handleSocketMessage = function(data)
                 
 
         case 'pick_general':
-            this.currentIters[10] = this.baseIters[10];
+            this.currentIters[6] = this.baseIters[6];
             this.erase = true;
             break;
 
         case 'collision':
             console.log('receive collision');
             this.players[data.player_id - 1].processCollision();
+            break;
+
+        case 'game_powers':
+            console.log('receive game powers');
+            this.powers = [];
+            const powers = data.powers;
+            powers.forEach(power => {
+                this.powers.push(new this.powerConstructors[power.id](power.id, power.pos, power.iters))
+            });
             break;
 
         case 'game_control':
@@ -150,6 +160,8 @@ const sendPickPower = function(power_index, player_id) {
         return;
     }
 
+    console.log('send pick power');
+
     this.curveSocket.send(JSON.stringify({
         'type': 'pick_power',
         'power_index': power_index,
@@ -210,6 +222,31 @@ const sendCollision = function(player_id) {
     }))
 }
 
+const sendGamePowers = function(powers) {
+    if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
+        console.error("Curve socket not connected");
+        return;
+    }
+
+    if (!this.playerNumber) {
+        console.error("Player number not assigned");
+        return;
+    }
+
+    console.log('send game powers');
+
+    const powerPropertiesList = powers.map(power => ({
+        id: power.id,
+        pos: power.pos,
+        iters: power.iters
+    }));
+
+    this.curveSocket.send(JSON.stringify({
+        'type': 'game_powers',
+        'powers': powerPropertiesList
+    }))
+}
+
 const sendGameControl = function(action) {
     if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
         console.error("Curve socket not connected");
@@ -244,4 +281,4 @@ const sendMatchData = function(attempts) {
     }))
 }
 
-export { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendCollision, sendGameControl, sendMatchData }
+export { handleSocketMessage, sendPlayerState, sendNewPower, sendPickPower, sendPickOthers, sendPickGeneral, sendCollision, sendGamePowers, sendGameControl, sendMatchData }

@@ -64,7 +64,7 @@ const paint_powerup = function(power)
     {
         let power_radius = 20;
 
-        if (power.id >= 6 && power.id <= 9) {
+        if (power.id >= 4 && power.id <= 5) {
             this.ctx.fillStyle = 'red';
             this.ctx.beginPath();
             this.ctx.arc((power.pos[0]) + this.width / 2, (power.pos[1]) + this.height / 2, power_radius, 0, 2 * Math.PI);

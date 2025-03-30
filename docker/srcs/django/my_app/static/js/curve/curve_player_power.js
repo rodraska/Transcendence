@@ -8,7 +8,8 @@ const pick_powerups = function()
         {
             this.give_powerup(this.game.powers[i].id);
             this.game.powers.splice(i, 1);
-            this.game.sendPickPower(i, this.id);
+            this.game.sendGamePowers(this.game.powers);
+            //this.game.sendPickPower(i, this.playerNumber);
             i--;
         }
     }
@@ -17,12 +18,12 @@ const pick_powerups = function()
 
 const give_powerup = function(id)
 {
-    if (id <= 4) //give me
+    if (id <= 2) //give me
     {
         let power = new this.game.powerConstructors[id](id, [0, 0], this.game.baseIters[id]);
         this.powers.push(power);
     }
-    else if (id == 5) //renew me
+    else if (id == 3) //renew me
     {
         let id_renew = this.check_powerup(id)
         if (id_renew == -1)
@@ -32,11 +33,11 @@ const give_powerup = function(id)
         } 
         else this.powers[id_renew].iters = this.game.baseIters[id]; 
     }
-    else if (id >= 6 && id <= 9) //give others
+    else if (id >= 4 && id <= 5) //give others
     {
         this.game.sendPickOthers(id, this.id);
     }
-    else if (id == 10) //general
+    else if (id == 6) //general
     {
         this.game.sendPickGeneral();
     }

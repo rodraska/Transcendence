@@ -21,7 +21,7 @@ const players_free = function()
 const begin_iter = function()
 {
     this.sendPlayerState(this.myPlayer);
-    if (this.currentIters[10] > 0) this.currentIters[10]--;
+    if (this.currentIters[6] > 0) this.currentIters[6]--;
     this.paint_offset();
     this.new_powerup();
     this.restoreCanvas();
@@ -38,7 +38,7 @@ const curr_iter = function()
     this.myPlayer.generalized_coordinates();
     this.myPlayer.holes();
     this.myPlayer.pick_powerups();
-    this.myPlayer.checkCollision();
+    //this.myPlayer.checkCollision();
     this.gamePaintHist();
     this.saveCanvas();
     this.gamePaintPlayers();
