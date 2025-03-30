@@ -9,7 +9,6 @@ const pick_powerups = function()
             this.give_powerup(this.game.powers[i].id);
             this.game.powers.splice(i, 1);
             this.game.sendGamePowers(this.game.powers);
-            //this.game.sendPickPower(i, this.playerNumber);
             i--;
         }
     }

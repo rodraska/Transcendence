@@ -20,7 +20,8 @@ const new_powerup = function()
     }
     //let id = Math.floor(Math.random() * 6) + 1; //all the power ups
     let id = 3; //specific powerup
-    this.sendNewPower(new this.powerConstructors[id](id, [x, y], this.baseIters[id]));
+    this.powers.push(new this.powerConstructors[id](id, [x, y], this.baseIters[id]));
+    this.sendGamePowers(this.powers);
 }
 
 const checkRGB = function(pos, rgb)
