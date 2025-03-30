@@ -2,7 +2,8 @@ const setupPongSocket = function()
 {
     const self = this;
 
-    const pongSocket = new WebSocket(`ws://localhost:8000/ws/pong_game/`);
+    const matchId = this.matchData.matchId;
+    const pongSocket = new WebSocket(`ws://localhost:8000/ws/pong_game/${matchId}/`);
     this.pongSocket = pongSocket;
 
     pongSocket.onopen = function() {

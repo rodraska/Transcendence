@@ -7,7 +7,6 @@ from transcendence.consumers import CurveConsumer
 websocket_urlpatterns = [
     re_path(r"ws/matchmaking/$", MatchmakingConsumer.as_asgi()),
     re_path(r'ws/chat_room/$', ChatConsumer.as_asgi()),
-    re_path(r'ws/pong_game/$', PongConsumer.as_asgi()),
-    re_path(r'ws/curve_lobby/$', CurveConsumer.as_asgi()),
-    re_path(r'ws/curve_game/$', CurveConsumer.as_asgi()),
+    re_path(r'ws/pong_game/(?P<game_id>\d+)/$', PongConsumer.as_asgi()),
+    re_path(r'ws/curve_game/(?P<game_id>\d+)/$', CurveConsumer.as_asgi()),
 ]

@@ -400,7 +400,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 class PongConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
-        self.game_id = '24'
+        self.game_id = self.scope['url_route']['kwargs']['game_id']
         self.room_group_name = f'pong_{self.game_id}'
 
         await self.channel_layer.group_add(
@@ -522,7 +522,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 class CurveConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
-        self.game_id = '48'
+        self.game_id = self.scope['url_route']['kwargs']['game_id']
         self.room_group_name = f'curve_{self.game_id}'
 
         await self.channel_layer.group_add(

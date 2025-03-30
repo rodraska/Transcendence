@@ -2,7 +2,8 @@ const setupCurveSocket =function()
 {
     const self = this;
 
-    const curveSocket = new WebSocket(`ws://localhost:8000/ws/curve_game/`);
+    const matchId = this.matchData.matchId;
+    const curveSocket = new WebSocket(`ws://localhost:8000/ws/curve_game/${matchId}/`);
     this.curveSocket = curveSocket;
 
     curveSocket.onopen = function() {
