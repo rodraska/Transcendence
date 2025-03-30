@@ -24,7 +24,7 @@ const handleSocketMessage = function(data)
         
         case 'pick_others':
             const power_id = data.power_id;
-            if (this.playerNumber !== data.player_id) {
+            if (this.playerNumber !== data.player_id && this.myPlayer.stop == false) {
                 let power = new this.powerConstructors[power_id](power_id, [0, 0], this.baseIters[power_id])
                 this.myPlayer.powers.push(power);
             }

@@ -1,5 +1,6 @@
 const pick_powerups = function()
 {
+    if (this.stop == true) return;
     for (let i = 0; i < this.game.powers.length; i++)
     {
         if (this.stop == true) break;
