@@ -42,6 +42,7 @@ const holes = function()
 
 const processCollision = function()
 {
+    if (this.stop == true) return;
     this.stop = true;
     this.game.dead++;
     for (let i = 1; i <= 2; i++) {
@@ -70,7 +71,7 @@ const checkCollision = function()
             {
                 console.log(i);
                 console.log('collision regular');
-                this.game.sendCollision(this.id);
+                if (this.stop == false) this.game.sendCollision(this.id);
 
                 return ;
             }
@@ -78,13 +79,13 @@ const checkCollision = function()
         if (this.game.checkRGB([x1, y1], [255, 255, 255]))
         {
             console.log('collision white');
-            this.game.sendCollision(this.id);
+            if (this.stop == false) this.game.sendCollision(this.id);
             return ;
         }
         if (this.hard_boundaries())
         {
             console.log('collision out');
-            this.game.sendCollision(this.id);
+            if (this.stop == false) this.game.sendCollision(this.id);
             return ;
         }
     }
