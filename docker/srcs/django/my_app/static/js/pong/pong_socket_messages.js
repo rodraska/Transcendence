@@ -56,6 +56,11 @@ const handleSocketMessage = function(data)
                 this.playerNumber = 2;
             console.log('matchData: ', this.matchData);
 
+        case 'game_over':
+            break;
+            //window.currentMatchData = null;
+            //Route.go("/play");
+
         default:
             console.log('Unknown message type:', type);
     }
@@ -147,4 +152,21 @@ const sendMatchData = function(attempts) {
     }))
 }
 
-export { handleSocketMessage, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl, sendMatchData }
+const sendGameOver = function() {
+    if (!this.pongSocket || this.pongSocket.readyState !== WebSocket.OPEN) {
+        console.error("Pong socket not connected");
+        return;
+    }
+
+    if (this.playerNumber !== 1) {
+        return;
+    }
+
+    this.pongSocket.send(JSON.stringify({
+        'type': 'game_over',
+        'winner': 'rodraska',
+        'match_id': this.matchData.matchId
+    }))
+}
+
+export { handleSocketMessage, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl, sendMatchData, sendGameOver }

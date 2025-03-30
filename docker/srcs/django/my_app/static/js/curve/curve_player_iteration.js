@@ -71,21 +71,23 @@ const checkCollision = function()
             {
                 console.log(i);
                 console.log('collision regular');
-                if (this.stop == false) this.game.sendCollision(this.id);
-
+                this.processCollision();
+                this.game.sendCollision(this.id);
                 return ;
             }
         }
         if (this.game.checkRGB([x1, y1], [255, 255, 255]))
         {
-            console.log('collision white');
-            if (this.stop == false) this.game.sendCollision(this.id);
+            console.log('collision white')
+            this.processCollision();
+            this.game.sendCollision(this.id);
             return ;
         }
         if (this.hard_boundaries())
         {
-            console.log('collision out');
-            if (this.stop == false) this.game.sendCollision(this.id);
+            console.log('collision out')
+            this.processCollision();
+            this.game.sendCollision(this.id);
             return ;
         }
     }

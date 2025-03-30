@@ -25,6 +25,7 @@ const final_paint = function()
     this.gamePaintPowers();
     this.paint_offset();
     this.paint_gg();
+    this.sendGameOver();
 }
 
 const paint_line = function(x_i, y_i, x_f, y_f)

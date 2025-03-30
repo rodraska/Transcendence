@@ -80,6 +80,7 @@ const check_goal = function()
     if (this.p1.score === this.win_score || this.p2.score === this.win_score)
     {
         this.sendScoreUpdate(2, this.p1.score, this.p2.score);
+        this.sendGameOver();
         return (2);
     }
     return (0);

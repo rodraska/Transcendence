@@ -72,6 +72,9 @@ const handleSocketMessage = function(data)
             this.getElementById("name2").innerHTML = this.matchData.player2;
             this.getElementById("pointToWin").innerHTML = "Point to Win: " + this.points_to_win;
             console.log(this.matchData);
+
+        case 'game_over':
+            break;
             
         default:
             console.log('Unkown message type:', type);
@@ -197,4 +200,21 @@ const sendMatchData = function(attempts) {
     }))
 }
 
-export { handleSocketMessage, checkSocket, sendPlayerState, sendPickOthers, sendPickGeneral, sendCollision, sendGamePowers, sendGameControl, sendMatchData }
+const sendGameOver = function() {
+    if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
+        console.error("Pong socket not connected");
+        return;
+    }
+
+    if (this.playerNumber !== 1) {
+        return;
+    }
+
+    this.curveSocket.send(JSON.stringify({
+        'type': 'game_over',
+        'winner': 'rodraska',
+        'match_id': this.matchData.matchId
+    }))
+}
+
+export { handleSocketMessage, checkSocket, sendPlayerState, sendPickOthers, sendPickGeneral, sendCollision, sendGamePowers, sendGameControl, sendMatchData, sendGameOver }

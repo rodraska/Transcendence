@@ -397,6 +397,41 @@ class ChatConsumer(AsyncWebsocketConsumer):
             for message in messages
         ]
 
+@database_sync_to_async
+def process_game_end(match_id, winner_username):
+    """
+    Process a normal game end with a winner.
+    Updates the match (ending it and setting the winner),
+    and returns messages for both players.
+    """
+    m = Match.objects.get(id=match_id, ended_on__isnull=True)
+    
+    # Find the winner user object
+    winner = CustomUser.objects.get(username=winner_username)
+    
+    # Determine the loser
+    if m.player1 == winner:
+        loser = m.player2
+    else:
+        loser = m.player1
+        
+    # Update match record
+    m.ended_on = timezone.now()
+    m.winner = winner
+    m.save()
+    
+    # Clean up any matchmaking entries
+    Matchmaking.objects.filter(match=m).delete()
+    
+    return {
+        "match_id": m.id,
+        "winner": winner.username,
+        "loser": loser.username,
+        "msg_for_winner": f"Congratulations! You won against {loser.username}.",
+        "msg_for_loser": f"Game over. {winner.username} won this match.",
+        "final_score": m.final_score if hasattr(m, 'final_score') else None
+    }
+
 class PongConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
@@ -482,6 +517,19 @@ class PongConsumer(AsyncWebsocketConsumer):
                     'match_data': match_data
                 }
             )
+
+        elif message_type == 'game_over':
+            winner_username = data.get('winner')
+            match_id = data.get('match_id')
+            result = await process_game_end(match_id, winner_username)
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_over',
+                    'result': result
+                }
+            )
     
     async def paddle_position(self, event):
         await self.send(text_data=json.dumps({
@@ -517,6 +565,12 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'match_data',
             'match_data': event['match_data']
+        }))
+
+    async def game_over(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_over',
+            'result': event['result']
         }))
 
 class CurveConsumer(AsyncWebsocketConsumer):
@@ -620,6 +674,19 @@ class CurveConsumer(AsyncWebsocketConsumer):
                 }
             )
 
+        elif message_type == 'game_over':
+            winner_username = data.get('winner')
+            match_id = data.get('match_id')
+            result = await process_game_end(match_id, winner_username)
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_over',
+                    'result': result
+                }
+            )
+
     async def player_state(self, event):
         if self.channel_name != event.get('sender_channel_name'):
             await self.send(text_data=json.dumps({
@@ -640,10 +707,11 @@ class CurveConsumer(AsyncWebsocketConsumer):
         }))
 
     async def collision(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'collision',
-            'player_id': event['player_id']
-        }))
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'collision',
+                'player_id': event['player_id']
+            }))
     
     async def game_powers(self, event):
         await self.send(text_data=json.dumps({
@@ -663,4 +731,10 @@ class CurveConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'match_data',
             'match_data': event['match_data']
+        }))
+
+    async def game_over(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_over',
+            'result': event['result']
         }))
