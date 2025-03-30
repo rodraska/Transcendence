@@ -56,8 +56,8 @@ const initializeCurveGameProperties = function()
             3: "cyan",
             4: "blue",
             5: "pink",
-            6: "green",
-            7: "orange",
+            6: "lime",
+            7: "yellow",
             8: "brown",
             9: "purple",
             10: "white"

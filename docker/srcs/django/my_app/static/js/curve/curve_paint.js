@@ -62,9 +62,19 @@ const reset_paint = function()
 
 const paint_powerup = function(power)
     {
+        let power_radius = 20;
+
+        if (power.id >= 6 && power.id <= 9) {
+            this.ctx.fillStyle = 'red';
+            this.ctx.beginPath();
+            this.ctx.arc((power.pos[0]) + this.width / 2, (power.pos[1]) + this.height / 2, power_radius, 0, 2 * Math.PI);
+            this.ctx.fill();
+            power_radius = 15;
+        }
+
         this.ctx.fillStyle = this.powerColors[power.id];
         this.ctx.beginPath();
-        this.ctx.arc((power.pos[0]) + this.width / 2, (power.pos[1]) + this.height / 2, 20, 0, 2 * Math.PI);
+        this.ctx.arc((power.pos[0]) + this.width / 2, (power.pos[1]) + this.height / 2, power_radius, 0, 2 * Math.PI);
         this.ctx.fill();
     }
 
