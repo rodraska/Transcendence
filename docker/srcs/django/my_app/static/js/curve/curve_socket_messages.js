@@ -16,7 +16,6 @@ const handleSocketMessage = function(data)
             break;
         
         case 'pick_others':
-            console.log('receive pick others');
             const power_id = data.power_id;
             if (this.myPlayer.stop == false) {
                 let power = new this.powerConstructors[power_id](power_id, [0, 0], this.baseIters[power_id])
@@ -77,16 +76,23 @@ const handleSocketMessage = function(data)
     }
 }
 
-const sendPlayerState = function(player) {
+const checkSocket = function() {
     if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
         console.error("Curve socket not connected");
-        return;
+        return 0;
     }
 
     if (!this.playerNumber) {
         console.error("Player number not assigned");
-        return;
+        return 0;
     }
+
+    return 1;
+}
+
+const sendPlayerState = function(player) {
+
+    if (!this.checkSocket()) return;
 
     const playerProperties = {
         id: player.id,
@@ -117,17 +123,7 @@ const sendPlayerState = function(player) {
 }
 
 const sendPickOthers = function(power_id) {
-    if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
-        console.error("Curve socket not connected");
-        return;
-    }
-
-    if (!this.playerNumber) {
-        console.error("Player number not assigned");
-        return;
-    }
-
-    console.log('send pick others');
+    if (!this.checkSocket()) return;
 
     this.curveSocket.send(JSON.stringify({
         'type': 'pick_others',
@@ -136,15 +132,7 @@ const sendPickOthers = function(power_id) {
 }
 
 const sendPickGeneral = function() {
-    if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
-        console.error("Curve socket not connected");
-        return;
-    }
-
-    if (!this.playerNumber) {
-        console.error("Player number not assigned");
-        return;
-    }
+    if (!this.checkSocket()) return;
 
     this.curveSocket.send(JSON.stringify({
         'type': 'pick_general'
@@ -152,15 +140,7 @@ const sendPickGeneral = function() {
 }
 
 const sendCollision = function(player_id) {
-    if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
-        console.error("Curve socket not connected");
-        return;
-    }
-
-    if (!this.playerNumber) {
-        console.error("Player number not assigned");
-        return;
-    }
+    if (!this.checkSocket()) return;
 
     this.curveSocket.send(JSON.stringify({
         'type': 'collision',
@@ -169,15 +149,7 @@ const sendCollision = function(player_id) {
 }
 
 const sendGamePowers = function(powers) {
-    if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
-        console.error("Curve socket not connected");
-        return;
-    }
-
-    if (!this.playerNumber) {
-        console.error("Player number not assigned");
-        return;
-    }
+    if (!this.checkSocket()) return;
 
     const powerPropertiesList = powers.map(power => ({
         id: power.id,
@@ -223,4 +195,4 @@ const sendMatchData = function(attempts) {
     }))
 }
 
-export { handleSocketMessage, sendPlayerState, sendPickOthers, sendPickGeneral, sendCollision, sendGamePowers, sendGameControl, sendMatchData }
+export { handleSocketMessage, checkSocket, sendPlayerState, sendPickOthers, sendPickGeneral, sendCollision, sendGamePowers, sendGameControl, sendMatchData }
