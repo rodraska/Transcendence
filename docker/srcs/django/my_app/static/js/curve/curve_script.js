@@ -38,7 +38,7 @@ const curr_iter = function()
     this.myPlayer.generalized_coordinates();
     this.myPlayer.holes();
     this.myPlayer.pick_powerups();
-    //this.myPlayer.checkCollision();
+    this.myPlayer.checkCollision();
     this.gamePaintHist();
     this.saveCanvas();
     this.gamePaintPlayers();

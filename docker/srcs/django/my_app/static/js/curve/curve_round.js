@@ -38,6 +38,7 @@ const players_load = function()
 const players_still = function()
 {
     if (this.currentIters.load == 150) return (this.players_free());
+    this.sendPlayerState(this.myPlayer);
     this.reset_paint();
     this.paint_offset();
     this.gamePaintPlayers();
