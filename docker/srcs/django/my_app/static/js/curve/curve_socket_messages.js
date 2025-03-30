@@ -67,9 +67,11 @@ const handleSocketMessage = function(data)
             }
             this.myPlayer = this.players[this.playerNumber - 1];
             this.points_to_win = this.matchData.points_to_win;
+            this.powerups_enabled = this.matchData.powerups_enabled;
             this.getElementById("name1").innerHTML = this.matchData.player1;
             this.getElementById("name2").innerHTML = this.matchData.player2;
             this.getElementById("pointToWin").innerHTML = "Point to Win: " + this.points_to_win;
+            console.log(this.matchData);
             
         default:
             console.log('Unkown message type:', type);

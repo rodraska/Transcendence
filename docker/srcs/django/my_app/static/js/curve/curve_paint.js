@@ -61,21 +61,21 @@ const reset_paint = function()
 }
 
 const paint_powerup = function(power)
-    {
-        let power_radius = 20;
+{
+    let power_radius = 20;
 
-        if (power.id >= 4 && power.id <= 5) {
-            this.ctx.fillStyle = 'red';
-            this.ctx.beginPath();
-            this.ctx.arc((power.pos[0]) + this.width / 2, (power.pos[1]) + this.height / 2, power_radius, 0, 2 * Math.PI);
-            this.ctx.fill();
-            power_radius = 15;
-        }
-
-        this.ctx.fillStyle = this.powerColors[power.id];
+    if (power.id >= 4 && power.id <= 5) {
+        this.ctx.fillStyle = 'red';
         this.ctx.beginPath();
         this.ctx.arc((power.pos[0]) + this.width / 2, (power.pos[1]) + this.height / 2, power_radius, 0, 2 * Math.PI);
         this.ctx.fill();
+        power_radius = 15;
     }
+
+    this.ctx.fillStyle = this.powerColors[power.id];
+    this.ctx.beginPath();
+    this.ctx.arc((power.pos[0]) + this.width / 2, (power.pos[1]) + this.height / 2, power_radius, 0, 2 * Math.PI);
+    this.ctx.fill();
+}
 
 export { paint_gg, final_paint, paint_line, paint_curve, paint_offset, reset_paint, paint_powerup }

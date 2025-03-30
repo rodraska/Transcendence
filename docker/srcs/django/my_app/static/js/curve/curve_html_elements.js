@@ -31,28 +31,6 @@ const getCurveHtmlElements = function(attempts)
     this.height = canvas.height;
 
     this.numberCurvePlayers = 2;
-        
-    /*for (let i = 0; i < this.numberCurvePlayers; i++)
-    {
-        let playerNumber = i + 1;
-        //Create div element
-        let playerDiv = document.createElement('div');
-        playerDiv.style.display = 'flex';
-        //CurvePlayer Name
-        let playerName = document.createElement('p');
-        playerName.textContent = 'CurvePlayer ' + playerNumber;
-        playerName.style.justifyContent = 'left';
-        playerName.style.flexGrow = '1';
-        //CurvePlayer Score
-        let playerScore = document.createElement('p');
-        playerScore.textContent = '0';
-        playerScore.id = 'score' + playerNumber;
-        playerScore.style.justifyContent = 'left';
-        playerScore.style.flexGrow = '1';
-        playerDiv.appendChild(playerName);
-        playerDiv.appendChild(playerScore);
-        this.playerList.appendChild(playerDiv);
-    }*/
 }
 
 export { getCurveHtmlElements }

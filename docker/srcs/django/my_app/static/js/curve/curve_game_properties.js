@@ -26,6 +26,7 @@ const initializeCurveGameProperties = function()
         round_winner: 0,
         game_winner: 0,
         points_to_win: 0,
+        powerups_enabled: 0,
         isPaused: false,
         isStart: false,
         animationID: null,

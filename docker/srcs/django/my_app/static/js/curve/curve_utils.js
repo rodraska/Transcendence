@@ -5,7 +5,7 @@ const dist = function([x1, y1], [x2, y2])
 
 const new_powerup = function()
 {
-    if (this.playerNumber !== 1) return;
+    if (this.playerNumber !== 1 || this.powerups_enabled == false) return;
     let drop = 601;
     if (Math.floor(Math.random() * drop) > 1) return;
     outer : while (1)
