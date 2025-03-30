@@ -550,20 +550,20 @@ class CurveConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     'type': 'player_state',
-                    'player': player
+                    'player': player,
+                    'sender_channel_name': self.channel_name
                 }
             )
 
         elif message_type == 'pick_others':
             power_id = data.get('power_id')
-            player_id = data.get('player_id')
 
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'pick_others',
                     'power_id': power_id,
-                    'player_id': player_id
+                    'sender_channel_name': self.channel_name
                 }
             )
 
@@ -621,17 +621,18 @@ class CurveConsumer(AsyncWebsocketConsumer):
             )
 
     async def player_state(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'player_state',
-            'player': event['player']
-        }))
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'player_state',
+                'player': event['player']
+            }))
 
     async def pick_others(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'pick_others',
-            'power_id': event['power_id'],
-            'player_id': event['player_id']
-        }))
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'pick_others',
+                'power_id': event['power_id']
+            }))
 
     async def pick_general(self, event):
         await self.send(text_data=json.dumps({

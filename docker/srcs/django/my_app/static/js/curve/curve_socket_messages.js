@@ -6,26 +6,19 @@ const handleSocketMessage = function(data)
     {
         case 'player_state':
             const player = data.player;
-            if (player.id !== this.playerNumber) {
-                const targetPlayer = this.players[player.id - 1];
-                Object.assign(targetPlayer, player);
-            }
+            const targetPlayer = this.players[player.id - 1];
+            Object.assign(targetPlayer, player);
             break;
         
         case 'new_power':
             const power = data.power;
             this.powers.push(new this.powerConstructors[power.id](power.id, power.pos, power.iters));
             break;
-
-        case 'pick_power':
-            console.log('receive pick power');
-            if (this.playerNumber !== data.player_id)
-                this.powers.splice(data.i, 1);
-            break;
         
         case 'pick_others':
+            console.log('receive pick others');
             const power_id = data.power_id;
-            if (this.playerNumber !== data.player_id && this.myPlayer.stop == false) {
+            if (this.myPlayer.stop == false) {
                 let power = new this.powerConstructors[power_id](power_id, [0, 0], this.baseIters[power_id])
                 this.myPlayer.powers.push(power);
             }
@@ -38,12 +31,10 @@ const handleSocketMessage = function(data)
             break;
 
         case 'collision':
-            console.log('receive collision');
             this.players[data.player_id - 1].processCollision();
             break;
 
         case 'game_powers':
-            console.log('receive game powers');
             this.powers = [];
             const powers = data.powers;
             powers.forEach(power => {
@@ -80,7 +71,6 @@ const handleSocketMessage = function(data)
             this.getElementById("name1").innerHTML = this.matchData.player1;
             this.getElementById("name2").innerHTML = this.matchData.player2;
             this.getElementById("pointToWin").innerHTML = "Point to Win: " + this.points_to_win;
-            console.log('matchData: ', this.matchData);
             
         default:
             console.log('Unkown message type:', type);
@@ -126,7 +116,7 @@ const sendPlayerState = function(player) {
     }))
 }
 
-const sendPickOthers = function(power_id, player_id) {
+const sendPickOthers = function(power_id) {
     if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
         console.error("Curve socket not connected");
         return;
@@ -137,10 +127,11 @@ const sendPickOthers = function(power_id, player_id) {
         return;
     }
 
+    console.log('send pick others');
+
     this.curveSocket.send(JSON.stringify({
         'type': 'pick_others',
-        'power_id': power_id,
-        'player_id': player_id
+        'power_id': power_id
     }))
 }
 
@@ -171,8 +162,6 @@ const sendCollision = function(player_id) {
         return;
     }
 
-    console.log('sendCollision');
-
     this.curveSocket.send(JSON.stringify({
         'type': 'collision',
         'player_id': player_id
@@ -189,8 +178,6 @@ const sendGamePowers = function(powers) {
         console.error("Player number not assigned");
         return;
     }
-
-    console.log('send game powers');
 
     const powerPropertiesList = powers.map(power => ({
         id: power.id,
@@ -229,8 +216,6 @@ const sendMatchData = function(attempts) {
         }
         return;
     }
-
-    console.log('sendMatchData');
 
     this.curveSocket.send(JSON.stringify({
         'type': 'match_data',

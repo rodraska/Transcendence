@@ -34,7 +34,7 @@ const give_powerup = function(id)
     }
     else if (id >= 4 && id <= 5) //give others
     {
-        this.game.sendPickOthers(id, this.id);
+        this.game.sendPickOthers(id);
     }
     else if (id == 6) //general
     {
