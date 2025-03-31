@@ -202,7 +202,7 @@ const sendMatchData = function(attempts) {
 
 const sendGameOver = function() {
     if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
-        console.error("Pong socket not connected");
+        console.error("Curve socket not connected");
         return;
     }
 
@@ -210,9 +210,13 @@ const sendGameOver = function() {
         return;
     }
 
+    let winner_name = this.players[this.game_winner - 1].name
+
+    console.log('winner_name: ', winner_name);
+
     this.curveSocket.send(JSON.stringify({
         'type': 'game_over',
-        'winner': 'rodraska',
+        'winner': winner_name,
         'match_id': this.matchData.matchId
     }))
 }

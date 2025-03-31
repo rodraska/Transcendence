@@ -7,7 +7,7 @@ class PongGame extends Component
     constructor()
     {
         super('static/html/pong_game.html');
-    
+
         Object.assign(this, initializePongGameProperties());
 
         console.log('username: ', window.loggedInUserName);
