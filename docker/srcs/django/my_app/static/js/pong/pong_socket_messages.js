@@ -50,10 +50,17 @@ const handleSocketMessage = function(data)
 
         case 'match_data':
             this.matchData = data.match_data;
-            if (window.loggedInUserName === this.matchData.player1)
+            if (window.loggedInUserName === this.matchData.player1) {
                 this.playerNumber = 1;
-            else if (window.loggedInUserName === this.matchData.player2)
+                this.name = this.matchData.player1;
+            }
+            else if (window.loggedInUserName === this.matchData.player2) {
                 this.playerNumber = 2;
+                this.name = this.matchData.player2;
+            }
+            this.points_to_win = this.matchData.points_to_win;
+            this.p1.name = this.matchData.player1;
+            this.p2.name = this.matchData.player2;
             console.log('matchData: ', this.matchData);
 
         case 'game_over':
@@ -162,9 +169,16 @@ const sendGameOver = function() {
         return;
     }
 
+    let winner_name;
+
+    if (this.p1.score == this.points_to_win)
+        winner_name = this.p1.name;
+    else if (this.p2.score == this.points_to_win)
+        winner_name = this.p2.name;
+
     this.pongSocket.send(JSON.stringify({
         'type': 'game_over',
-        'winner': 'rodraska',
+        'winner': winner_name,
         'match_id': this.matchData.matchId
     }))
 }

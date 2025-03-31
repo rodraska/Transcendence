@@ -8,11 +8,9 @@ class PongGame extends Component
     {
         super('static/html/pong_game.html');
 
-        Object.assign(this, initializePongGameProperties());
-
-        console.log('username: ', window.loggedInUserName);
-
         this.matchData = window.currentMatchData;
+
+        Object.assign(this, initializePongGameProperties());
     }
 
     onInit() {

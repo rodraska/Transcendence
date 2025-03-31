@@ -1,5 +1,7 @@
 class PongPlayer
 {
+    name = null;
+    
     constructor(pos)
     {
         this.pos = pos;

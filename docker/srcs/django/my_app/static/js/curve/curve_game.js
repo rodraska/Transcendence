@@ -11,8 +11,6 @@ class CurveGame extends Component
         this.matchData = window.currentMatchData;
 
         Object.assign(this, initializeCurveGameProperties());
-
-        this.points_to_win = this.matchData.points_to_win;
     }
 
     onInit() {

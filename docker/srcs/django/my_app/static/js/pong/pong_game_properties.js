@@ -13,8 +13,9 @@ const initializePongGameProperties = function()
 {
     return {
         pongSocket: null,
-        matchData: null,
         playerNumber: null,
+        myPlayer: null,
+        name: null,
         gameReady: false,
         scoreChanged: false,
 
@@ -32,7 +33,7 @@ const initializePongGameProperties = function()
         p_vel: 5,
         s_height: 100,
         s_width: 50,
-        win_score: 3,
+        points_to_win: 3,
         isPaused: false,
         isStart: false,
         animationID: null,
