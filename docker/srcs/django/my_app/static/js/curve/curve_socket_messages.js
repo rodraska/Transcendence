@@ -56,22 +56,11 @@ const handleSocketMessage = function(data)
             break;
 
         case 'match_data':
+            if (this.matchData) break;
+            console.log('receive match data');
             this.matchData = data.match_data;
-            if (window.loggedInUserName === this.matchData.player1) {
-                this.playerNumber = 1;
-                this.name = this.matchData.player1;
-            }
-            else if (window.loggedInUserName === this.matchData.player2) {
-                this.playerNumber = 2;
-                this.name = this.matchData.player2;
-            }
-            this.myPlayer = this.players[this.playerNumber - 1];
-            this.points_to_win = this.matchData.points_to_win;
-            this.powerups_enabled = this.matchData.powerups_enabled;
-            this.getElementById("name1").innerHTML = this.matchData.player1;
-            this.getElementById("name2").innerHTML = this.matchData.player2;
-            this.getElementById("pointToWin").innerHTML = "Point to Win: " + this.points_to_win;
-            console.log(this.matchData);
+            this.setMatchData();
+            break;
 
         case 'game_over':
             break;
@@ -79,6 +68,24 @@ const handleSocketMessage = function(data)
         default:
             console.log('Unkown message type:', type);
     }
+}
+
+const setMatchData = function() {
+    console.log('set match data');
+    if (window.loggedInUserName === this.matchData.player1) {
+        this.playerNumber = 1;
+        this.name = this.matchData.player1;
+    }
+    else if (window.loggedInUserName === this.matchData.player2) {
+        this.playerNumber = 2;
+        this.name = this.matchData.player2;
+    }
+    this.myPlayer = this.players[this.playerNumber - 1];
+    this.points_to_win = this.matchData.points_to_win;
+    this.powerups_enabled = this.matchData.powerups_enabled;
+    this.getElementById("name1").innerHTML = this.matchData.player1;
+    this.getElementById("name2").innerHTML = this.matchData.player2;
+    this.getElementById("pointToWin").innerHTML = "Point to Win: " + this.points_to_win;
 }
 
 const checkSocket = function() {
@@ -194,6 +201,10 @@ const sendMatchData = function(attempts) {
         return;
     }
 
+    console.log('send match data');
+
+    this.setMatchData();
+
     this.curveSocket.send(JSON.stringify({
         'type': 'match_data',
         'match_data': this.matchData,
@@ -221,4 +232,4 @@ const sendGameOver = function() {
     }))
 }
 
-export { handleSocketMessage, checkSocket, sendPlayerState, sendPickOthers, sendPickGeneral, sendCollision, sendGamePowers, sendGameControl, sendMatchData, sendGameOver }
+export { handleSocketMessage, checkSocket, setMatchData, sendPlayerState, sendPickOthers, sendPickGeneral, sendCollision, sendGamePowers, sendGameControl, sendMatchData, sendGameOver }
