@@ -8,19 +8,15 @@ const handleSocketMessage = function(data)
             const player = data.player;
             const position = data.position;
 
-            if (player !== this.playerNumber) {
-                if (player === 1)
-                    this.p1.pos = position;
-                else if (player === 2)
-                    this.p2.pos = position;
-            }
+            if (player === 1)
+                this.p1.pos = position;
+            else if (player === 2)
+                this.p2.pos = position;
             break;
                 
         case 'ball_update':
-            if (this.playerNumber !== 1) {
-                this.ball.pos = data.position;
-                this.ball.vel_t = data.velocity;
-            }
+            this.ball.pos = data.position;
+            this.ball.vel_t = data.velocity;
             break;
 
         case 'score_update':

@@ -464,7 +464,8 @@ class PongConsumer(AsyncWebsocketConsumer):
                 {
                     'type': 'paddle_position',
                     'player': player,
-                    'position': position
+                    'position': position,
+                    'sender_channel_name': self.channel_name
                 }
             )
         
@@ -488,7 +489,8 @@ class PongConsumer(AsyncWebsocketConsumer):
                 {
                     'type': 'ball_update',
                     'position': position,
-                    'velocity': velocity
+                    'velocity': velocity,
+                    'sender_channel_name': self.channel_name
                 }
             )
         
@@ -533,11 +535,12 @@ class PongConsumer(AsyncWebsocketConsumer):
             )
     
     async def paddle_position(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'paddle_position',
-            'player': event['player'],
-            'position': event['position']
-        }))
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'paddle_position',
+                'player': event['player'],
+                'position': event['position']
+            }))
 
     async def game_control(self, event):
         action = event.get('action')
@@ -548,11 +551,12 @@ class PongConsumer(AsyncWebsocketConsumer):
         }))
 
     async def ball_update(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'ball_update',
-            'position': event['position'],
-            'velocity': event['velocity']
-        }))
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'ball_update',
+                'position': event['position'],
+                'velocity': event['velocity']
+            }))
 
     async def score_update(self, event):
         await self.send(text_data=json.dumps({
