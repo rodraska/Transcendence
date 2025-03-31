@@ -514,7 +514,8 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     'type': 'match_data',
-                    'match_data': match_data
+                    'match_data': match_data,
+                    'sender_channel_name': self.channel_name
                 }
             )
 
@@ -562,10 +563,11 @@ class PongConsumer(AsyncWebsocketConsumer):
         }))
 
     async def match_data(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'match_data',
-            'match_data': event['match_data']
-        }))
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'match_data',
+                'match_data': event['match_data']
+            }))
 
     async def game_over(self, event):
         await self.send(text_data=json.dumps({

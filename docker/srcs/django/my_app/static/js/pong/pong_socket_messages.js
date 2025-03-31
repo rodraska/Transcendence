@@ -49,19 +49,11 @@ const handleSocketMessage = function(data)
             break;
 
         case 'match_data':
+            if (this.matchData) break;
+            console.log('receive match data');
             this.matchData = data.match_data;
-            if (window.loggedInUserName === this.matchData.player1) {
-                this.playerNumber = 1;
-                this.name = this.matchData.player1;
-            }
-            else if (window.loggedInUserName === this.matchData.player2) {
-                this.playerNumber = 2;
-                this.name = this.matchData.player2;
-            }
-            this.points_to_win = this.matchData.points_to_win;
-            this.p1.name = this.matchData.player1;
-            this.p2.name = this.matchData.player2;
-            console.log('matchData: ', this.matchData);
+            this.setMatchData();
+            break;
 
         case 'game_over':
             break;
@@ -73,16 +65,37 @@ const handleSocketMessage = function(data)
     }
 }
 
-const sendPaddlePosition = function(position) {
+const checkSocket = function() {
     if (!this.pongSocket || this.pongSocket.readyState !== WebSocket.OPEN) {
         console.error("Pong socket not connected");
-        return;
+        return 0;
     }
 
     if (!this.playerNumber) {
         console.error("Player number not assigned");
-        return;
+        return 0;
     }
+
+    return 1;
+}
+
+const setMatchData = function() {
+    console.log('set match data');
+    if (window.loggedInUserName === this.matchData.player1) {
+        this.playerNumber = 1;
+        this.name = this.matchData.player1;
+    }
+    else if (window.loggedInUserName === this.matchData.player2) {
+        this.playerNumber = 2;
+        this.name = this.matchData.player2;
+    }
+    this.points_to_win = this.matchData.points_to_win;
+    this.p1.name = this.matchData.player1;
+    this.p2.name = this.matchData.player2;
+}
+
+const sendPaddlePosition = function(position) {
+    if (!this.checkSocket()) return;
 
     this.pongSocket.send(JSON.stringify({
         'type': 'paddle_position',
@@ -92,13 +105,7 @@ const sendPaddlePosition = function(position) {
 }
 
 const sendBallUpdate = function(position, velocity) {
-    if (!this.pongSocket || this.pongSocket.readyState !== WebSocket.OPEN) {
-        console.error("Pong socket not connected");
-        return;
-    }
-
-    if (this.playerNumber !== 1)
-        return;
+    if (!this.checkSocket()) return;
 
     this.pongSocket.send(JSON.stringify({
         'type': 'ball_update',
@@ -108,14 +115,7 @@ const sendBallUpdate = function(position, velocity) {
 }
 
 const sendScoreUpdate = function(signal, p1Score, p2Score) {
-    if (!this.pongSocket || this.pongSocket.readyState !== WebSocket.OPEN) {
-        console.error("Pong socket not connected");
-        return;
-    }
-
-    if (this.playerNumber !== 1) {
-        return;
-    }
+    if (!this.checkSocket()) return;
 
     this.pongSocket.send(JSON.stringify({
         'type': 'score_update',
@@ -153,6 +153,8 @@ const sendMatchData = function(attempts) {
 
     console.log('sendMatchData');
 
+    this.setMatchData();
+
     this.pongSocket.send(JSON.stringify({
         'type': 'match_data',
         'match_data': this.matchData,
@@ -160,14 +162,7 @@ const sendMatchData = function(attempts) {
 }
 
 const sendGameOver = function() {
-    if (!this.pongSocket || this.pongSocket.readyState !== WebSocket.OPEN) {
-        console.error("Pong socket not connected");
-        return;
-    }
-
-    if (this.playerNumber !== 1) {
-        return;
-    }
+    if (!this.checkSocket()) return;
 
     let winner_name;
 
@@ -183,4 +178,4 @@ const sendGameOver = function() {
     }))
 }
 
-export { handleSocketMessage, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl, sendMatchData, sendGameOver }
+export { handleSocketMessage, checkSocket, setMatchData, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl, sendMatchData, sendGameOver }
