@@ -1,5 +1,6 @@
 const initial_conditions = function()
 {
+    console.log('initial conditions');
     this.ball.pos[0] = 0;
     this.ball.pos[1] = 0;
     this.ball.vel[0] = 0;

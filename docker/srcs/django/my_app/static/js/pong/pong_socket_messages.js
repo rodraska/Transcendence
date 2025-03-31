@@ -20,9 +20,13 @@ const handleSocketMessage = function(data)
             break;
 
         case 'score_update':
-            
+            console.log('score update');
             this.p1.score = data.p1_score;
             this.p2.score = data.p2_score;
+            this.p2.pos[0] = -this.width / 2 + this.p_width / 2 + this.p_offest;
+            this.p2.pos[1] = 0;
+            this.p1.pos[0] = this.width / 2 - this.p_width / 2 - this.p_offest;
+            this.p1.pos[1] = 0;
             if (data.signal == 1)
                 this.ft_start();
             else if (data.signal == 2)
