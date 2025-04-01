@@ -2,7 +2,10 @@ import Player from "./curve_player.js"
 
 const ft_round = function()
 {
-    if (this.game_winner != 0) return (this.final_paint());
+    if (this.game_winner != 0)
+    {
+        return (this.ft_stop(this.game_winner));
+    }
     this.round++;
     document.getElementById("round").innerHTML = "Round " + this.round;
     this.powers = [];
