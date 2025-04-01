@@ -86,12 +86,19 @@ const ft_pause = function()
     else this.animationID = requestAnimationFrame(this.players_play.bind(this));
 }
 
-const ft_stop = function()
+const ft_stop = function(player_number)
 {
+    console.log('ft_stop: ', player_number);
+    console.log('playerNumber: ', this.playerNumber);
     this.isStart = false;
     cancelAnimationFrame(this.animationID);
-    this.game_winner = 1;
+    if (player_number == 1)
+        this.game_winner = 2;
+    else if (player_number == 2)
+        this.game_winner = 1;
     this.paint_gg();
+    if (player_number == this.playerNumber)
+        this.sendGameOver();
 }
 
 export { players_free, begin_iter, curr_iter, end_iter, players_play, ft_start, ft_pause, ft_stop }

@@ -46,12 +46,12 @@ const ft_stop = function(player_number)
     this.isStart = false;
     cancelAnimationFrame(this.animationID);
     if (player_number == 1) {
-        this.p1.score = this.points_to_win;
-        this.p2.score = 0;
-    }
-    else if (player_number == 2) {
         this.p1.score = 0;
         this.p2.score = this.points_to_win;
+    }
+    else if (player_number == 2) {
+        this.p1.score = this.points_to_win;
+        this.p2.score = 0;
     }
     this.initial_conditions();
     this.paint_stop();

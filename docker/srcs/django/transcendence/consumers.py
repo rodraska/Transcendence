@@ -665,12 +665,14 @@ class CurveConsumer(AsyncWebsocketConsumer):
 
         elif message_type == 'game_control':
             action = data.get('action')
+            player_number = data.get('player_number')
     
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'game_control',
-                    'action': action
+                    'action': action,
+                    'player_number': player_number
                 }
             )
         
@@ -733,10 +735,12 @@ class CurveConsumer(AsyncWebsocketConsumer):
 
     async def game_control(self, event):
         action = event.get('action')
+        player_number = event.get('player_number')
     
         await self.send(text_data=json.dumps({
             'type': 'game_control',
-            'action': action
+            'action': action,
+            'player_number': player_number
         }))
 
     async def match_data(self, event):

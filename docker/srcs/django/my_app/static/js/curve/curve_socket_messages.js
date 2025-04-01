@@ -50,7 +50,7 @@ const handleSocketMessage = function(data)
                     this.ft_pause();
                     break;
                 case 'stop':
-                    this.ft_stop();
+                    this.ft_stop(data.player_number);
                     break;
             }
             break;
@@ -186,9 +186,12 @@ const sendGameControl = function(action) {
         return;
     }
 
+    console.log('send game control: ', this.playerNumber);
+
     this.curveSocket.send(JSON.stringify({
         'type': 'game_control',
-        'action': action
+        'action': action,
+        'player_number': this.playerNumber
     }))
 }
 
@@ -212,18 +215,13 @@ const sendMatchData = function(attempts) {
 }
 
 const sendGameOver = function() {
-    if (!this.curveSocket || this.curveSocket.readyState !== WebSocket.OPEN) {
-        console.error("Curve socket not connected");
-        return;
-    }
+    if (!this.checkSocket() || this.isOver == true) return;
 
-    if (this.playerNumber !== 1) {
-        return;
-    }
+    this.isOver = true;
 
     let winner_name = this.players[this.game_winner - 1].name
 
-    console.log('winner_name: ', winner_name);
+    console.trace('winner_name: ', winner_name);
 
     this.curveSocket.send(JSON.stringify({
         'type': 'game_over',

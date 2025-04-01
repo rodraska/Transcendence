@@ -14,7 +14,7 @@ const paint_gg = function()
     {
         this.ctx.fillStyle = this.players[this.game_winner - 1].color;
         this.ctx.fillText(this.players[this.game_winner - 1].name + " Wins The Game", this.width / 2, this.height / 2);
-        this.sendGameOver();
+        //this.sendGameOver();
     }    
 }
 
