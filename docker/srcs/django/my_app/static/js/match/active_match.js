@@ -1,5 +1,5 @@
 import Component from "../spa/component.js";
-import { getOrCreateSocket } from "../index.js";
+import { getOrCreateSocket } from "../utils/socketManager.js";
 import Route from "../spa/route.js";
 
 class ActiveMatch extends Component {
@@ -13,10 +13,8 @@ class ActiveMatch extends Component {
     this.player1Forfeit = this.querySelector("#player1-forfeit");
     this.player2Forfeit = this.querySelector("#player2-forfeit");
     this.customParams = this.querySelector("#custom-params");
-
     this.loadMatchData();
     this.setupForfeitButtons();
-
     const socket = getOrCreateSocket();
     socket.onmessage = (e) => {
       const d = JSON.parse(e.data);
@@ -54,11 +52,7 @@ class ActiveMatch extends Component {
         return;
       }
       s.send(JSON.stringify({ action: "forfeit" }));
-      window.currentMatchData = null;
-      // Optionally, you can immediately route back:
-      // Route.go("/play");
     };
-
     if (window.loggedInUserName === window.currentMatchData?.player1) {
       this.player2Forfeit.style.display = "none";
       this.player1Forfeit.addEventListener("click", forfeitSelf);

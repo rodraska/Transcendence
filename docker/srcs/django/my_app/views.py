@@ -250,7 +250,7 @@ def get_all_users(request):
     try:
         target_id = int(target_user_id)
         users_qs = CustomUser.objects.exclude(id=target_id)
-        users = list(users_qs.values("id", "username", "avatar_url"))
+        users = list(users_qs.values("id", "username", "avatar_url", "is_online"))
         relationships = Relationship.objects.filter(Q(from_user_id=target_id) | Q(to_user_id=target_id))
         relationship_map = {}
         for rel in relationships:
