@@ -40,15 +40,23 @@ const ft_pause = function()
     else this.animationID = requestAnimationFrame(this.update.bind(this));
 }
 
-const ft_stop = function()
+const ft_stop = function(player_number)
 {
-    console.log('ft_stop');
+    console.log('ft_stop: ', player_number);
     this.isStart = false;
     cancelAnimationFrame(this.animationID);
+    if (player_number == 1) {
+        this.p1.score = this.points_to_win;
+        this.p2.score = 0;
+    }
+    else if (player_number == 2) {
+        this.p1.score = 0;
+        this.p2.score = this.points_to_win;
+    }
     this.initial_conditions();
     this.paint_stop();
-    this.p1.score = 0;
-    this.p2.score = 0;
+    if (player_number == this.playerNumber)
+        this.sendGameOver();
 }
 
 export { update, ft_start, ft_pause, ft_stop }

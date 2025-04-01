@@ -34,6 +34,7 @@ const handleSocketMessage = function(data)
             break;
 
         case 'game_control':
+            console.log('receive game_control');
             const action = data.action;
             switch (action) {
                 case 'start':
@@ -43,7 +44,7 @@ const handleSocketMessage = function(data)
                     this.ft_pause();
                     break;
                 case 'stop':
-                    this.ft_stop();
+                    this.ft_stop(data.player_number);
                     break;
             }
             break;
@@ -136,9 +137,12 @@ const sendGameControl = function(action) {
         return;
     }
 
+    console.log('send game control: ', this.playerNumber);
+
     this.pongSocket.send(JSON.stringify({
         'type': 'game_control',
-        'action': action
+        'action': action,
+        'player_number': this.playerNumber
     }))
 }
 
@@ -162,7 +166,11 @@ const sendMatchData = function(attempts) {
 }
 
 const sendGameOver = function() {
-    if (!this.checkSocket()) return;
+    if (!this.checkSocket() || this.isOver == true) return;
+
+    this.isOver = true;
+
+    console.log('send game over');
 
     let winner_name;
 
