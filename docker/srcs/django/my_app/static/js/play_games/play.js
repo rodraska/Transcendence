@@ -1,6 +1,6 @@
 import Component from "../spa/component.js";
 import Route from "../spa/route.js";
-import { getOrCreateSocket } from "../index.js";
+import { getOrCreateSocket } from "../utils/socketManager.js";
 
 function forceCloseModal(modalInstance) {
   if (modalInstance) modalInstance.hide();
@@ -15,7 +15,8 @@ class Play extends Component {
     this.isSearching = false;
     this.modalInstance = null;
     this.customModalInstance = null;
-    this.inviteModalInstance = null; // for custom game invites
+    this.inviteModalInstance = null;
+    this.currentPendingId = null;
   }
 
   async onInit() {
@@ -33,7 +34,6 @@ class Play extends Component {
     this.customPointsInput = this.querySelector("#custom-points");
     this.customCreateBtn = this.querySelector("#custom-create-btn");
     this.customGameTypeSelect = this.querySelector("#custom-game-type");
-    // Invite modal elements
     this.inviteModal = this.querySelector("#inviteModal");
     this.inviteInfoText = this.querySelector("#invite-info");
     this.acceptInviteBtn = this.querySelector("#accept-invite-btn");
@@ -48,7 +48,6 @@ class Play extends Component {
     this.customCreateBtn.addEventListener("click", () =>
       this.createCustomGame()
     );
-    // Invite modal event listeners
     this.acceptInviteBtn.addEventListener("click", () => this.acceptInvite());
     this.declineInviteBtn.addEventListener("click", () => this.declineInvite());
 
@@ -70,48 +69,60 @@ class Play extends Component {
     this.socket.onmessage = (e) => {
       const d = JSON.parse(e.data);
       if (d.match_found) {
-        // This branch is used when a normal (auto-matched) game is found.
-        this.matchInfoText.textContent = `Found Match #${d.match_id}: ${d.player1} vs ${d.player2}.`;
-        window.currentMatchData = {
-          matchId: d.match_id,
-          player1: d.player1,
-          player2: d.player2,
-          powerups_enabled: d.powerups_enabled,
-          points_to_win: d.points_to_win,
-        };
+        this.currentPendingId = d.pending_id;
+        this.matchInfoText.textContent = `Pending: ${d.player1} vs ${d.player2}.`;
+        this.enterMatchBtn.classList.remove("d-none");
         this.modalInstance.show();
+      } else if (d.waiting) {
+        this.searchingIndicator.textContent = d.message;
+        this.showSearchingUI(true);
       } else if (d.waiting_invite) {
-        // Instead of an alert, update the searching UI.
         this.searchingIndicator.textContent = d.message;
         this.showSearchingUI(true);
       } else if (d.custom_invite) {
-        // For the invitee: show the custom game invitation modal.
-        this.inviteInfoText.textContent = `${
-          d.player1
-        } has invited you to a custom match (${d.game_type}, Points: ${
-          d.points_to_win
-        }, Powerups: ${d.powerups_enabled ? "On" : "Off"}). Do you accept?`;
-        window.currentMatchData = {
-          matchId: d.match_id,
-          player1: d.player1,
-          player2: window.loggedInUserName,
-          powerups_enabled: d.powerups_enabled,
-          points_to_win: d.points_to_win,
-        };
+        this.currentPendingId = d.pending_id;
+        this.inviteInfoText.textContent = `${d.player1} invited you (${
+          d.game_type
+        }, Points: ${d.points_to_win}, Powerups: ${
+          d.powerups_enabled ? "On" : "Off"
+        }). Accept?`;
         this.inviteModalInstance.show();
-      } else if (d.match_accepted) {
-        // On acceptance, auto-redirect both players.
+      } else if (d.waiting_confirm) {
+        this.matchInfoText.textContent = d.message;
+        this.enterMatchBtn.classList.add("d-none");
+      } else if (d.match_start) {
+        forceCloseModal(this.modalInstance);
+        document.body.classList.remove("modal-open");
+        document
+          .querySelectorAll(".modal-backdrop")
+          .forEach((el) => el.remove());
         window.currentMatchData = {
           matchId: d.match_id,
           player1: d.player1,
           player2: d.player2,
+          powerups_enabled: d.powerups_enabled,
+          points_to_win: d.points_to_win,
         };
         Route.go("/active-match");
+      } else if (d.invite_declined) {
+        alert(d.message);
+        forceCloseModal(this.modalInstance);
+        window.currentMatchData = null;
+        Route.go("/play");
       } else if (d.error) {
         alert(`Error: ${d.message}`);
+      } else if (d.event === "match_cancelled") {
+        alert(d.message);
+        forceCloseModal(this.modalInstance);
+        forceCloseModal(this.inviteModalInstance);
+        this.isSearching = false;
+        this.showSearchingUI(false);
+        window.currentMatchData = null;
+        Route.go("/play");
       } else if (d.event === "match_forfeited") {
         alert(d.message);
         forceCloseModal(this.modalInstance);
+        forceCloseModal(this.inviteModalInstance);
         window.currentMatchData = null;
         Route.go("/play");
       }
@@ -147,14 +158,20 @@ class Play extends Component {
         { credentials: "include" }
       );
       const users = await r.json();
-      this.customOpponentSelect.innerHTML =
-        '<option value="" disabled selected>-- Select an Opponent --</option>';
-      users.forEach((u) => {
-        const opt = document.createElement("option");
-        opt.value = u.username;
-        opt.textContent = u.username;
-        this.customOpponentSelect.appendChild(opt);
-      });
+      const availableUsers = users.filter((u) => u.is_online);
+      if (availableUsers.length === 0) {
+        this.customOpponentSelect.innerHTML =
+          '<option value="" disabled selected>No online users</option>';
+      } else {
+        this.customOpponentSelect.innerHTML =
+          '<option value="" disabled selected>-- Select an Opponent --</option>';
+        availableUsers.forEach((u) => {
+          const opt = document.createElement("option");
+          opt.value = u.username;
+          opt.textContent = u.username;
+          this.customOpponentSelect.appendChild(opt);
+        });
+      }
     } catch (err) {
       console.error("Failed fetching opponents:", err);
     }
@@ -162,13 +179,13 @@ class Play extends Component {
 
   searchForMatch(t) {
     if (this.isSearching) {
-      alert("You're already searching for a match.");
+      alert("You're already searching.");
       return;
     }
     this.isSearching = true;
     this.showSearchingUI(true);
     if (this.socket.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify({ action: "join", game_type_id: t.id }));
+      this.socket.send(JSON.stringify({ action: "queue", game_type_id: t.id }));
     } else {
       this.isSearching = false;
       this.showSearchingUI(false);
@@ -197,16 +214,27 @@ class Play extends Component {
   enterMatch() {
     this.isSearching = false;
     this.showSearchingUI(false);
-    forceCloseModal(this.modalInstance);
-    Route.go("/active-match");
+    if (this.socket.readyState === WebSocket.OPEN && this.currentPendingId) {
+      this.socket.send(
+        JSON.stringify({
+          action: "confirm_match",
+          pending_id: this.currentPendingId,
+        })
+      );
+    }
   }
 
   cancelMatch() {
     this.isSearching = false;
     this.showSearchingUI(false);
     forceCloseModal(this.modalInstance);
-    if (this.socket.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify({ action: "forfeit" }));
+    if (this.socket.readyState === WebSocket.OPEN && this.currentPendingId) {
+      this.socket.send(
+        JSON.stringify({
+          action: "cancel_pending",
+          pending_id: this.currentPendingId,
+        })
+      );
     }
     window.currentMatchData = null;
     alert("Match canceled.");
@@ -224,7 +252,6 @@ class Play extends Component {
     const pw = this.customPowerupsSwitch.checked;
     let pts = parseInt(this.customPointsInput.value, 10);
     const gameTypeId = parseInt(this.customGameTypeSelect.value, 10);
-
     if (!opp) {
       alert("Select opponent.");
       return;
@@ -236,7 +263,7 @@ class Play extends Component {
     if (this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(
         JSON.stringify({
-          action: "create_custom",
+          action: "invite_custom",
           opponent_username: opp,
           game_type_id: gameTypeId,
           points_to_win: pts,
@@ -250,14 +277,11 @@ class Play extends Component {
   }
 
   acceptInvite() {
-    if (
-      this.socket.readyState === WebSocket.OPEN &&
-      window.currentMatchData?.matchId
-    ) {
+    if (this.socket.readyState === WebSocket.OPEN && this.currentPendingId) {
       this.socket.send(
         JSON.stringify({
-          action: "accept_invite",
-          match_id: window.currentMatchData.matchId,
+          action: "confirm_match",
+          pending_id: this.currentPendingId,
         })
       );
       this.inviteModalInstance.hide();
@@ -267,6 +291,14 @@ class Play extends Component {
   }
 
   declineInvite() {
+    if (this.socket.readyState === WebSocket.OPEN && this.currentPendingId) {
+      this.socket.send(
+        JSON.stringify({
+          action: "decline_pending",
+          pending_id: this.currentPendingId,
+        })
+      );
+    }
     this.inviteModalInstance.hide();
     window.currentMatchData = null;
   }
