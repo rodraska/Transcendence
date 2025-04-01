@@ -1,4 +1,5 @@
 import Component from "../spa/component.js";
+import { showToast } from "../utils/toast.js";
 
 class LoginForm extends Component {
   constructor() {
@@ -23,7 +24,7 @@ class LoginForm extends Component {
           if (data.error) {
             alert("Error: " + data.error);
           } else {
-            alert("Login successful.");
+            showToast("Login successful.", "success", "Login");
             fetch("/api/current_user/", { credentials: "include" })
               .then((resp) => resp.json())
               .then((userData) => {
