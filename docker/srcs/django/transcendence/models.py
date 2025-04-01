@@ -5,6 +5,7 @@ from django.conf import settings
 
 class CustomUser(AbstractUser):
     avatar_url = models.URLField(blank=True, null=True)
+    is_online = models.BooleanField(default=False) 
 
 
 class Relationship(models.Model):
