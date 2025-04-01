@@ -8,7 +8,24 @@ function normalizeRoute(url) {
   return url;
 }
 
+function forfeitIfActiveMatch(newRoute) {
+  if (
+    window.currentMatchData &&
+    window.currentMatchData.matchId &&
+    normalizeRoute(newRoute) !== "/active-match"
+  ) {
+    import("../utils/socketManager.js").then((module) => {
+      const socket = module.getOrCreateSocket();
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ action: "forfeit" }));
+      }
+    });
+    window.currentMatchData = null;
+  }
+}
+
 function setPage(url) {
+  forfeitIfActiveMatch(url);
   const normUrl = normalizeRoute(url);
   if (!contentContainer) {
     console.error("Content container is not set in Route.");
@@ -17,7 +34,6 @@ function setPage(url) {
   const component = routes.get(normUrl);
   if (component) {
     contentContainer.innerHTML = "";
-    // Use the custom element’s tag name defined during subscribe.
     const elementName =
       normUrl === "/" ? "home-component" : normUrl.slice(1) + "-component";
     const el = document.createElement(elementName);
@@ -28,6 +44,9 @@ function setPage(url) {
 }
 
 window.addEventListener("load", () => {
+  if (!window.location.hash) {
+    return;
+  }
   const currentHash = window.location.hash || "/";
   setPage(currentHash);
 });
