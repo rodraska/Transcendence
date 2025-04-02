@@ -1,4 +1,5 @@
 import Component from "../spa/component.js";
+import PongPage from "../pong/pong.js"
 
 class TournamentPage extends Component {
   constructor() {
@@ -158,33 +159,29 @@ class TournamentPage extends Component {
     });
   }
 
+  if (!customElements.get("pong-component")) {
+    customElements.define("pong-component", PongPage)
+  }
+  
   openNextGameModal() {
-    const nextMatch = this.getNextPendingMatch();
+    const nextMatch = this.getNextPendingMatch()
     if (!nextMatch) {
-      alert("No pending matches. Tournament might be complete.");
-      return;
+      alert("No pending matches.")
+      return
     }
-    // Display match information in the modal.
-    this.currentMatch = nextMatch;
-    this.gameMatchInfo.textContent = `Match: ${nextMatch.players[0]} vs ${nextMatch.players[1]}`;
-
-    // Build radio buttons to choose the winner.
+    this.currentMatch = nextMatch
+    this.gameMatchInfo.textContent = `${nextMatch.players[0]} vs ${nextMatch.players[1]}`
     this.winnerSelectionDiv.innerHTML = `
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="winnerRadio" id="winner1" value="${nextMatch.players[0]}">
-        <label class="form-check-label" for="winner1">
-          ${nextMatch.players[0]}
-        </label>
+      <div>
+        <input type="radio" name="winnerRadio" value="${nextMatch.players[0]}"> ${nextMatch.players[0]}
+        <input type="radio" name="winnerRadio" value="${nextMatch.players[1]}"> ${nextMatch.players[1]}
       </div>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="winnerRadio" id="winner2" value="${nextMatch.players[1]}">
-        <label class="form-check-label" for="winner2">
-          ${nextMatch.players[1]}
-        </label>
-      </div>
-    `;
-    // Show the modal.
-    this.gameModal.show();
+    `
+    const container = this.getElementById("pongGameContainer")
+    container.innerHTML = ""
+    const pongElement = document.createElement("pong-component")
+    container.appendChild(pongElement)
+    this.gameModal.show()
   }
 
   confirmGameResult() {
