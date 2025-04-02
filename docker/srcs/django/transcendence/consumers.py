@@ -39,6 +39,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                 opp = m.player1
             m.ended_on = timezone.now()
             m.winner = opp
+            m.result = "forfeit"
             m.save()
             Matchmaking.objects.filter(user=user, match=m).delete()
             return {
