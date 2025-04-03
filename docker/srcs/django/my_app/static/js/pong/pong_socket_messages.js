@@ -166,9 +166,7 @@ const sendMatchData = function(attempts) {
 }
 
 const sendGameOver = function() {
-    if (!this.checkSocket() || this.isOver == true) return;
-
-    this.isOver = true;
+    if (!this.checkSocket()) return;
 
     console.log('send game over');
 

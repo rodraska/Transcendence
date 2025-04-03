@@ -42,8 +42,10 @@ const ft_pause = function()
 
 const ft_stop = function(player_number)
 {
+    if (this.isOver == true) return;
     console.log('ft_stop: ', player_number);
     this.isStart = false;
+    this.isOver = true;
     cancelAnimationFrame(this.animationID);
     if (player_number == 1) {
         this.p1.score = 0;
