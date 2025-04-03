@@ -88,17 +88,19 @@ const ft_pause = function()
 
 const ft_stop = function(player_number)
 {
+    if (this.isOver == true) return;
     console.log('ft_stop: ', player_number);
     console.log('playerNumber: ', this.playerNumber);
     this.isStart = false;
+    this.isOver = true;
     cancelAnimationFrame(this.animationID);
     if (player_number == 1)
         this.game_winner = 2;
     else if (player_number == 2)
         this.game_winner = 1;
-    this.paint_gg();
     if (player_number == this.playerNumber)
         this.sendGameOver();
+    return (this.final_paint());
 }
 
 export { players_free, begin_iter, curr_iter, end_iter, players_play, ft_start, ft_pause, ft_stop }

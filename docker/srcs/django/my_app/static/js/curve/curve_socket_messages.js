@@ -63,6 +63,7 @@ const handleSocketMessage = function(data)
             break;
 
         case 'game_over':
+            console.log('receive game_over');
             break;
             
         default:
@@ -215,9 +216,7 @@ const sendMatchData = function(attempts) {
 }
 
 const sendGameOver = function() {
-    if (!this.checkSocket() || this.isOver == true) return;
-
-    this.isOver = true;
+    if (!this.checkSocket()) return;
 
     let winner_name = this.players[this.game_winner - 1].name
 
