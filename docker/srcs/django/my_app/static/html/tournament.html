@@ -1,0 +1,60 @@
+<div class="container mt-5">
+  <h1 class="mb-4">Tournament Setup</h1>
+  <div class="row">
+    <!-- Left: Tournament Setup Form -->
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="playerCount" class="form-label"
+          >Select number of players (2-4):</label
+        >
+        <select class="form-select" id="playerCount">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+        </select>
+      </div>
+      <div id="playersContainer"></div>
+      <button id="startTournament" class="btn btn-primary mt-3">
+        Start Tournament
+      </button>
+      <button id="resetTournament" class="btn btn-secondary mt-3">
+        Reset Tournament
+      </button>
+    </div>
+
+    <div class="col-md-6">
+      <div id="bracket"></div>
+      <div class="mt-3">
+        <button id="startNextGame" class="btn btn-success">
+          Start Next Game
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Pong game simulation -->
+<div
+  class="modal fade"
+  id="gameModal"
+  tabindex="-1"
+  aria-labelledby="gameModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gameMatchInfo">Pong Tournament</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div id="pongGameContainer"></div>
+      </div>
+    </div>
+  </div>
+</div>

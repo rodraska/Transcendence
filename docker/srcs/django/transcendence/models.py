@@ -67,3 +67,4 @@ class Match(models.Model):
     ended_on = models.DateTimeField(null=True, blank=True)
     points_to_win = models.IntegerField(default=10)
     powerups_enabled = models.BooleanField(default=False)
+    result = models.CharField(max_length=20, blank=True, null=True)

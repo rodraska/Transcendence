@@ -12,6 +12,7 @@ import PlayGames from "./play_games/play_games.js";
 import Record from "./match/record.js";
 import Play from "./play_games/play.js";
 import ActiveMatch from "./match/active_match.js";
+import TournamentPage from "./tournament/tournament.js";
 
 const headerContainer = document.getElementById("header-container");
 const contentContainer = document.getElementById("content-container");
@@ -37,17 +38,16 @@ function toggleHeader() {
 Route.setContentContainer(contentContainer);
 Route.subscribe("/home", HomePage);
 Route.subscribe("/profile", UserProfile);
-//Route.subscribe("/user", UserProfile);
 Route.subscribe("/pong", PongPage);
 Route.subscribe("/curve", CurvePage);
 Route.subscribe("/login", LoginButtons);
 Route.subscribe("/registration_form", RegistrationForm);
 Route.subscribe("/login_form", LoginForm);
 Route.subscribe("/friends", FriendsPage);
-// Route.subscribe("/play-games", PlayGames);
 Route.subscribe("/record", Record);
 Route.subscribe("/play", Play);
 Route.subscribe("/active-match", ActiveMatch);
+Route.subscribe("/tournament", TournamentPage);
 
 window.addEventListener("hashchange", () => {
   toggleHeader();
@@ -66,7 +66,7 @@ function checkLoginStatus() {
         window.loggedInUserName = data.username;
         window.loggedInUserId = data.user_id;
         window.loggedInAvatarUrl = data.avatar_url;
-        import("../utils/socketManager.js").then((module) => {
+        import("./utils/socketManager.js").then((module) => {
           module.getOrCreateSocket();
         });
         if (normalizeRoute(window.location.hash) === "/") {

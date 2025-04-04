@@ -1,4 +1,4 @@
-export default class Component extends HTMLElement {
+class Component extends HTMLElement {
   constructor(template) {
     super();
     fetch(template)
@@ -26,3 +26,5 @@ export default class Component extends HTMLElement {
 if (!customElements.get("base-component")) {
   customElements.define("base-component", Component);
 }
+
+export default Component;
