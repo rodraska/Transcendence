@@ -1,4 +1,5 @@
 import Component from "../spa/component.js";
+import { showToast } from "../utils/toast.js";
 
 class UserProfile extends Component {
     constructor() {
@@ -110,9 +111,11 @@ class UserProfile extends Component {
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                alert("Error updating avatar: " + data.error);
+                showToast("Error updating avatar!", "danger");
+                //alert("Error updating avatar: " + data.error);
             } else {
-                alert("Updated Avatar!");
+                showToast("Updated Avatar!", "success", "Profile");
+                //alert("Updated Avatar!");
                 document.getElementById("profileImage").src = data.avatar_url;
                 window.loggedInAvatarUrl = data.avatar_url;
 
@@ -152,9 +155,11 @@ class UserProfile extends Component {
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                alert("Error updating profile: " + data.error);
+                showToast("Error updating profile!", "danger");
+                //alert("Error updating profile: " + data.error);
             } else {
-                alert("Updated profile!");
+                showToast("Updated profile!", "success", "Profile");
+                //alert("Updated profile!");
             }
         })
         .catch(error => console.error("Error updating profile: ", error));
