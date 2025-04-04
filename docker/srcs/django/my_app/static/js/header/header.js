@@ -47,6 +47,13 @@ class HeaderBar extends Component {
       userNameElement.textContent = window.loggedInUserName;
     }
 
+    const gameStatsBtn = this.querySelector("#statbtn");
+    if (gameStatsBtn) {
+      gameStatsBtn.addEventListener("click", () => {
+        Route.go("/record");
+      });
+    }
+
     document.querySelector("header").component = this;
 
     this.updateHeader(
