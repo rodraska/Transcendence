@@ -1,4 +1,18 @@
 <div class="container mt-4">
-  <h2>Match Record</h2>
+  <h2>Game Stats</h2>
+
+  <div id="user-stats" class="card p-3 mb-3 bg-light">
+    <h4>Statistics by Game Type</h4>
+    <div id="stats-by-game-type" class="row"></div> <!-- Row for stats -->
+  </div>
+
+  <div class="mb-3">
+    <label for="game-filter" class="form-label">Filter by Game Type:</label>
+    <select id="game-filter" class="form-select">
+      <option value="all">All Games</option>
+    </select>
+  </div>
+
+  <h3>Match History</h3>
   <ul id="match-record-list" class="list-group"></ul>
 </div>
