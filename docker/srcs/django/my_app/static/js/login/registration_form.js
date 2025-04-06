@@ -1,4 +1,5 @@
 import Component from "../spa/component.js";
+import { showToast } from "../utils/toast.js";
 
 class RegistrationForm extends Component {
   constructor() {
@@ -31,15 +32,18 @@ class RegistrationForm extends Component {
         .then((response) => response.json())
         .then((data) => {
           if (data.error) {
-            alert("Error: " + data.error);
+            showToast("Error: " + data.error, "danger", "Register");
+            //alert("Error: " + data.error);
           } else {
-            alert("Registration successful you can now login.");
+            showToast("Registration successful you can now login.", "success", "Register");
+            //alert("Registration successful you can now login.");
             window.location.href = "#/login";
           }
         })
         .catch((error) => {
           console.error("Error registering user:", error);
-          alert("Error registering user: " + error);
+          showToast("Error registering user: " + data.error, "danger", "Register");
+          //alert("Error registering user: " + error);
         });
     });
   }
