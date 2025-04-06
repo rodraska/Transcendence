@@ -15,7 +15,7 @@ const players_free = function()
     this.myPlayer.paint_arrow();
     this.paint_offset();
     this.currentIters.begin++;
-    requestAnimationFrame(this.players_free.bind(this));
+    this.animationID = requestAnimationFrame(this.players_free.bind(this));
 }
 
 const begin_iter = function()
@@ -79,11 +79,12 @@ const ft_start = function(bool)
 const ft_pause = function()
 {
     console.log('ft_pause: ', this.isPaused);
-    if (this.currentIters.begin < 150) return;
+    //if (this.currentIters.begin < 150) return;
     if (!this.isStart) return;
     this.isPaused = !this.isPaused;
     if (this.isPaused) cancelAnimationFrame(this.animationID);
-    else this.animationID = requestAnimationFrame(this.players_play.bind(this));
+    else if (!this.isPaused && this.currentIters.begin > 150) this.animationID = requestAnimationFrame(this.players_play.bind(this));
+    else if (!this.isPaused && this.currentIters.begin < 150) this.animationID = requestAnimationFrame(this.players_free.bind(this));
 }
 
 const ft_stop = function(player_number)

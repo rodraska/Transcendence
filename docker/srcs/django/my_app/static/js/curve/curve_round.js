@@ -47,7 +47,7 @@ const players_still = function()
     this.gamePaintPlayers();
     this.myPlayer.paint_arrow();
     this.currentIters.load++;
-    requestAnimationFrame(this.players_still.bind(this));
+    this.animationID = requestAnimationFrame(this.players_still.bind(this));
 }
 
 export { ft_round, players_spawn, players_load, players_still }

@@ -26,6 +26,18 @@ document.addEventListener('keyup', function(event)
     }
 });
 
+document.addEventListener('visibilitychange', function()
+{
+    if (!window.curve_game) return;
+    const curve = window.curve_game;
+
+    if (document.hidden) {
+        if (curve.isStart && !curve.isPaused && !curve.isOver) {
+            curve.sendGameControl('pause');
+        }
+    }
+});
+
 const curveGameControlEvents = function() {
     if (!window.curve_game) return;
     const curve = window.curve_game;
