@@ -4,7 +4,8 @@ const ft_round = function()
 {
     if (this.game_winner != 0)
     {
-        return (this.ft_stop(this.game_winner));
+        //return (this.ft_stop(this.game_winner));
+        return (this.final_paint());
     }
     this.round++;
     document.getElementById("round").innerHTML = "Round " + this.round;

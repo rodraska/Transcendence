@@ -67,6 +67,7 @@ const ft_start = function(bool)
 {
     //console.trace("ft start called");
     console.log('ft_start');
+    if (this.isOver == true) return;
     if (this.isPaused === true) return (this.ft_pause());
     if (this.isStart === true && bool == false) return;
     this.isStart = true;
@@ -89,6 +90,7 @@ const ft_pause = function()
 
 const ft_stop = function(player_number)
 {
+    //if (this.game.playerScores[i] == this.game.points_to_win)
     if (this.isOver == true) return;
     console.log('ft_stop: ', player_number);
     console.log('playerNumber: ', this.playerNumber);

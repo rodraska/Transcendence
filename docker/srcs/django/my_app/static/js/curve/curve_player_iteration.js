@@ -50,8 +50,12 @@ const processCollision = function()
             this.game.round_winner = i;
             this.game.playerScores[i]++;
         }
-        if (this.game.playerScores[i] >= this.game.points_to_win) 
+        if (this.game.playerScores[i] >= this.game.points_to_win)
+        {
             this.game.game_winner = i;
+            this.isOver = true;
+        } 
+            
     }
     this.powers = [];
     document.getElementById("score1").innerHTML = this.game.playerScores[1];
