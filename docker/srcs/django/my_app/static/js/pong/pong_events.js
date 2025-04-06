@@ -52,6 +52,18 @@ document.addEventListener('keyup', function(event)
     }
 });
 
+document.addEventListener('visibilitychange', function()
+{
+    if (!window.pong_game) return;
+    const pong = window.pong_game;
+
+    if (document.hidden) {
+        if (pong.isStart && !pong.isPaused && !pong.isOver) {
+            pong.sendGameControl('pause');
+        }
+    }
+});
+
 const gameControlEvents = function() {
     if (!window.pong_game) return;
     const pong = window.pong_game;
