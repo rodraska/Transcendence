@@ -72,18 +72,28 @@ FtPongGame.ft_stop = function () {
   this.initial_conditions();
   if (document.getElementById("pong").closest("#pongGameContainer")) {
     if (this.p1.score === this.win_score || this.p2.score === this.win_score) {
+      const player1Score = this.p1.score;
+      const player2Score = this.p2.score;
+      const player1Name =
+        window.currentTournamentMatch && window.currentTournamentMatch.players
+          ? window.currentTournamentMatch.players[0]
+          : "Player 1";
+      const player2Name =
+        window.currentTournamentMatch && window.currentTournamentMatch.players
+          ? window.currentTournamentMatch.players[1]
+          : "Player 2";
+      const winnerName =
+        player1Score === this.win_score ? player1Name : player2Name;
+      const loserName =
+        player1Score === this.win_score ? player2Name : player1Name;
+      const scoreResult = player1Score + ":" + player2Score;
       this.paint_winner();
       setTimeout(() => {
-        let winnerIdentifier =
-          this.p1.score === this.win_score ? "Player 1" : "Player 2";
-        let winnerAlias =
-          window.currentTournamentMatch && window.currentTournamentMatch.players
-            ? winnerIdentifier === "Player 1"
-              ? window.currentTournamentMatch.players[0]
-              : window.currentTournamentMatch.players[1]
-            : winnerIdentifier;
         if (typeof window.tournamentGameFinished === "function") {
-          window.tournamentGameFinished(winnerAlias);
+          window.tournamentGameFinished({
+            winner: winnerName,
+            result: scoreResult,
+          });
         }
       }, 2000);
     } else {

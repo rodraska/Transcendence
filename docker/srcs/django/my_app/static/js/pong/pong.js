@@ -17,7 +17,6 @@ export default class PongPage extends Component {
   // }
 
   onInit() {
-    debugger;
     map = document.getElementById("pong");
     const modalContainer = map.closest("#pongGameContainer");
     if (modalContainer) {
