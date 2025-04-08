@@ -22,7 +22,8 @@ class LoginForm extends Component {
         .then((r) => r.json())
         .then((data) => {
           if (data.error) {
-            alert("Error: " + data.error);
+            showToast("Error: " + data.error, "danger", "Login");
+            //alert("Error: " + data.error);
           } else {
             showToast("Login successful.", "success", "Login");
             fetch("/api/current_user/", { credentials: "include" })
@@ -49,7 +50,8 @@ class LoginForm extends Component {
         })
         .catch((error) => {
           console.error("Error logging in user:", error);
-          alert("Error logging in user: " + error);
+          showToast("Error logging in user: " + data.error, "danger", "Login");
+          //alert("Error logging in user: " + error);
         });
     });
   }

@@ -71,6 +71,7 @@ class FriendsPage extends Component {
     const startIndex = (page - 1) * this.friendsPerPage;
     const endIndex = page * this.friendsPerPage;
     const currentFriends = this.friendsData.slice(startIndex, endIndex);
+  
     currentFriends.forEach((friend) => {
       const friendItem = document.createElement("li");
       friendItem.className = "list-group-item d-flex align-items-center";
@@ -90,11 +91,66 @@ class FriendsPage extends Component {
           }
         </div>
       `;
+  
+      // Tooltip na foto
+      const photo = friendItem.querySelector(".friend-photo");
+      let tooltip = null;
+  
+      photo.addEventListener("mouseenter", async (event) => {
+        if (tooltip) return;
+  
+        tooltip = document.createElement("div");
+        tooltip.className = "user-tooltip";
+        tooltip.style.position = "absolute";
+        tooltip.style.background = "#fff";
+        tooltip.style.border = "1px solid #ccc";
+        tooltip.style.padding = "10px";
+        tooltip.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+        tooltip.style.zIndex = "1000";
+  
+        document.body.appendChild(tooltip);
+  
+        const stats = await fetchUserStats(friend.id, friend.name);
+  
+        if (!tooltip) return;
+  
+        if (!stats || Object.keys(stats).length === 0) {
+          tooltip.innerHTML = `
+            <strong>${friend.name}</strong><br>
+            <em>No games played.</em>
+          `;
+        } else {
+          tooltip.innerHTML = `
+            <strong>${friend.name}</strong><br>
+            ${Object.entries(stats)
+              .map(([gameType, { total, wins }]) => {
+                const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
+                return `<span style="display: inline-block; margin-bottom: 4px;">
+                  ${gameType} → Games: ${total} Wins: ${winRate}%
+                </span>`;
+              })
+              .join("<br>")}
+          `;
+        }
+  
+        const rect = photo.getBoundingClientRect();
+        tooltip.style.left = `${rect.left + window.scrollX + 20}px`;
+        tooltip.style.top = `${rect.top + window.scrollY + 20}px`;
+      });
+  
+      photo.addEventListener("mouseleave", () => {
+        if (tooltip) {
+          tooltip.remove();
+          tooltip = null;
+        }
+      });
+  
       this.setupFriendActions(friendItem, friend);
+  
       this.friendsList.appendChild(friendItem);
     });
   }
-
+  
   setupFriendActions(friendItem, friend) {
     friendItem
       .querySelector(".is-friend-btn")
@@ -243,5 +299,37 @@ class FriendsPage extends Component {
     this.confirmationModal.show();
   }
 }
+
+async function fetchUserStats(userId, username) {
+  try {
+    const response = await fetch(`/api/match_record/${userId}/`, {
+      credentials: "include"
+    });
+    if (!response.ok) throw new Error(`Erro ${response.status}`);
+    
+    const data = await response.json();
+    return data.matches ? calculateStats(data.matches, username) : null;
+  } catch (err) {
+    console.error("Falha ao buscar stats:", err);
+    return null;
+  }
+}
+
+function calculateStats(matches, username) {
+  const stats = {};
+  matches.forEach(match => {
+    const gameType = match.game_type;
+    if (!stats[gameType]) {
+      stats[gameType] = { total: 0, wins: 0 };
+    }
+    stats[gameType].total += 1;
+    if (match.winner === username) {
+      stats[gameType].wins += 1;
+    }
+  });
+  return stats;
+}
+
+
 
 export default FriendsPage;

@@ -35,12 +35,64 @@
 		font-family: 'Arial', sans-serif;
 	}
 
+	#friends-list {
+		margin-bottom: 120px; /* ou mais se precisares */
+	}
+
 	.bottom {
 		position: fixed;
 		bottom: 0;
 		width: 100%;
-		padding: 150px;
+		background-color: white;
+		padding: 20px 0;
+		z-index: 10;
 	}
+
+
+	/* Tooltip */	
+	.user-tooltip {
+		max-width: 220px;
+		font-size: 14px;
+		border-radius: 8px;
+		background-color: #fdfdfd;
+		border: 1px solid #ccc;
+		padding: 10px;
+		transition: opacity 0.2s ease;
+		opacity: 1;
+		pointer-events: auto;
+		position: absolute;
+		z-index: 1000;
+	}
+
+	.user-tooltip strong {
+		font-size: 15px;
+		color: var(--accent-color);
+	}
+
+	.user-tooltip em {
+		color: var(--primary-color);
+	}
+
+	.user-tooltip.no-stats {
+		color: #999;
+	}
+
+	.user-tooltip.hidden {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.user-tooltip::after {
+		content: '';
+		position: absolute;
+		border-left: 6px solid transparent;
+		border-right: 6px solid transparent;
+		border-top: 6px solid #fdfdfd;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
 </style>
 
 <body>
