@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model, authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from transcendence.models import Matchmaking, Relationship, CustomUser, GameType, Match
+from transcendence.models import Matchmaking, Relationship, CustomUser, GameType, Match, Tournament
 from django.db.models import Q
 from django.core.files.storage import default_storage 
 from django.core.files.base import ContentFile
@@ -499,3 +499,34 @@ def getMatchRecordByUserId(request, user_id):
             "ended_on": m.ended_on,
         })
     return JsonResponse({"matches": record}, safe=False)
+
+@csrf_exempt
+@login_required
+def save_tournament_result(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            tournament_result = data.get("tournament")
+            tournament = Tournament.objects.create(
+                user=request.user,
+                results=tournament_result
+            )
+            return JsonResponse({"success": True, "tournament_id": tournament.id})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=400)
+    return JsonResponse({"error": "Only POST allowed."}, status=405)
+
+@csrf_exempt
+@login_required
+def get_tournaments(request):
+    if request.method == "GET":
+        tournaments = Tournament.objects.filter(user=request.user).order_by("-created_on")
+        data = []
+        for t in tournaments:
+            data.append({
+                "id": t.id,
+                "results": t.results,
+                "created_on": t.created_on.isoformat()
+            })
+        return JsonResponse({"tournaments": data})
+    return JsonResponse({"error": "Only GET allowed."}, status=405)

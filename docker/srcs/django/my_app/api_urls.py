@@ -1,7 +1,7 @@
 # my_app/api_urls.py
 from django.urls import path
 from .views import (
-    current_user, register_user, main_login, send_friend_request,
+    current_user, get_tournaments, register_user, main_login, save_tournament_result, send_friend_request,
     accept_friend_request, decline_friend_request, unfriend, block_user, cancel_friend_request, get_all_users, get_game_types,
     get_user_by_id, update_user_info, getMatchRecordByUserId, update_avatar
 )
@@ -22,4 +22,6 @@ urlpatterns = [
     path("user/<int:user_id>/update/", update_user_info, name="update_user_info"),
     path("match_record/<int:user_id>/", getMatchRecordByUserId, name="get_match_record_by_user"),
     path("user/<int:user_id>/update_avatar/", update_avatar, name="update_avatar"),
+    path("save_tournament_result/", save_tournament_result, name="save_tournament_result"),
+    path("get_tournaments/", get_tournaments, name="get_tournaments"),
 ]

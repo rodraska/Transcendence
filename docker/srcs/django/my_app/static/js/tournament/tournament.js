@@ -1,5 +1,7 @@
 import Component from "../spa/component.js";
 import PongPage from "../pong/pong.js";
+import { showToast } from "../utils/toast.js";
+import Route from "../spa/route.js";
 
 class TournamentPage extends Component {
   constructor() {
@@ -13,6 +15,7 @@ class TournamentPage extends Component {
     this.startButton = document.getElementById("startTournament");
     this.resetButton = document.getElementById("resetTournament");
     this.bracketDiv = document.getElementById("bracket");
+    this.nextMatchDiv = document.getElementById("nextMatch");
     this.startNextGameBtn = document.getElementById("startNextGame");
 
     this.startNextGameBtn.style.display = "none";
@@ -31,14 +34,15 @@ class TournamentPage extends Component {
       "click",
       this.openNextGameModal.bind(this)
     );
+
     this.updatePlayers();
     this.validatePlayerNames();
+    this.loadMyTournaments();
   }
 
   updatePlayers() {
     const count = parseInt(this.playerCountSelect.value, 10);
     this.playersContainer.innerHTML = "";
-
     for (let i = 1; i <= count; i++) {
       const formGroup = document.createElement("div");
       formGroup.className = "mb-3";
@@ -121,75 +125,100 @@ class TournamentPage extends Component {
   initTournament() {
     const count = parseInt(this.playerCountSelect.value, 10);
     const players = [];
-
     for (let i = 1; i <= count; i++) {
       const alias = document.getElementById("player" + i).value.trim();
-      if (!alias || alias.length < 5 || players.indexOf(alias) !== -1) {
-        return;
-      }
+      if (!alias || alias.length < 5 || players.indexOf(alias) !== -1) return;
       players.push(alias);
     }
-
     const randomizedPlayers = this.shuffleArray(players);
-
     this.tournamentState = [];
     if (count === 2) {
       this.tournamentState.push({
         round: "Final",
         players: [randomizedPlayers[0], randomizedPlayers[1]],
         winner: null,
+        result: null,
       });
     } else if (count === 3) {
       this.tournamentState.push({
         round: "Semi-final",
         players: [randomizedPlayers[0], randomizedPlayers[1]],
         winner: null,
+        result: null,
       });
       this.tournamentState.push({
         round: "Final",
         players: [null, randomizedPlayers[2]],
         winner: null,
+        result: null,
       });
     } else if (count === 4) {
       this.tournamentState.push({
         round: "Semi-final 1",
         players: [randomizedPlayers[0], randomizedPlayers[1]],
         winner: null,
+        result: null,
       });
       this.tournamentState.push({
         round: "Semi-final 2",
         players: [randomizedPlayers[2], randomizedPlayers[3]],
         winner: null,
+        result: null,
       });
       this.tournamentState.push({
         round: "Final",
         players: [null, null],
         winner: null,
+        result: null,
       });
     }
-
     this.startButton.disabled = true;
     this.startNextGameBtn.style.display = "block";
     this.bracketDiv.classList.add("border", "rounded", "p-3");
     this.updateBracketDisplay();
+    this.announceNextMatch();
   }
 
   updateBracketDisplay() {
-    let html = "";
+    let html = `<div class="card mb-3"><div class="card-header">Tournament Bracket</div><div class="card-body">`;
     for (const match of this.tournamentState) {
-      html += `<h2 class="mt-3">${match.round}</h2>`;
+      html += `<h5>${match.round}</h5>`;
       if (match.players[0] && match.players[1]) {
         html += `<p>${match.players[0]} vs ${match.players[1]}</p>`;
       } else if (match.players[0] || match.players[1]) {
-        html += `<p>${
-          match.players[0] ? match.players[0] : match.players[1]
-        } (bye)</p>`;
+        const totalPlayers = parseInt(this.playerCountSelect.value, 10);
+        if (totalPlayers < 4) {
+          html += `<p>${
+            match.players[0] ? match.players[0] : match.players[1]
+          } (bye)</p>`;
+        } else {
+          html += `<p>${
+            match.players[0] ? match.players[0] : match.players[1]
+          }</p>`;
+        }
       }
       if (match.winner) {
-        html += `<p><strong>Winner: ${match.winner}</strong></p>`;
+        html += `<p class="fw-bold">Winner: ${match.winner}</p>`;
       }
+      if (match.result) {
+        html += `<p class="fw-bold">Result: ${match.result}</p>`;
+      }
+      html += `<hr>`;
     }
+    html += `</div></div>`;
     this.bracketDiv.innerHTML = html;
+  }
+
+  announceNextMatch() {
+    const nextMatch = this.getNextPendingMatch();
+    let html = `<div class="alert alert-info" role="alert">`;
+    if (nextMatch) {
+      html += `<strong>Next Match:</strong> ${nextMatch.players[0]} vs ${nextMatch.players[1]}`;
+    } else {
+      html += `No pending matches. Tournament concluded.`;
+    }
+    html += `</div>`;
+    this.nextMatchDiv.innerHTML = html;
   }
 
   getNextPendingMatch() {
@@ -204,16 +233,20 @@ class TournamentPage extends Component {
     }
     const nextMatch = this.getNextPendingMatch();
     if (!nextMatch) {
-      alert("No pending matches.");
+      showToast("No pending matches.", "warning", "Tournament");
       return;
     }
+    // For bye matches in 2-player tournaments, auto-advance and save results
     if (
       this.tournamentState.length === 2 &&
       (!nextMatch.players[0] || !nextMatch.players[1])
     ) {
       const winnerAlias = nextMatch.players[0] || nextMatch.players[1];
       nextMatch.winner = winnerAlias;
+      nextMatch.result = "Bye";
       this.updateBracketDisplay();
+      this.announceNextMatch();
+      this.saveTournamentResult();
       return;
     }
     this.currentMatch = nextMatch;
@@ -224,14 +257,12 @@ class TournamentPage extends Component {
     const pongElement = document.createElement("pong-component");
     container.appendChild(pongElement);
     const self = this;
-    window.tournamentGameFinished = function (winner) {
-      self.currentMatch.winner = winner;
-      if (
-        self.tournamentState.length === 2 &&
-        self.currentMatch.round === "Semi-final"
-      ) {
-        self.tournamentState[1].players[0] = winner;
-      }
+    window.tournamentGameFinished = function (resultData) {
+      // resultData is: { winner: 'alias', result: 'score1:score2' }
+      self.currentMatch.winner = resultData.winner;
+      self.currentMatch.result = resultData.result;
+
+      // If the tournament has a semi-final -> final flow:
       if (
         self.tournamentState.length === 3 &&
         self.currentMatch.round.startsWith("Semi-final")
@@ -240,39 +271,52 @@ class TournamentPage extends Component {
           (m) => m.round === "Final"
         );
         if (!finalMatch.players[0]) {
-          finalMatch.players[0] = winner;
+          finalMatch.players[0] = resultData.winner;
         } else if (!finalMatch.players[1]) {
-          finalMatch.players[1] = winner;
+          finalMatch.players[1] = resultData.winner;
         }
       }
+
+      // If 3-player scenario or a 2-match bracket
+      if (
+        self.tournamentState.length === 2 &&
+        self.currentMatch.round === "Semi-final"
+      ) {
+        // The final is always index 1
+        self.tournamentState[1].players[0] = resultData.winner;
+      }
+
       self.updateBracketDisplay();
+      self.announceNextMatch();
       self.gameModal.hide();
       window.tournamentGameFinished = null;
       window.currentTournamentMatch = null;
+
+      // If the final is concluded, save results and handle end-of-tournament UI
+      if (
+        self.currentMatch.round === "Final" &&
+        self.tournamentState.every((m) => m.winner)
+      ) {
+        // Show End Tournament button or do immediate final flow:
+        self.finishTournament();
+      }
     };
     this.gameModal.show();
   }
 
-  resetTournament() {
-    this.tournamentState = [];
-    this.bracketDiv.innerHTML = "";
-    this.playersContainer.innerHTML = "";
-    this.startButton.disabled = false;
-    this.startNextGameBtn.style.display = "none";
-    this.playerCountSelect.value = "2";
-    this.updatePlayers();
-  }
   confirmGameResult() {
     const selected = document.querySelector(
       'input[name="winnerRadio"]:checked'
     );
     if (!selected) {
-      alert("Please select a winner.");
+      showToast("Please select a winner.", "warning", "Tournament");
       return;
     }
     const winner = selected.value;
     this.currentMatch.winner = winner;
-
+    // Optionally update result for this match if known
+    // For example, set a result string (you can customize as needed)
+    this.currentMatch.result = this.p1.score + ":" + this.p2.score;
     if (
       this.tournamentState.length === 2 &&
       this.currentMatch.round === "Semi-final"
@@ -290,11 +334,128 @@ class TournamentPage extends Component {
         finalMatch.players[1] = winner;
       }
     }
+    this.updateBracketDisplay();
+    this.announceNextMatch();
     if (this.currentMatch.round === "Final") {
-      alert(`Tournament Winner: ${winner}`);
+      this.saveTournamentResult();
     }
     this.gameModal.hide();
-    this.updateBracketDisplay();
+  }
+
+  // Saves tournament results to the backend and reloads past tournaments.
+  saveTournamentResult(callback) {
+    const tournamentResult = {
+      tournament: this.tournamentState,
+      timestamp: new Date().toISOString(),
+    };
+    fetch("/api/save_tournament_result/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(tournamentResult),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        showToast("Tournament saved successfully.", "success", "Tournament");
+        this.loadMyTournaments();
+        if (typeof callback === "function") {
+          callback();
+        }
+      })
+      .catch((err) => {
+        console.error("Error saving tournament:", err);
+        showToast("Error saving tournament.", "danger", "Tournament");
+        if (typeof callback === "function") {
+          callback();
+        }
+      });
+  }
+
+  loadMyTournaments() {
+    fetch("/api/get_tournaments/")
+      .then((res) => res.json())
+      .then((data) => {
+        let html = `<div class="card">
+                      <div class="card-header">My Tournaments</div>
+                      <div class="card-body">`;
+        if (data && data.tournaments && data.tournaments.length) {
+
+          data.tournaments.forEach((tourney) => {
+            html += this.renderTournamentCard(tourney);
+          });
+        } else {
+          html += `<p>No results</p>`;
+        }
+        html += `</div></div>`;
+        document.getElementById("myTournaments").innerHTML = html;
+      })
+      .catch((err) => console.error("Error loading tournaments:", err));
+  }
+
+  resetTournament() {
+    this.tournamentState = [];
+    this.bracketDiv.innerHTML = "";
+    this.nextMatchDiv.innerHTML = "";
+    this.playersContainer.innerHTML = "";
+    this.startButton.disabled = false;
+    this.startNextGameBtn.style.display = "none";
+    this.playerCountSelect.value = "2";
+    this.updatePlayers();
+  }
+
+  finishTournament() {
+    // Disable "Start Next Game" button
+    this.startNextGameBtn.textContent = "End Tournament";
+    this.startNextGameBtn.onclick = () => {
+      // Announce final winner if you want a quick toast
+      const finalMatch = this.tournamentState.find((m) => m.round === "Final");
+      if (finalMatch && finalMatch.winner) {
+        // Example: Using showToast or any small text
+        showToast(
+          `Tournament Winner: ${finalMatch.winner}`,
+          "info",
+          "Tournament"
+        );
+      }
+
+      // Save results to DB, then redirect
+      this.saveTournamentResult(() => {
+        // Callback after successful save
+        Route.go("/play");
+      });
+    };
+  }
+
+  renderTournamentCard(tourney) {
+    // Format the creation date/time
+    const createdDate = new Date(tourney.created_on).toLocaleString();
+
+    // Build HTML for each match in the tournament
+    let matchesHtml = "";
+    (tourney.results || []).forEach((match) => {
+      matchesHtml += `
+        <div class="mb-3 border-bottom pb-2">
+          <h5 class="mb-1">${match.round}</h5>
+          <p class="mb-1"><strong>Match:</strong> ${match.players.join(
+            " vs "
+          )}</p>
+          <p class="mb-1"><strong>Score:</strong> ${match.result}</p>
+          <p class="mb-1"><strong>Winner:</strong> ${match.winner}</p>
+        </div>
+      `;
+    });
+
+    return `
+      <div class="card mb-3">
+        <div class="card-header">
+          <strong>Played On:</strong> ${createdDate}
+        </div>
+        <div class="card-body">
+          ${matchesHtml || "<p>No matches found.</p>"}
+        </div>
+      </div>
+    `;
   }
 }
 

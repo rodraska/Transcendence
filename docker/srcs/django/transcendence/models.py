@@ -68,3 +68,11 @@ class Match(models.Model):
     points_to_win = models.IntegerField(default=10)
     powerups_enabled = models.BooleanField(default=False)
     result = models.CharField(max_length=20, blank=True, null=True)
+    
+class Tournament(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    results = models.JSONField(blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Tournament for {self.user.username} on {self.created_on}"

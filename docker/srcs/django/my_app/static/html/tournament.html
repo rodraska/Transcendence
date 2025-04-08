@@ -1,7 +1,6 @@
 <div class="container mt-5">
   <h1 class="mb-4">Tournament Setup</h1>
   <div class="row">
-    <!-- Left: Tournament Setup Form -->
     <div class="col-md-6">
       <div class="mb-3">
         <label for="playerCount" class="form-label"
@@ -24,11 +23,10 @@
 
     <div class="col-md-6">
       <div id="bracket"></div>
-      <div class="mt-3">
-        <button id="startNextGame" class="btn btn-success">
-          Start Next Game
-        </button>
-      </div>
+      <div id="nextMatch" class="mt-3"></div>
+      <button id="startNextGame" class="btn btn-success mt-3">
+        Start Next Game
+      </button>
     </div>
   </div>
 </div>
@@ -58,3 +56,5 @@
     </div>
   </div>
 </div>
+
+<div class="container mt-5" id="myTournaments"></div>
