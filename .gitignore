@@ -1,1 +1,2 @@
-docker/srcs/django/transcendence/migrations/ -r
+**/migrations/*
+**/__pycache__/*
