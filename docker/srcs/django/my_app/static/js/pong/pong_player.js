@@ -1,5 +1,7 @@
 class PongPlayer
 {
+    name = null;
+    
     constructor(pos)
     {
         this.pos = pos;
@@ -8,3 +10,5 @@ class PongPlayer
         this.score = 0;
     }
 }
+
+export default PongPlayer;

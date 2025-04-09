@@ -1,17 +1,18 @@
-FtPongGame.initial_conditions = function()
+const initial_conditions = function()
 {
+    console.log('initial conditions');
     this.ball.pos[0] = 0;
     this.ball.pos[1] = 0;
     this.ball.vel[0] = 0;
     this.ball.vel[1] = 0;
     this.ball.vel_t = 0;
-    this.p1.pos[0] = -width / 2 + this.p_width / 2 + this.p_offest;
-    this.p1.pos[1] = 0;
-    this.p2.pos[0] = width / 2 - this.p_width / 2 - this.p_offest;
+    this.p2.pos[0] = -this.width / 2 + this.p_width / 2 + this.p_offest;
     this.p2.pos[1] = 0;
+    this.p1.pos[0] = this.width / 2 - this.p_width / 2 - this.p_offest;
+    this.p1.pos[1] = 0;
 }
 
-FtPongGame.initial_ball = function()
+const initial_ball = function()
 {
     const randomSide = Math.floor(Math.random() * 2) + 1;
     if (randomSide == 1)
@@ -19,3 +20,5 @@ FtPongGame.initial_ball = function()
     else
         this.ball.vel[0] = -this.b_vel_i;
 }
+
+export {initial_conditions, initial_ball}
