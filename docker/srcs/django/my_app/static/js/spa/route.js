@@ -25,7 +25,7 @@ function forfeitIfActiveMatch(newRoute) {
 }
 
 function setPage(url) {
-  forfeitIfActiveMatch(url);
+  //forfeitIfActiveMatch(url);
   const normUrl = normalizeRoute(url);
   if (!contentContainer) {
     console.error("Content container is not set in Route.");
