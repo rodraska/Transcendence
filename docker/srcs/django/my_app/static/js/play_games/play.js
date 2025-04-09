@@ -62,7 +62,6 @@ class Play extends Component {
     await this.fetchGameTypes();
     this.socket = getOrCreateSocket();
     this.setupSocketMessages();
-    await this.populateOpponentSelect();
   }
 
   setupSocketMessages() {
@@ -243,7 +242,8 @@ class Play extends Component {
     alert("Match canceled.");
   }
 
-  openCustomGameModal() {
+  async openCustomGameModal() {
+    await this.populateOpponentSelect();
     this.customOpponentSelect.value = "";
     this.customPowerupsSwitch.checked = false;
     this.customPointsInput.value = "10";
