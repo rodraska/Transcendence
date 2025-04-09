@@ -79,6 +79,9 @@ class Play extends Component {
       } else if (d.waiting_invite) {
         this.searchingIndicator.textContent = d.message;
         this.showSearchingUI(true);
+        if (d.pending_id) {
+          this.currentPendingId = d.pending_id;
+        }
       } else if (d.custom_invite) {
         this.currentPendingId = d.pending_id;
         this.inviteInfoText.textContent = `${d.player1} invited you (${
@@ -250,7 +253,7 @@ class Play extends Component {
   createCustomGame() {
     const opp = this.customOpponentSelect.value;
     const pw = this.customPowerupsSwitch.checked;
-    let pts = parseInt(this.customPointsInput.value, 10);
+    const pts = parseInt(this.customPointsInput.value, 10);
     const gameTypeId = parseInt(this.customGameTypeSelect.value, 10);
     if (!opp) {
       alert("Select opponent.");
@@ -272,8 +275,17 @@ class Play extends Component {
       );
     }
     setTimeout(() => {
+      document.activeElement.blur();
+      if (this.currentPendingId) {
+        this.socket.send(
+          JSON.stringify({
+            action: "confirm_match",
+            pending_id: this.currentPendingId,
+          })
+        );
+      }
       this.customModalInstance.hide();
-    }, 10);
+    }, 500);
   }
 
   acceptInvite() {

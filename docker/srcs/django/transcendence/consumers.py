@@ -221,7 +221,11 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                         "powerups_enabled": pwr,
                     }
                 )
-                await self.send(json.dumps({"waiting_invite": True, "message": "Waiting for opponent..."}))
+                await self.send(json.dumps({
+                    "waiting_invite": True,
+                    "message": "Waiting for opponent...",
+                    "pending_id": pid
+                }))
             except CustomUser.DoesNotExist:
                 await self.send(json.dumps({"error": True, "message": f"User '{opp_name}' not found."}))
             except GameType.DoesNotExist:
