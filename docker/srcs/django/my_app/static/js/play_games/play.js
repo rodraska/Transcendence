@@ -104,6 +104,7 @@ class Play extends Component {
           player2: d.player2,
           powerups_enabled: d.powerups_enabled,
           points_to_win: d.points_to_win,
+          game_type: d.game_type,
         };
         Route.go("/active-match");
       } else if (d.invite_declined) {

@@ -254,6 +254,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                 user1 = await self.get_user_by_name(p1)
                 user2 = await self.get_user_by_name(p2)
                 match = await self.create_match_in_db(g, user1, user2, pts, pwr)
+                game_type = g.name
                 await self.channel_layer.group_send(
                     f"user_{p1}",
                     {
@@ -263,6 +264,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                         "player2": p2,
                         "powerups_enabled": match.powerups_enabled,
                         "points_to_win": match.points_to_win,
+                        "game_type": game_type,
                     }
                 )
                 await self.channel_layer.group_send(
@@ -274,6 +276,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                         "player2": p2,
                         "powerups_enabled": match.powerups_enabled,
                         "points_to_win": match.points_to_win,
+                        "game_type": game_type,
                     }
                 )
                 del self.pending_data[pid]
@@ -403,6 +406,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             "player2": event["player2"],
             "powerups_enabled": event["powerups_enabled"],
             "points_to_win": event["points_to_win"],
+            "game_type": event["game_type"]
         }))
 
     async def waiting_confirm(self, event):
