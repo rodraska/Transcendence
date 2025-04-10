@@ -438,3 +438,154 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             "friend_request": True,
             "from_username": event["from_username"]
         }))
+
+class PongConsumer(AsyncWebsocketConsumer):
+
+    async def connect(self):
+        self.game_id = self.scope['url_route']['kwargs']['game_id']
+        self.room_group_name = f'pong_{self.game_id}'
+
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        message_type = data.get('type')
+
+        if message_type == 'paddle_position':
+            player = data.get('player')
+            position = data.get('position')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'paddle_position',
+                    'player': player,
+                    'position': position,
+                    'sender_channel_name': self.channel_name
+                }
+            )
+        
+        elif message_type == 'game_control':
+            action = data.get('action')
+            player_number = data.get('player_number')
+    
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_control',
+                    'action': action,
+                    'player_number': player_number
+                }
+            )
+
+        elif message_type == 'ball_update':
+            position = data.get('position')
+            velocity = data.get('velocity')
+    
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'ball_update',
+                    'position': position,
+                    'velocity': velocity,
+                    'sender_channel_name': self.channel_name
+                }
+            )
+        
+        elif message_type == 'score_update':
+            signal = data.get('signal')
+            p1_score = data.get('p1_score')
+            p2_score = data.get('p2_score')
+    
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'score_update',
+                    'signal': signal,
+                    'p1_score': p1_score,
+                    'p2_score': p2_score
+                }
+        )
+
+        elif message_type == 'match_data':
+            match_data = data.get('match_data')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'match_data',
+                    'match_data': match_data,
+                    'sender_channel_name': self.channel_name
+                }
+            )
+
+        elif message_type == 'game_over':
+            winner_username = data.get('winner')
+            match_id = data.get('match_id')
+            result = await process_game_end(match_id, winner_username)
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_over',
+                    'result': result
+                }
+            )
+    
+    async def paddle_position(self, event):
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'paddle_position',
+                'player': event['player'],
+                'position': event['position']
+            }))
+
+    async def game_control(self, event):
+        action = event.get('action')
+        player_number = event.get('player_number')
+    
+        await self.send(text_data=json.dumps({
+            'type': 'game_control',
+            'action': action,
+            'player_number': player_number
+        }))
+
+    async def ball_update(self, event):
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'ball_update',
+                'position': event['position'],
+                'velocity': event['velocity']
+            }))
+
+    async def score_update(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'score_update',
+            'signal': event['signal'],
+            'p1_score': event['p1_score'],
+            'p2_score': event['p2_score']
+        }))
+
+    async def match_data(self, event):
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'match_data',
+                'match_data': event['match_data']
+            }))
+
+    async def game_over(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_over',
+            'result': event['result']
+        }))
