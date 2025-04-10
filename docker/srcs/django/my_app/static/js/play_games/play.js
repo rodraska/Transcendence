@@ -1,6 +1,7 @@
 import Component from "../spa/component.js";
 import Route from "../spa/route.js";
 import { getOrCreateSocket } from "../utils/socketManager.js";
+import { showToast } from "../utils/toast.js";
 
 function forceCloseModal(modalInstance) {
   if (modalInstance) modalInstance.hide();
@@ -113,14 +114,17 @@ class Play extends Component {
         };
         Route.go("/active-match");
       } else if (d.invite_declined) {
-        alert(d.message);
+        //alert(d.message);
+        showToast(d.message, "warning");
         forceCloseModal(this.modalInstance);
         window.currentMatchData = null;
         Route.go("/play");
       } else if (d.error) {
-        alert(`Error: ${d.message}`);
+        //alert(`Error: ${d.message}`);
+        showToast(`Error: ${d.message}`, "danger");
       } else if (d.event === "match_cancelled") {
-        alert(d.message);
+        //alert(d.message);
+        showToast(d.message, "warning");
         forceCloseModal(this.modalInstance);
         forceCloseModal(this.inviteModalInstance);
         this.isSearching = false;
@@ -128,7 +132,8 @@ class Play extends Component {
         window.currentMatchData = null;
         Route.go("/play");
       } else if (d.event === "match_forfeited") {
-        alert(d.message);
+        //alert(d.message);
+        showToast(d.message, "warning");
         forceCloseModal(this.modalInstance);
         forceCloseModal(this.inviteModalInstance);
         window.currentMatchData = null;
@@ -216,7 +221,8 @@ class Play extends Component {
 
   searchForMatch(t) {
     if (this.isSearching) {
-      alert("You're already searching.");
+      //alert("You're already searching.");
+      showToast("You're already searching.", "warning");
       return;
     }
     this.isSearching = true;
@@ -274,7 +280,9 @@ class Play extends Component {
       );
     }
     window.currentMatchData = null;
-    alert("Match canceled.");
+    //alert("Match canceled.");
+    showToast("Match canceled.", "warning");
+    
   }
 
   async openCustomGameModal() {
@@ -291,11 +299,13 @@ class Play extends Component {
     const pts = parseInt(this.customPointsInput.value, 10);
     const gameTypeId = parseInt(this.customGameTypeSelect.value, 10);
     if (!opp) {
-      alert("Select opponent.");
+      //alert("Select opponent.");
+      showToast("Select opponent.", "danger");
       return;
     }
     if (isNaN(pts) || pts < 5 || pts > 20) {
-      alert("Points must be 5-20.");
+      //alert("Points must be 5-20.");
+      showToast("Points must be 5-20.", "danger");
       return;
     }
     if (this.socket.readyState === WebSocket.OPEN) {
