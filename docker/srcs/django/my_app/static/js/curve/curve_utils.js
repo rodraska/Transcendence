@@ -18,8 +18,8 @@ const new_powerup = function()
             if (this.dist([x, y], this.powers[j].pos) < 50) {continue outer};
         break ;
     }
-    //let id = Math.floor(Math.random() * 6) + 1; //all the power ups
-    let id = 4; //specific powerup
+    let id = Math.floor(Math.random() * 6) + 1; //all the power ups
+    //let id = 4; //specific powerup
     this.powers.push(new this.powerConstructors[id](id, [x, y], this.baseIters[id]));
     this.sendGamePowers(this.powers);
 }

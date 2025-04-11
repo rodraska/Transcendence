@@ -35,7 +35,7 @@ const holes = function()
         let ratio = this.game.baseValues.vel / this.vel_t;
         if (Math.floor(Math.random() * this.hole_rate * ratio) == 0)
         {
-            this.hole_iter = 12 * ratio;
+            this.hole_iter = 20 * ratio;
         }
     }
 }
