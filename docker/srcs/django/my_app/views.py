@@ -472,7 +472,7 @@ def update_avatar(request, user_id):
 
             return JsonResponse({"avatar_url": avatar_url})
 
-    return JsonResponse({"error": "Nenhum avatar enviado ou selecionado."}, status=400)
+    return JsonResponse({"error": "No avatar founded"}, status=400)
 
 
 @csrf_exempt
