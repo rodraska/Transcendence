@@ -74,6 +74,7 @@ class Play extends Component {
   setupSocketMessages() {
     this.socket.onmessage = (e) => {
       const d = JSON.parse(e.data);
+      //console.log(d);
       if (d.match_found) {
         this.currentPendingId = d.pending_id;
         this.matchInfoText.textContent = `Pending: ${d.player1} vs ${d.player2}.`;
@@ -111,8 +112,14 @@ class Play extends Component {
           player2: d.player2,
           powerups_enabled: d.powerups_enabled,
           points_to_win: d.points_to_win,
+          game_type: d.game_type,
         };
-        Route.go("/active-match");
+        if (d.game_type == "Curve")
+          Route.go("/curve");
+        else if (d.game_type == "Pong")
+          Route.go("/pong");
+        else
+          Route.go("/active-match");
       } else if (d.invite_declined) {
         //alert(d.message);
         showToast(d.message, "warning");

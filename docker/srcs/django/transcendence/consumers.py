@@ -254,6 +254,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                 user1 = await self.get_user_by_name(p1)
                 user2 = await self.get_user_by_name(p2)
                 match = await self.create_match_in_db(g, user1, user2, pts, pwr)
+                game_type = g.name
                 await self.channel_layer.group_send(
                     f"user_{p1}",
                     {
@@ -263,6 +264,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                         "player2": p2,
                         "powerups_enabled": match.powerups_enabled,
                         "points_to_win": match.points_to_win,
+                        "game_type": game_type,
                     }
                 )
                 await self.channel_layer.group_send(
@@ -274,6 +276,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                         "player2": p2,
                         "powerups_enabled": match.powerups_enabled,
                         "points_to_win": match.points_to_win,
+                        "game_type": game_type,
                     }
                 )
                 del self.pending_data[pid]
@@ -403,6 +406,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             "player2": event["player2"],
             "powerups_enabled": event["powerups_enabled"],
             "points_to_win": event["points_to_win"],
+            "game_type": event["game_type"]
         }))
 
     async def waiting_confirm(self, event):
@@ -433,4 +437,363 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         await self.send(json.dumps({
             "friend_request": True,
             "from_username": event["from_username"]
+        }))
+
+@database_sync_to_async
+def process_game_end(match_id, winner_username):
+    """
+    Process a normal game end with a winner.
+    Updates the match (ending it and setting the winner),
+    and returns messages for both players.
+    """
+    m = Match.objects.get(id=match_id, ended_on__isnull=True)
+    
+    # Find the winner user object
+    winner = CustomUser.objects.get(username=winner_username)
+    
+    # Determine the loser
+    if m.player1 == winner:
+        loser = m.player2
+    else:
+        loser = m.player1
+        
+    # Update match record
+    m.ended_on = timezone.now()
+    m.winner = winner
+    m.save()
+    
+    # Clean up any matchmaking entries
+    Matchmaking.objects.filter(match=m).delete()
+    
+    return {
+        "match_id": m.id,
+        "winner": winner.username,
+        "loser": loser.username,
+        "msg_for_winner": f"Congratulations! You won against {loser.username}.",
+        "msg_for_loser": f"Game over. {winner.username} won this match.",
+        "final_score": m.final_score if hasattr(m, 'final_score') else None
+    }
+
+class PongConsumer(AsyncWebsocketConsumer):
+
+    async def connect(self):
+        self.game_id = self.scope['url_route']['kwargs']['game_id']
+        self.room_group_name = f'pong_{self.game_id}'
+
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        message_type = data.get('type')
+
+        if message_type == 'paddle_position':
+            player = data.get('player')
+            position = data.get('position')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'paddle_position',
+                    'player': player,
+                    'position': position,
+                    'sender_channel_name': self.channel_name
+                }
+            )
+        
+        elif message_type == 'game_control':
+            action = data.get('action')
+            player_number = data.get('player_number')
+    
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_control',
+                    'action': action,
+                    'player_number': player_number
+                }
+            )
+
+        elif message_type == 'ball_update':
+            position = data.get('position')
+            velocity = data.get('velocity')
+    
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'ball_update',
+                    'position': position,
+                    'velocity': velocity,
+                    'sender_channel_name': self.channel_name
+                }
+            )
+        
+        elif message_type == 'score_update':
+            signal = data.get('signal')
+            p1_score = data.get('p1_score')
+            p2_score = data.get('p2_score')
+    
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'score_update',
+                    'signal': signal,
+                    'p1_score': p1_score,
+                    'p2_score': p2_score
+                }
+        )
+
+        elif message_type == 'match_data':
+            match_data = data.get('match_data')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'match_data',
+                    'match_data': match_data,
+                    'sender_channel_name': self.channel_name
+                }
+            )
+
+        elif message_type == 'game_over':
+            winner_username = data.get('winner')
+            match_id = data.get('match_id')
+            result = await process_game_end(match_id, winner_username)
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_over',
+                    'result': result
+                }
+            )
+    
+    async def paddle_position(self, event):
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'paddle_position',
+                'player': event['player'],
+                'position': event['position']
+            }))
+
+    async def game_control(self, event):
+        action = event.get('action')
+        player_number = event.get('player_number')
+    
+        await self.send(text_data=json.dumps({
+            'type': 'game_control',
+            'action': action,
+            'player_number': player_number
+        }))
+
+    async def ball_update(self, event):
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'ball_update',
+                'position': event['position'],
+                'velocity': event['velocity']
+            }))
+
+    async def score_update(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'score_update',
+            'signal': event['signal'],
+            'p1_score': event['p1_score'],
+            'p2_score': event['p2_score']
+        }))
+
+    async def match_data(self, event):
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'match_data',
+                'match_data': event['match_data']
+            }))
+
+    async def game_over(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_over',
+            'result': event['result']
+        }))
+
+class CurveConsumer(AsyncWebsocketConsumer):
+
+    async def connect(self):
+        self.game_id = self.scope['url_route']['kwargs']['game_id']
+        self.room_group_name = f'curve_{self.game_id}'
+
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        await self.accept()
+    
+    async def disconnect(self, close_code):
+
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        message_type = data.get('type')
+
+        if message_type == 'player_state':
+            player = data.get('player')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'player_state',
+                    'player': player,
+                    'sender_channel_name': self.channel_name
+                }
+            )
+
+        elif message_type == 'pick_others':
+            power_id = data.get('power_id')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'pick_others',
+                    'power_id': power_id,
+                    'sender_channel_name': self.channel_name
+                }
+            )
+
+        elif message_type == 'pick_general':
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'pick_general'
+                }
+            )
+
+        elif message_type == 'game_powers':
+            powers = data.get('powers')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_powers',
+                    'powers': powers
+                }
+            )
+
+        elif message_type == 'collision':
+            player_id = data.get('player_id')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'collision',
+                    'player_id': player_id,
+                    'sender_channel_name': self.channel_name
+                }
+            )
+
+        elif message_type == 'game_control':
+            action = data.get('action')
+            player_number = data.get('player_number')
+    
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_control',
+                    'action': action,
+                    'player_number': player_number
+                }
+            )
+        
+        elif message_type == 'match_data':
+            match_data = data.get('match_data')
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'match_data',
+                    'match_data': match_data,
+                    'sender_channel_name': self.channel_name
+                }
+            )
+
+        elif message_type == 'game_over':
+            winner_username = data.get('winner')
+            match_id = data.get('match_id')
+            result = await process_game_end(match_id, winner_username)
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_over',
+                    'result': result
+                }
+            )
+
+    async def player_state(self, event):
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'player_state',
+                'player': event['player']
+            }))
+
+    async def pick_others(self, event):
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'pick_others',
+                'power_id': event['power_id']
+            }))
+
+    async def pick_general(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'pick_general'
+        }))
+
+    async def collision(self, event):
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'collision',
+                'player_id': event['player_id']
+            }))
+    
+    async def game_powers(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_powers',
+            'powers': event['powers']
+        }))
+
+    async def game_control(self, event):
+        action = event.get('action')
+        player_number = event.get('player_number')
+    
+        await self.send(text_data=json.dumps({
+            'type': 'game_control',
+            'action': action,
+            'player_number': player_number
+        }))
+
+    async def match_data(self, event):
+        if self.channel_name != event.get('sender_channel_name'):
+            await self.send(text_data=json.dumps({
+                'type': 'match_data',
+                'match_data': event['match_data']
+            }))
+
+    async def game_over(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_over',
+            'result': event['result']
         }))

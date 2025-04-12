@@ -2,8 +2,8 @@ import Route, { normalizeRoute } from "./spa/route.js";
 import HeaderBar from "./header/header.js";
 import HomePage from "./home/home_page.js";
 import UserProfile from "./header/profile.js";
-import PongPage from "./pong/pong.js";
-import CurvePage from "./curve/curve.js";
+import PongGame from "./pong/pong_game.js"
+import CurveGame from "./curve/curve_game.js"
 import LoginButtons from "./login/login.js";
 import RegistrationForm from "./login/registration_form.js";
 import LoginForm from "./login/login_form.js";
@@ -38,8 +38,8 @@ function toggleHeader() {
 Route.setContentContainer(contentContainer);
 Route.subscribe("/home", HomePage);
 Route.subscribe("/profile", UserProfile);
-Route.subscribe("/pong", PongPage);
-Route.subscribe("/curve", CurvePage);
+Route.subscribe("/pong", PongGame);
+Route.subscribe("/curve", CurveGame);
 Route.subscribe("/login", LoginButtons);
 Route.subscribe("/registration_form", RegistrationForm);
 Route.subscribe("/login_form", LoginForm);
@@ -72,7 +72,7 @@ function checkLoginStatus() {
         if (normalizeRoute(window.location.hash) === "/") {
           Route.go("/play");
         } else {
-          Route.go(window.location.hash);
+          //Route.go(window.location.hash);
         }
       } else {
         window.loggedInUserName = null;

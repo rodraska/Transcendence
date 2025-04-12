@@ -32,14 +32,16 @@ class ActiveMatch extends Component {
       this.player2Name.textContent = "Unknown";
       return;
     }
-    const { player1, player2, powerups_enabled, points_to_win } =
+    const { player1, player2, powerups_enabled, points_to_win, game_type } =
       window.currentMatchData;
+    console.log('window currentMatchData: ', window.currentMatchData);
     this.player1Name.textContent = player1;
     this.player2Name.textContent = player2;
     if (window.currentMatchData.matchId) {
       this.customParams.innerHTML = `
         <p><strong>Powerups:</strong> ${powerups_enabled ? "On" : "Off"}</p>
         <p><strong>Points to Win:</strong> ${points_to_win ?? 10}</p>
+        <p><strong>Game Type:</strong> ${game_type}</p>
       `;
     }
   }
