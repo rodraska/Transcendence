@@ -7,6 +7,10 @@ class HeaderBar extends Component {
   }
 
   onInit() {
+    if (!window.loggedInUserName) {
+      return;
+    }
+
     const logoutButton = this.querySelector("#logout-button");
     if (logoutButton) {
       logoutButton.addEventListener("click", () => {
