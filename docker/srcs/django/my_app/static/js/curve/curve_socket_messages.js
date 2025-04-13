@@ -219,7 +219,11 @@ const sendMatchData = function(attempts) {
 const sendGameOver = function() {
     if (!this.checkSocket()) return;
 
-    let winner_name = this.players[this.game_winner - 1].name
+    //let winner_name = this.players[this.game_winner - 1].name
+
+    let winner_name = window.currentMatchData.player1;
+    if (this.game_winner == 2)
+        winner_name = window.currentMatchData.player2;
 
     console.trace('winner_name: ', winner_name);
 

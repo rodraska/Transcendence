@@ -12,8 +12,19 @@ const paint_gg = function()
     }
     else
     {
-        this.ctx.fillStyle = this.players[this.game_winner - 1].color;
-        this.ctx.fillText(this.players[this.game_winner - 1].name + " Wins The Game", this.width / 2, this.height / 2);
+        if (this.players.length > 0)
+        {
+            this.ctx.fillStyle = this.players[this.game_winner - 1].color;
+            this.ctx.fillText(this.players[this.game_winner - 1].name + " Wins The Game", this.width / 2, this.height / 2);
+        }
+        else
+        {
+            this.ctx.fillStyle = 'white';
+            let winner_name = window.currentMatchData.player1;
+            if (this.game_winner == 2)
+                winner_name = window.currentMatchData.player2;
+            this.ctx.fillText(winner_name + " Wins The Game", this.width / 2, this.height / 2);
+        }
     }    
 }
 
