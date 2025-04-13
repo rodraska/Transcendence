@@ -7,7 +7,7 @@ import { paint_black, paint_squares, paint_names, paint_score, paint_ball, paint
 import { handleSocketMessage, checkSocket, setMatchData, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl, sendMatchData, sendGameOver } from "./pong_socket_messages.js"
 import { gameControlEvents } from "./pong_events.js"
 import { getPongHtmlElements } from "./pong_html_elements.js"
-import { setupPongSocket } from "./pong_socket_setup.js"
+import { setupPongSocket, closePongSocket } from "./pong_socket_setup.js"
 
 const initializePongGameProperties = function()
 {
@@ -76,6 +76,7 @@ const initializePongGameProperties = function()
         sendGameControl: sendGameControl,
         getPongHtmlElements: getPongHtmlElements,
         setupPongSocket: setupPongSocket,
+        closePongSocket: closePongSocket,
         sendMatchData: sendMatchData,
         sendGameOver: sendGameOver
     }

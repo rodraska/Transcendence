@@ -57,6 +57,7 @@ const handleSocketMessage = function(data)
             break;
 
         case 'game_over':
+            this.closePongSocket();
             break;
             //window.currentMatchData = null;
             //Route.go("/play");
