@@ -1,24 +1,44 @@
+
 <div class="container mt-4">
-  <h2 class="mb-4">Choose a Game</h2>
+  <h2 class="mb-5 text-center">Choose a Game</h2>
 
-  <div id="searching-indicator" class="alert alert-info d-none">
-    Searching for a match...
+  <div class="d-flex flex-wrap gap-4 justify-content-between">
+    <!-- Multiplayer Section -->
+    <div class="flex-fill p-3 bg-light border rounded shadow-sm" style="min-width: 300px; max-width: 48%;">
+      <h4 class="mb-3">Multiplayer</h4>
+
+      <div id="searching-indicator" class="alert alert-info d-none">
+        Searching for a match...
+      </div>
+      <button id="cancel-search-btn" class="btn btn-secondary mb-3 d-none">
+        Cancel Search
+      </button>
+
+      <button
+        id="custom-game-btn"
+        class="btn btn-warning mb-3"
+        data-bs-toggle="modal"
+        data-bs-target="#customGameModal"
+      >
+        Create Custom Game
+      </button>
+
+      <div id="game-types" class="d-flex flex-wrap"></div>
+    </div>
+
+    <!-- Singleplayer Section -->
+    <div class="flex-fill p-3 bg-light border rounded shadow-sm" style="min-width: 300px; max-width: 48%;">
+      <h4 class="mb-3">Singleplayer</h4>
+
+      <button id="tournament-btn" class="btn btn-success mb-3">
+        Tournament
+      </button>
+
+      <div id="singleplayer-game-types" class="d-flex flex-wrap"></div>
+    </div>
   </div>
-  <button id="cancel-search-btn" class="btn btn-secondary mb-3 d-none">
-    Cancel Search
-  </button>
-
-  <button
-    id="custom-game-btn"
-    class="btn btn-warning mb-3"
-    data-bs-toggle="modal"
-    data-bs-target="#customGameModal"
-  >
-    Create Custom Game
-  </button>
-
-  <div id="game-types" class="d-flex flex-wrap"></div>
 </div>
+
 
 <!-- Match Found Modal -->
 <div class="modal fade" id="matchFoundModal" tabindex="-1" aria-hidden="true">

@@ -92,58 +92,59 @@ class FriendsPage extends Component {
         </div>
       `;
   
-      // Tooltip na foto
-      const photo = friendItem.querySelector(".friend-photo");
-      let tooltip = null;
-  
-      photo.addEventListener("mouseenter", async (event) => {
-        if (tooltip) return;
-  
-        tooltip = document.createElement("div");
-        tooltip.className = "user-tooltip";
-        tooltip.style.position = "absolute";
-        tooltip.style.background = "#fff";
-        tooltip.style.border = "1px solid #ccc";
-        tooltip.style.padding = "10px";
-        tooltip.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
-        tooltip.style.zIndex = "1000";
-  
-        document.body.appendChild(tooltip);
-  
-        const stats = await fetchUserStats(friend.id, friend.name);
-  
-        if (!tooltip) return;
-  
-        if (!stats || Object.keys(stats).length === 0) {
-          tooltip.innerHTML = `
-            <strong>${friend.name}</strong><br>
-            <em>No games played.</em>
-          `;
-        } else {
-          tooltip.innerHTML = `
-            <strong>${friend.name}</strong><br>
-            ${Object.entries(stats)
-              .map(([gameType, { total, wins }]) => {
-                const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
-                return `<span style="display: inline-block; margin-bottom: 4px;">
-                  ${gameType} → Games: ${total} Wins: ${winRate}%
-                </span>`;
-              })
-              .join("<br>")}
-          `;
-        }
-  
-        const rect = photo.getBoundingClientRect();
-        tooltip.style.left = `${rect.left + window.scrollX + 20}px`;
-        tooltip.style.top = `${rect.top + window.scrollY + 20}px`;
-      });
-  
-      photo.addEventListener("mouseleave", () => {
-        if (tooltip) {
-          tooltip.remove();
-          tooltip = null;
-        }
-      });
+        
+    const photo = friendItem.querySelector(".friend-photo");
+    let tooltip = null;
+
+    function closeTooltip(event) {
+      // click outside photo
+      if (tooltip && !tooltip.contains(event.target) && event.target !== photo) {
+        tooltip.remove();
+        tooltip = null;
+      }
+    }
+
+    // open tooltip
+    photo.addEventListener("click", async (event) => {
+      if (!friend.isFriend) return;
+      
+      if (tooltip) {
+        tooltip.remove();
+        tooltip = null;
+        return;
+      }
+
+      tooltip = document.createElement("div");
+      tooltip.className = "user-tooltip";
+      tooltip.style.position = "absolute";
+      tooltip.style.background = "#fff";
+      tooltip.style.border = "1px solid #ccc";
+      tooltip.style.padding = "10px";
+      tooltip.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+      tooltip.style.zIndex = "1000";
+
+      document.body.appendChild(tooltip);
+
+      const stats = await fetchUserStats(friend.id, friend.name);
+
+      tooltip.innerHTML = stats && Object.keys(stats).length
+        ? `<strong>${friend.name}</strong><br>
+            ${Object.entries(stats).map(([gameType, { total, wins }]) => {
+              const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
+              return `<span style="display: inline-block; margin-bottom: 4px;">
+                ${gameType} → Games: ${total} Wins: ${winRate}%
+              </span>`;
+            }).join("<br>")}`
+        : `<strong>${friend.name}</strong><br><em>No games played.</em>`;
+
+      const rect = photo.getBoundingClientRect();
+      tooltip.style.left = `${rect.left + window.scrollX + 20}px`;
+      tooltip.style.top = `${rect.top + window.scrollY + 20}px`;
+
+      document.addEventListener("click", closeTooltip);
+    });
+
+
   
       this.setupFriendActions(friendItem, friend);
   

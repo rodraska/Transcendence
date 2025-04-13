@@ -1,6 +1,7 @@
 import Component from "../spa/component.js";
 import Route from "../spa/route.js";
 import { getOrCreateSocket } from "../utils/socketManager.js";
+import { showToast } from "../utils/toast.js";
 
 function forceCloseModal(modalInstance) {
   if (modalInstance) modalInstance.hide();
@@ -38,6 +39,8 @@ class Play extends Component {
     this.inviteInfoText = this.querySelector("#invite-info");
     this.acceptInviteBtn = this.querySelector("#accept-invite-btn");
     this.declineInviteBtn = this.querySelector("#decline-invite-btn");
+    this.singleplayerGameTypesContainer = this.querySelector("#singleplayer-game-types");
+
 
     this.cancelSearchBtn.addEventListener("click", () => this.cancelSearch());
     this.enterMatchBtn.addEventListener("click", () => this.enterMatch());
@@ -51,6 +54,10 @@ class Play extends Component {
     this.acceptInviteBtn.addEventListener("click", () => this.acceptInvite());
     this.declineInviteBtn.addEventListener("click", () => this.declineInvite());
 
+    this.querySelector("#tournament-btn")?.addEventListener("click", () => {
+      Route.go("/tournament");
+    });
+    
     this.modalInstance = new bootstrap.Modal(this.matchFoundModal, {
       backdrop: "static",
     });
@@ -114,14 +121,17 @@ class Play extends Component {
         else
           Route.go("/active-match");
       } else if (d.invite_declined) {
-        alert(d.message);
+        //alert(d.message);
+        showToast(d.message, "warning");
         forceCloseModal(this.modalInstance);
         window.currentMatchData = null;
         Route.go("/play");
       } else if (d.error) {
-        alert(`Error: ${d.message}`);
+        //alert(`Error: ${d.message}`);
+        showToast(`Error: ${d.message}`, "danger");
       } else if (d.event === "match_cancelled") {
-        alert(d.message);
+        //alert(d.message);
+        showToast(d.message, "warning");
         forceCloseModal(this.modalInstance);
         forceCloseModal(this.inviteModalInstance);
         this.isSearching = false;
@@ -129,7 +139,8 @@ class Play extends Component {
         window.currentMatchData = null;
         Route.go("/play");
       } else if (d.event === "match_forfeited") {
-        alert(d.message);
+        //alert(d.message);
+        showToast(d.message, "warning");
         forceCloseModal(this.modalInstance);
         forceCloseModal(this.inviteModalInstance);
         window.currentMatchData = null;
@@ -149,7 +160,7 @@ class Play extends Component {
     }
   }
 
-  renderGameTypes(types) {
+ /*  renderGameTypes(types) {
     this.gameTypesContainer.innerHTML = "";
     types.forEach((t) => {
       const btn = document.createElement("button");
@@ -159,6 +170,35 @@ class Play extends Component {
       this.gameTypesContainer.appendChild(btn);
     });
   }
+ */
+  renderGameTypes(types) {
+    this.gameTypesContainer.innerHTML = "";
+    this.singleplayerGameTypesContainer.innerHTML = "";
+  
+    types.forEach((t) => {
+      // Multiplayer Button
+      const mpBtn = document.createElement("button");
+      mpBtn.textContent = t.name;
+      mpBtn.classList.add("btn", "btn-primary", "m-2");
+      mpBtn.addEventListener("click", () => this.searchForMatch(t));
+      this.gameTypesContainer.appendChild(mpBtn);
+  
+      // Singleplayer Button (different link behavior)
+      const spBtn = document.createElement("button");
+      spBtn.textContent = t.name;
+      spBtn.classList.add("btn", "btn-primary", "m-2");
+      spBtn.addEventListener("click", () => {
+        // redirect to singleplayer match page for that game type
+        if (t.name === "Pong"){
+        Route.go("/pong");}
+        else if (t.name === "Curve"){
+          Route.go("/curve");}
+      });
+      this.singleplayerGameTypesContainer.appendChild(spBtn);
+    });
+  }
+  
+
 
   async populateOpponentSelect() {
     try {
@@ -188,7 +228,8 @@ class Play extends Component {
 
   searchForMatch(t) {
     if (this.isSearching) {
-      alert("You're already searching.");
+      //alert("You're already searching.");
+      showToast("You're already searching.", "warning");
       return;
     }
     this.isSearching = true;
@@ -246,7 +287,9 @@ class Play extends Component {
       );
     }
     window.currentMatchData = null;
-    alert("Match canceled.");
+    //alert("Match canceled.");
+    showToast("Match canceled.", "warning");
+    
   }
 
   async openCustomGameModal() {
@@ -263,11 +306,13 @@ class Play extends Component {
     const pts = parseInt(this.customPointsInput.value, 10);
     const gameTypeId = parseInt(this.customGameTypeSelect.value, 10);
     if (!opp) {
-      alert("Select opponent.");
+      //alert("Select opponent.");
+      showToast("Select opponent.", "danger");
       return;
     }
     if (isNaN(pts) || pts < 5 || pts > 20) {
-      alert("Points must be 5-20.");
+      //alert("Points must be 5-20.");
+      showToast("Points must be 5-20.", "danger");
       return;
     }
     if (this.socket.readyState === WebSocket.OPEN) {
