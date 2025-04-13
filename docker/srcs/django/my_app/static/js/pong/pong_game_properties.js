@@ -33,6 +33,7 @@ const initializePongGameProperties = function()
         p_height: 100,
         p_offest: 20,
         p_vel: 5,
+        boost: 1,
         s_height: 100,
         s_width: 50,
         points_to_win: 3,

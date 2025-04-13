@@ -25,13 +25,13 @@ const collision_1 = function()
         {
             const theta = (90 / this.p_height * dist) * Math.PI / 180;
             this.ball.vel[1] = this.ball.vel_t * Math.sin(theta);
-            this.ball.vel[0] = -this.b_vel_f;
+            this.ball.vel[0] = -this.b_vel_f * this.boost;
         } 
         else if (this.ball.pos[1] <= this.p1.pos[1] && this.ball.pos[1] >= this.p1.pos[1] - this.p_height / 2)
         {
             const theta = (90 / this.p_height * dist) * Math.PI / 180; 
             this.ball.vel[1] = this.ball.vel_t * Math.sin(theta);
-            this.ball.vel[0] = -this.b_vel_f;
+            this.ball.vel[0] = -this.b_vel_f * this.boost;
         }
     }
 }
@@ -46,13 +46,13 @@ const collision_2 = function()
         {
             const theta = (90 / this.p_height * dist) * Math.PI / 180;
             this.ball.vel[1] = this.ball.vel_t * Math.sin(theta);
-            this.ball.vel[0] = this.b_vel_f;
+            this.ball.vel[0] = this.b_vel_f * this.boost;
         }
         else if (this.ball.pos[1] <= this.p2.pos[1] && this.ball.pos[1] >= this.p2.pos[1] - this.p_height / 2)
         {
             const theta = (90 / this.p_height * dist) * Math.PI / 180; 
             this.ball.vel[1] = this.ball.vel_t * Math.sin(theta);
-            this.ball.vel[0] = this.b_vel_f;
+            this.ball.vel[0] = this.b_vel_f * this.boost;
         }
     }
 }

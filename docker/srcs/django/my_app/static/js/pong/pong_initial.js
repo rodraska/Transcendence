@@ -16,9 +16,9 @@ const initial_ball = function()
 {
     const randomSide = Math.floor(Math.random() * 2) + 1;
     if (randomSide == 1)
-        this.ball.vel[0] = this.b_vel_i;
+        this.ball.vel[0] = this.b_vel_i * this.boost;
     else
-        this.ball.vel[0] = -this.b_vel_i;
+        this.ball.vel[0] = -this.b_vel_i * this.boost;
 }
 
 export {initial_conditions, initial_ball}
