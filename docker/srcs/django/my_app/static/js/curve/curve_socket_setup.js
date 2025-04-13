@@ -27,4 +27,16 @@ const setupCurveSocket =function()
     }
 }
 
-export { setupCurveSocket }
+const closeCurveSocket = function() {
+    if (this.curveSocket && this.curveSocket.readyState !== WebSocket.CLOSED) {
+        this.curveSocket.close();
+        console.log('Curve socket closing...');
+    }
+    else
+        console.log('Curve socket already closed or never opened');
+
+    this.curveSocket = null;
+    window.curveSocket = null;
+}
+
+export { setupCurveSocket, closeCurveSocket }

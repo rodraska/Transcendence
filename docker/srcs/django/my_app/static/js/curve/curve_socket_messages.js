@@ -64,6 +64,7 @@ const handleSocketMessage = function(data)
 
         case 'game_over':
             console.log('receive game_over');
+            this.closeCurveSocket();
             break;
             
         default:

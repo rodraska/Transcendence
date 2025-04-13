@@ -7,7 +7,7 @@ import { PowerUp, PowerSpeed, PowerSlow, PowerGod, PowerRubber } from "./curve_p
 import { handleSocketMessage, checkSocket, setMatchData, sendPlayerState, sendPickOthers, sendPickGeneral, sendCollision, sendGamePowers, sendGameControl, sendMatchData, sendGameOver } from "./curve_socket_messages.js"
 import { curveGameControlEvents } from "./curve_events.js"
 import { getCurveHtmlElements } from "./curve_html_elements.js"
-import { setupCurveSocket } from "./curve_socket_setup.js"
+import { setupCurveSocket, closeCurveSocket } from "./curve_socket_setup.js"
 
 const initializeCurveGameProperties = function()
 {
@@ -141,6 +141,7 @@ const initializeCurveGameProperties = function()
         sendGameControl: sendGameControl,
         getCurveHtmlElements: getCurveHtmlElements,
         setupCurveSocket: setupCurveSocket,
+        closeCurveSocket: closeCurveSocket,
         sendMatchData: sendMatchData,
         sendGameOver: sendGameOver
     }
