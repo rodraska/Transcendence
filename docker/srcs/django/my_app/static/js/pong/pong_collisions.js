@@ -79,6 +79,7 @@ const check_goal = function()
     }
     if (this.p1.score === this.points_to_win || this.p2.score === this.points_to_win)
     {
+        this.score = this.p1.score + "-" + this.p2.score;
         this.sendScoreUpdate(2, this.p1.score, this.p2.score);
         this.sendGameOver();
         return (2);

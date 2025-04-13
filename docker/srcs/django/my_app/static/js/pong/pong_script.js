@@ -21,7 +21,7 @@ const update = function()
 
 const ft_start = function()
 {
-    console.log('ft_start');
+    console.log('ft_start: ', this.score);
     if (this.isOver == true) return;
     //console.trace('ft start called');
     if (this.isPaused === true) return (this.ft_pause());
@@ -47,6 +47,7 @@ const ft_stop = function(player_number)
     console.log('ft_stop: ', player_number);
     this.isStart = false;
     this.isOver = true;
+    this.score = this.p1.score + "-" + this.p2.score;
     cancelAnimationFrame(this.animationID);
     if (player_number == 1) {
         this.p1.score = 0;

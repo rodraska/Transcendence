@@ -440,7 +440,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         }))
 
 @database_sync_to_async
-def process_game_end(match_id, winner_username):
+def process_game_end(match_id, winner_username, score):
     """
     Process a normal game end with a winner.
     Updates the match (ending it and setting the winner),
@@ -460,6 +460,7 @@ def process_game_end(match_id, winner_username):
     # Update match record
     m.ended_on = timezone.now()
     m.winner = winner
+    m.result = score
     m.save()
     
     # Clean up any matchmaking entries
@@ -568,7 +569,8 @@ class PongConsumer(AsyncWebsocketConsumer):
         elif message_type == 'game_over':
             winner_username = data.get('winner')
             match_id = data.get('match_id')
-            result = await process_game_end(match_id, winner_username)
+            score = data.get('score')
+            result = await process_game_end(match_id, winner_username, score)
 
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -733,7 +735,7 @@ class CurveConsumer(AsyncWebsocketConsumer):
         elif message_type == 'game_over':
             winner_username = data.get('winner')
             match_id = data.get('match_id')
-            result = await process_game_end(match_id, winner_username)
+            result = await process_game_end(match_id, winner_username, 'score')
 
             await self.channel_layer.group_send(
                 self.room_group_name,

@@ -19,6 +19,7 @@ const initializePongGameProperties = function()
         gameReady: false,
         scoreChanged: false,
         isOver: false,
+        score: "",
 
         map: null,
         pong_ctx: null,
