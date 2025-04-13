@@ -18,6 +18,18 @@ const paint_squares = function()
     }
 }
 
+const paint_names = function()
+{
+    this.pong_ctx.font = "30px 'Press Start 2P', cursive";
+    this.pong_ctx.fillStyle = 'white';
+    this.pong_ctx.textAlign = "center";
+    this.pong_ctx.textBaseline = "bottom";
+    this.pong_ctx.fillText(this.p2.name, this.width / 4, this.s_height / 2);
+    this.pong_ctx.textAlign = "center";
+    this.pong_ctx.textBaseline = "bottom";
+    this.pong_ctx.fillText(this.p1.name, 3 * this.width / 4, this.s_height / 2);
+}
+
 const paint_score = function()
 {
     this.pong_ctx.font = "80px 'Press Start 2P', cursive";
@@ -65,6 +77,7 @@ const paint_stop = function()
     this.pong_ctx.clearRect(0, 0, this.map.width, this.map.height);
     this.paint_black();
     this.paint_squares();
+    this.paint_names();
     this.paint_score();
     this.paint_pong_gameover();
     this.paint_players();
@@ -74,9 +87,10 @@ const paint_loop = function()
 {
     this.paint_black();
     this.paint_squares();
+    this.paint_names();
     this.paint_score();
     this.paint_ball();
     this.paint_players();
 }
 
-export { paint_black, paint_squares, paint_score, paint_ball, paint_players, paint_pong_gameover, paint_stop, paint_loop }
+export { paint_black, paint_squares, paint_names, paint_score, paint_ball, paint_players, paint_pong_gameover, paint_stop, paint_loop }

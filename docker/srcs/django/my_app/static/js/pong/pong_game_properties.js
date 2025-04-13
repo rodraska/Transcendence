@@ -3,7 +3,7 @@ import PongPlayer from "./pong_player.js"
 import { update, ft_start, ft_pause, ft_stop } from "./pong_script.js"
 import { initial_conditions, initial_ball } from "./pong_initial.js"
 import { update_positions, collision_2, collision_1, check_goal, collision_tb, collisions } from "./pong_collisions.js" 
-import { paint_black, paint_squares, paint_score, paint_ball, paint_players, paint_pong_gameover, paint_stop, paint_loop } from "./pong_paint.js"
+import { paint_black, paint_squares, paint_names, paint_score, paint_ball, paint_players, paint_pong_gameover, paint_stop, paint_loop } from "./pong_paint.js"
 import { handleSocketMessage, checkSocket, setMatchData, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl, sendMatchData, sendGameOver } from "./pong_socket_messages.js"
 import { gameControlEvents } from "./pong_events.js"
 import { getPongHtmlElements } from "./pong_html_elements.js"
@@ -58,6 +58,7 @@ const initializePongGameProperties = function()
         collisions: collisions,
         paint_black: paint_black,
         paint_squares: paint_squares,
+        paint_names: paint_names,
         paint_score: paint_score,
         paint_ball: paint_ball,
         paint_players: paint_players,
