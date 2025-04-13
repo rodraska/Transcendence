@@ -7,7 +7,7 @@ export function getOrCreateSocket() {
   if (activeSocket && activeSocket.readyState === WebSocket.OPEN) {
     return activeSocket;
   }
-  activeSocket = new WebSocket("ws://localhost:8000/ws/matchmaking/");
+  activeSocket = new WebSocket(`ws://${window.location.hostname}:8000/ws/matchmaking/`);
   activeSocket.onopen = () => console.log("Global WebSocket connected.");
   activeSocket.onclose = () => console.warn("Global WebSocket closed.");
   activeSocket.onerror = (err) => console.error("Global WebSocket error:", err);

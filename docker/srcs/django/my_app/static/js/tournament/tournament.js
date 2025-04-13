@@ -3,6 +3,24 @@ import PongPage from "../pong/pong_game.js";
 import { showToast } from "../utils/toast.js";
 import Route from "../spa/route.js";
 
+const fetchUsername = async () => {
+  try {
+    const response = await fetch("/api/current_user/", { credentials: "include" });
+    const data = await response.json();
+    
+    if (data.error) {
+      showToast("No logged in user", "danger");
+      return;
+    }
+    
+    return data.username;
+  } catch (error) {
+    showToast("Error fetching user.", "danger");
+  }
+}
+
+const isAlpha = str => /^[a-zA-Z]*$/.test(str);
+
 class TournamentPage extends Component {
   constructor() {
     super("static/html/tournament.html");
@@ -40,7 +58,8 @@ class TournamentPage extends Component {
     this.loadMyTournaments();
   }
 
-  updatePlayers() {
+  async updatePlayers() {
+    const firstUsername = await fetchUsername();
     const count = parseInt(this.playerCountSelect.value, 10);
     this.playersContainer.innerHTML = "";
     for (let i = 1; i <= count; i++) {
@@ -56,7 +75,11 @@ class TournamentPage extends Component {
       input.type = "text";
       input.className = "form-control";
       input.id = "player" + i;
-      input.placeholder = "Enter alias for player " + i;
+      if (i == 1) {
+        input.value = firstUsername;
+      } else {
+        input.placeholder = "Enter alias for player " + i;
+      }
 
       formGroup.appendChild(label);
       formGroup.appendChild(input);
@@ -72,9 +95,13 @@ class TournamentPage extends Component {
         const errorDiv = document.getElementById(input.id + "_error");
         const alias = input.value.trim();
         let errorMsg = "";
-        if (alias.length > 0 && alias.length < 5) {
-          errorMsg = "Alias must be at least 5 characters long.";
-        } else if (alias) {
+        if (alias.length > 0 && alias.length > 8) {
+          errorMsg = "Alias is to big.";
+        }
+        else if (!isAlpha(alias)) {
+          errorMsg = "Alias can only contain letters.";
+        }
+        else if (alias) {
           const inputs = this.playersContainer.querySelectorAll("input");
           let countAlias = 0;
           inputs.forEach((el) => {
@@ -98,13 +125,12 @@ class TournamentPage extends Component {
   }
 
   validatePlayerNames() {
-    const count = parseInt(this.playerCountSelect.value, 10);
     let valid = true;
     const inputs = this.playersContainer.querySelectorAll("input");
     const names = [];
     inputs.forEach((input) => {
       const alias = input.value.trim();
-      if (alias === "" || alias.length < 5) {
+      if (alias === "" || alias.length > 8 || !isAlpha(alias)) {
         valid = false;
       }
       if (alias) {
@@ -127,7 +153,7 @@ class TournamentPage extends Component {
     const players = [];
     for (let i = 1; i <= count; i++) {
       const alias = document.getElementById("player" + i).value.trim();
-      if (!alias || alias.length < 5 || players.indexOf(alias) !== -1) return;
+      if (!alias || alias.length > 5 || players.indexOf(alias) !== -1 || !isAlpha(alias)) return;
       players.push(alias);
     }
     const randomizedPlayers = this.shuffleArray(players);
@@ -236,7 +262,6 @@ class TournamentPage extends Component {
       showToast("No pending matches.", "warning", "Tournament");
       return;
     }
-    // For bye matches in 2-player tournaments, auto-advance and save results
     if (
       this.tournamentState.length === 2 &&
       (!nextMatch.players[0] || !nextMatch.players[1])
@@ -258,11 +283,9 @@ class TournamentPage extends Component {
     container.appendChild(pongElement);
     const self = this;
     window.tournamentGameFinished = function (resultData) {
-      // resultData is: { winner: 'alias', result: 'score1:score2' }
       self.currentMatch.winner = resultData.winner;
       self.currentMatch.result = resultData.result;
 
-      // If the tournament has a semi-final -> final flow:
       if (
         self.tournamentState.length === 3 &&
         self.currentMatch.round.startsWith("Semi-final")
@@ -277,12 +300,10 @@ class TournamentPage extends Component {
         }
       }
 
-      // If 3-player scenario or a 2-match bracket
       if (
         self.tournamentState.length === 2 &&
         self.currentMatch.round === "Semi-final"
       ) {
-        // The final is always index 1
         self.tournamentState[1].players[0] = resultData.winner;
       }
 
@@ -292,12 +313,10 @@ class TournamentPage extends Component {
       window.tournamentGameFinished = null;
       window.currentTournamentMatch = null;
 
-      // If the final is concluded, save results and handle end-of-tournament UI
       if (
         self.currentMatch.round === "Final" &&
         self.tournamentState.every((m) => m.winner)
       ) {
-        // Show End Tournament button or do immediate final flow:
         self.finishTournament();
       }
     };
@@ -314,8 +333,6 @@ class TournamentPage extends Component {
     }
     const winner = selected.value;
     this.currentMatch.winner = winner;
-    // Optionally update result for this match if known
-    // For example, set a result string (you can customize as needed)
     this.currentMatch.result = this.p1.score + ":" + this.p2.score;
     if (
       this.tournamentState.length === 2 &&
@@ -342,7 +359,6 @@ class TournamentPage extends Component {
     this.gameModal.hide();
   }
 
-  // Saves tournament results to the backend and reloads past tournaments.
   saveTournamentResult(callback) {
     const tournamentResult = {
       tournament: this.tournamentState,
@@ -400,18 +416,15 @@ class TournamentPage extends Component {
     this.playersContainer.innerHTML = "";
     this.startButton.disabled = false;
     this.startNextGameBtn.style.display = "none";
-    this.playerCountSelect.value = "2";
+    this.playerCountSelect.value = "4";
     this.updatePlayers();
   }
 
   finishTournament() {
-    // Disable "Start Next Game" button
     this.startNextGameBtn.textContent = "End Tournament";
     this.startNextGameBtn.onclick = () => {
-      // Announce final winner if you want a quick toast
       const finalMatch = this.tournamentState.find((m) => m.round === "Final");
       if (finalMatch && finalMatch.winner) {
-        // Example: Using showToast or any small text
         showToast(
           `Tournament Winner: ${finalMatch.winner}`,
           "info",
@@ -419,19 +432,15 @@ class TournamentPage extends Component {
         );
       }
 
-      // Save results to DB, then redirect
       this.saveTournamentResult(() => {
-        // Callback after successful save
         Route.go("/play");
       });
     };
   }
 
   renderTournamentCard(tourney) {
-    // Format the creation date/time
     const createdDate = new Date(tourney.created_on).toLocaleString();
 
-    // Build HTML for each match in the tournament
     let matchesHtml = "";
     (tourney.results || []).forEach((match) => {
       matchesHtml += `
