@@ -27,7 +27,8 @@ function toggleHeader() {
   if (
     currentRoute === "/login" ||
     currentRoute === "/login_form" ||
-    currentRoute === "/registration_form"
+    currentRoute === "/registration_form" || 
+    (currentRoute === "/" && !window.loggedInUserName)
   ) {
     headerContainer.style.display = "none";
   } else {

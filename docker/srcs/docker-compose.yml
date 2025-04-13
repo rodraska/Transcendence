@@ -25,7 +25,13 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=transcendence.settings
     command: daphne -b 0.0.0.0 -p 8000 transcendence.asgi:application
-
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8080:8080
+  
 
 volumes:
   db_data:

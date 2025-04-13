@@ -1,5 +1,5 @@
 import Component from "../spa/component.js";
-import PongPage from "../pong/pong.js";
+import PongPage from "../pong/pong_game.js";
 import { showToast } from "../utils/toast.js";
 import Route from "../spa/route.js";
 
