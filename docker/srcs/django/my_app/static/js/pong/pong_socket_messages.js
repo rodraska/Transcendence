@@ -23,7 +23,6 @@ const handleSocketMessage = function(data)
             console.log('score update');
             this.p1.score = data.p1_score;
             this.p2.score = data.p2_score;
-            this.score = this.p1.score + "-" + this.p2.score;
             this.p2.pos[0] = -this.width / 2 + this.p_width / 2 + this.p_offest;
             this.p2.pos[1] = 0;
             this.p1.pos[0] = this.width / 2 - this.p_width / 2 - this.p_offest;
@@ -58,7 +57,6 @@ const handleSocketMessage = function(data)
             break;
 
         case 'game_over':
-            this.score = this.p1.score + "-" + this.p2.score;
             break;
             //window.currentMatchData = null;
             //Route.go("/play");
