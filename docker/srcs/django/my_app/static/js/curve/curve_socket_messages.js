@@ -225,7 +225,8 @@ const sendGameOver = function() {
     this.curveSocket.send(JSON.stringify({
         'type': 'game_over',
         'winner': winner_name,
-        'match_id': this.matchData.matchId
+        'match_id': this.matchData.matchId,
+        'score': this.score,
     }))
 }
 

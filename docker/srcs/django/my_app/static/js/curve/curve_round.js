@@ -5,6 +5,8 @@ const ft_round = function()
     if (this.game_winner != 0)
     {
         //return (this.ft_stop(this.game_winner));
+        this.score = this.playerScores[1] + "-" + this.playerScores[2];
+        if (this.playerNumber == 1) this.sendGameOver();
         return (this.final_paint());
     }
     this.round++;

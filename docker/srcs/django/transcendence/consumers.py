@@ -735,7 +735,8 @@ class CurveConsumer(AsyncWebsocketConsumer):
         elif message_type == 'game_over':
             winner_username = data.get('winner')
             match_id = data.get('match_id')
-            result = await process_game_end(match_id, winner_username, 'score')
+            score = data.get('score')
+            result = await process_game_end(match_id, winner_username, score)
 
             await self.channel_layer.group_send(
                 self.room_group_name,

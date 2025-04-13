@@ -101,6 +101,7 @@ const ft_stop = function(player_number)
         this.game_winner = 2;
     else if (player_number == 2)
         this.game_winner = 1;
+    this.score = 'forfeit';
     if (player_number == this.playerNumber)
         this.sendGameOver();
     return (this.final_paint());

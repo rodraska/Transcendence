@@ -18,6 +18,7 @@ const initializeCurveGameProperties = function()
         name: null,
         gameReady: null,
         isOver: false,
+        score: "",
 
         players: [],
         powers: [],
