@@ -5,6 +5,7 @@ const setupCurveSocket =function()
     const matchId = this.matchData.matchId;
     const curveSocket = new WebSocket(`ws://localhost:8000/ws/curve_game/${matchId}/`);
     this.curveSocket = curveSocket;
+    window.curveSocket = curveSocket;
 
     curveSocket.onopen = function() {
         console.log('Curve socket onopen');
