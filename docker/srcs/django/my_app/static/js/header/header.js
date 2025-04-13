@@ -7,41 +7,49 @@ class HeaderBar extends Component {
   }
 
   onInit() {
-    if (!window.loggedInUserName) {
-      return;
-    }
 
     const logoutButton = this.querySelector("#logout-button");
     if (logoutButton) {
-      logoutButton.addEventListener("click", () => {
+      logoutButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         window.location.href = "/accounts/logout/";
       });
     }
 
     const homeButton = this.querySelector("#homebtn");
     if (homeButton) {
-      homeButton.addEventListener("click", () => {
+      homeButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         Route.go("/home");
       });
     }
 
     const profileButton = this.querySelector("#profilebtn");
     if (profileButton) {
-      profileButton.addEventListener("click", () => {
+      profileButton.addEventListener("click", (e) => {
+        debugger;
+        e.preventDefault();
+        e.stopPropagation();
         Route.go("/profile");
       });
     }
 
     const playButton = this.querySelector("#playgamebtn");
     if (playButton) {
-      playButton.addEventListener("click", () => {
+      playButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         Route.go("/play");
       });
     }
 
     const friendsButton = this.querySelector("#friendbtn");
     if (friendsButton) {
-      friendsButton.addEventListener("click", () => {
+      friendsButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         Route.go("/friends");
       });
     }
@@ -53,7 +61,9 @@ class HeaderBar extends Component {
 
     const gameStatsBtn = this.querySelector("#statbtn");
     if (gameStatsBtn) {
-      gameStatsBtn.addEventListener("click", () => {
+      gameStatsBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         Route.go("/record");
       });
     }
