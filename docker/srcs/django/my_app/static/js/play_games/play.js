@@ -178,7 +178,7 @@ class Play extends Component {
     types.forEach((t) => {
       const gameTypeSelection = document.querySelector("#custom-game-type")
       const gameType = document.createElement("option")
-      gameType.value = "${t.id}"
+      gameType.value = `${t.id}`
       gameType.innerText = `${t.name}`
       gameTypeSelection.appendChild(gameType)
 
