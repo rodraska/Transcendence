@@ -1,3 +1,5 @@
+// import { showToast } from "./toast";
+
 let activeSocket = null;
 
 export function getOrCreateSocket() {
@@ -11,10 +13,12 @@ export function getOrCreateSocket() {
   activeSocket.onmessage = (event) => {
     const data = JSON.parse(event.data);
     if (data.event === "match_forfeited") {
-      alert(data.message || "Opponent forfeited.");
+      // alert(data.message || "Opponent forfeited.");
+      // showToast(data.message || "Opponent forfeited.")
       forceCloseAllModals();
       window.currentMatchData = null;
-      window.location.hash = "#/play";
+      // window.location.hash = "#/play";
+      Route.go("/play")
     } else {
       console.log("Global message:", data);
     }
