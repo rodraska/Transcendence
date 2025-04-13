@@ -37,7 +37,8 @@ class RegistrationForm extends Component {
           } else {
             showToast("Registration successful you can now login.", "success", "Register");
             //alert("Registration successful you can now login.");
-            window.location.href = "#/login";
+            // window.location.href = "#/login";
+            Route.go("/login")
           }
         })
         .catch((error) => {
