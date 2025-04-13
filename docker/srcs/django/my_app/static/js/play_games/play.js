@@ -176,8 +176,11 @@ class Play extends Component {
     this.singleplayerGameTypesContainer.innerHTML = "";
   
     types.forEach((t) => {
-      const gameType = document.querySelector("#custom-game-type")
-      gameType.innerHTML = `<option value="${t.id}">${t.name}</option>`
+      const gameTypeSelection = document.querySelector("#custom-game-type")
+      const gameType = document.createElement("option")
+      gameType.value = "${t.id}"
+      gameType.innerText = `${t.name}`
+      gameTypeSelection.appendChild(gameType)
 
       // Multiplayer Button
       const mpBtn = document.createElement("button");
