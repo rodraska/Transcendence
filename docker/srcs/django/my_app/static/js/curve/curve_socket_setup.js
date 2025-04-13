@@ -5,6 +5,7 @@ const setupCurveSocket =function()
     const matchId = this.matchData.matchId;
     const curveSocket = new WebSocket(`ws://${window.location.hostname}:8000/ws/curve_game/${matchId}/`);
     this.curveSocket = curveSocket;
+    window.curveSocket = curveSocket;
 
     curveSocket.onopen = function() {
         console.log('Curve socket onopen');
@@ -26,4 +27,16 @@ const setupCurveSocket =function()
     }
 }
 
-export { setupCurveSocket }
+const closeCurveSocket = function() {
+    if (this.curveSocket && this.curveSocket.readyState !== WebSocket.CLOSED) {
+        this.curveSocket.close();
+        console.log('Curve socket closing...');
+    }
+    else
+        console.log('Curve socket already closed or never opened');
+
+    this.curveSocket = null;
+    window.curveSocket = null;
+}
+
+export { setupCurveSocket, closeCurveSocket }

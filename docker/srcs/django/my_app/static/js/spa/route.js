@@ -24,8 +24,53 @@ function forfeitIfActiveMatch(newRoute) {
   }
 }
 
+function forfeitIfGame(newRoute) {
+  if (
+    window.currentMatchData &&
+    window.currentMatchData.matchId &&
+    normalizeRoute(newRoute) !== "/curve" && normalizeRoute(newRoute) !== "/pong"
+  ) {
+    console.log('new route forfeit');
+    const pongSocket = window.pongSocket;
+    const curveSocket = window.curveSocket;
+
+    if (pongSocket && pongSocket.readyState === WebSocket.OPEN) {
+      let playerNumber = 1;
+      if (window.loggedInUserName === window.currentMatchData.player2)
+        playerNumber = 2;
+
+      console.log('playerNumber: ', playerNumber);
+
+      pongSocket.send(JSON.stringify({
+        'type': 'game_control',
+        'action': 'stop',
+        'player_number': playerNumber
+      }))
+    }
+
+    if (curveSocket && curveSocket.readyState === WebSocket.OPEN) {
+      let playerNumber = 1;
+      if (window.loggedInUserName === window.currentMatchData.player2)
+        playerNumber = 2;
+
+      console.log('playerNumber: ', playerNumber);
+
+      curveSocket.send(JSON.stringify({
+        'type': 'game_control',
+        'action': 'stop',
+        'player_number': playerNumber
+      }))
+    }
+
+    window.pongSocket = null;
+    window.curveSocket = null;
+    window.currentMatchData = null;
+  }
+}
+
 function setPage(url) {
   //forfeitIfActiveMatch(url);
+  forfeitIfGame(url);
   const normUrl = normalizeRoute(url);
   if (!contentContainer) {
     console.error("Content container is not set in Route.");

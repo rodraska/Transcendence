@@ -5,6 +5,7 @@ const setupPongSocket = function()
     const matchId = this.matchData.matchId;
     const pongSocket = new WebSocket(`ws://${window.location.hostname}:8000/ws/pong_game/${matchId}/`);
     this.pongSocket = pongSocket;
+    window.pongSocket = pongSocket;
 
     pongSocket.onopen = function() {
         console.log("Pong socket open");
@@ -25,4 +26,16 @@ const setupPongSocket = function()
     };
 }
 
-export { setupPongSocket }
+const closePongSocket = function() {
+    if (this.pongSocket && this.pongSocket.readyState !== WebSocket.CLOSED) {
+        this.pongSocket.close();
+        console.log('Pong socket closing...');
+    }
+    else
+        console.log('Pong socket already closed or never opened');
+
+    this.pongSocket = null;
+    window.pongSocket = null;
+}
+
+export { setupPongSocket, closePongSocket }
