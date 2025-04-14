@@ -1,18 +1,9 @@
 const update = function()
 {
-    //console.log('update');
-    if (this.playerNumber === 1) {
-        this.sendPaddlePosition(this.p1.pos);
-        this.sendBallUpdate(this.ball.pos, this.ball.vel_t);
-    }
-    else if (this.playerNumber === 2)
-        this.sendPaddlePosition(this.p2.pos);
-    if (this.playerNumber === 1)
-    {
-        let x = this.check_goal();
-        if (x === 1) return (this.ft_start());
-        else if (x === 2) return (this.ft_stop(3));
-    }
+    console.log('update');
+    let x = this.check_goal();
+    if (x === 1) return (this.ft_start());
+    else if (x === 2) return (this.ft_stop(3));
     this.update_positions();
     this.collisions();
     this.paint_loop();
@@ -59,8 +50,6 @@ const ft_stop = function(player_number)
     }
     this.initial_conditions();
     this.paint_stop();
-    if (this.playerNumber == 1)
-        this.sendGameOver();
 }
 
 export { update, ft_start, ft_pause, ft_stop }

@@ -24,10 +24,10 @@ const paint_names = function()
     this.pong_ctx.fillStyle = 'white';
     this.pong_ctx.textAlign = "center";
     this.pong_ctx.textBaseline = "bottom";
-    this.pong_ctx.fillText(this.p2.name, this.width / 4, this.s_height / 2);
+    this.pong_ctx.fillText("Player2", this.width / 4, this.s_height / 2);
     this.pong_ctx.textAlign = "center";
     this.pong_ctx.textBaseline = "bottom";
-    this.pong_ctx.fillText(this.p1.name, 3 * this.width / 4, this.s_height / 2);
+    this.pong_ctx.fillText("Player1", 3 * this.width / 4, this.s_height / 2);
 }
 
 const paint_score = function()
