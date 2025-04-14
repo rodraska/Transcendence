@@ -140,17 +140,6 @@ class Record extends Component {
         <div>${winnerText}</div>
       `;
 
-    //   li.innerHTML = `
-    //   <div>
-    //     <strong>${match.player1}</strong> vs <strong>${match.player2}</strong> (${match.result})
-    //     <div class="text-muted"><small>${match.game_type} | ${dateTimeString}</small></div>
-    //     ${match.result && match.result.includes("-") ? `
-    //       <div class="mt-1"><strong>Score:</strong>${ resultDisplay }</div>
-    //     ` : ""}
-    //   </div>
-    //   <div>${winnerText}</div>
-    // `;
-
       this.listElement.appendChild(li);
     });
   }
