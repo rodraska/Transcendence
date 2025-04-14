@@ -30,7 +30,7 @@ function toggleHeader() {
     currentRoute === "/login" ||
     currentRoute === "/login_form" ||
     currentRoute === "/registration_form" || 
-    (currentRoute === "/" && !window.loggedInUserName)
+    (!window.loggedInUserName)
   ) {
     headerContainer.style.display = "none";
   } else {
@@ -59,8 +59,8 @@ window.addEventListener("hashchange", () => {
 });
 
 window.addEventListener("DOMContentLoaded", () => {
-  toggleHeader();
   checkLoginStatus();
+  toggleHeader();
 });
 
 function checkLoginStatus() {
