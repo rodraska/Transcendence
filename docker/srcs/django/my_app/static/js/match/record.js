@@ -128,7 +128,7 @@ class Record extends Component {
         const forfeiter = match.winner === match.player1 ? match.player2 : match.player1;
         extraInfo = `<small class="text-danger mt-1">Forfeited by ${forfeiter}</small>`;
       } else if (match.result && match.result.includes("-")) {
-        extraInfo = `Score: ${match.result}`;
+        extraInfo = `<em>Score: ${match.result}</em>`;
       }
 
       li.innerHTML = `
