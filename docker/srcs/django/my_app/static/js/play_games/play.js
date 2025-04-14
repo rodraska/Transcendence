@@ -74,7 +74,7 @@ class Play extends Component {
   setupSocketMessages() {
     this.socket.onmessage = (e) => {
       const d = JSON.parse(e.data);
-      //console.log(d);
+      console.log(d);
       if (d.match_found) {
         this.currentPendingId = d.pending_id;
         this.matchInfoText.textContent = `Pending: ${d.player1} vs ${d.player2}.`;
@@ -196,9 +196,9 @@ class Play extends Component {
       spBtn.addEventListener("click", () => {
         // redirect to singleplayer match page for that game type
         if (t.name === "Pong"){
-        Route.go("/pong");}
+        Route.go("/pong_single");}
         else if (t.name === "Curve"){
-          Route.go("/curve");}
+          Route.go("/curve_single");}
       });
       this.singleplayerGameTypesContainer.appendChild(spBtn);
     });
