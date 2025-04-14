@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from transcendence.models import Matchmaking, Relationship, CustomUser, GameType, Match, Tournament
 from django.db.models import Q
-from django.core.files.storage import default_storage 
+from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
 def index(request):
@@ -304,12 +304,12 @@ def search_for_match(request):
 
         # Insert user into matchmaking
         Matchmaking.objects.create(game_type=game_type, user=user)
-        
+
         return JsonResponse({"message": "Searching for match..."})
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
-    
+
 def find_match():
     matchmaking_entries = Matchmaking.objects.filter(match__isnull=True).order_by("created_at")
 
@@ -358,12 +358,12 @@ def search_for_match(request):
             return JsonResponse({"error": "You are already searching for a match."}, status=400)
 
         Matchmaking.objects.create(game_type=game_type, user=user)
-        
+
         return JsonResponse({"message": "Searching for match..."})
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
-    
+
 def cleanup_stale_entries():
     timeout = timezone.now() - timedelta(minutes=5)
     Matchmaking.objects.filter(match__isnull=True, created_at__lt=timeout).delete()
@@ -377,7 +377,7 @@ def get_user_by_id(request, user_id):
         user = CustomUser.objects.get(pk=user_id)
     except CustomUser.DoesNotExist:
         return JsonResponse({"error": "User not found."}, status=404)
-    
+
     data = {
         "id": user.id,
         "username": user.username,
@@ -399,7 +399,7 @@ def update_user_info(request, user_id):
         data = json.loads(request.body)
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON"}, status=400)
-    
+
     if "email" in data:
         request.user.email = data["email"]
     if "first_name" in data:
@@ -408,12 +408,12 @@ def update_user_info(request, user_id):
         request.user.last_name = data["last_name"]
     if "avatar_url" in data:
         request.user.avatar_url = data["avatar_url"]
-    
+
     try:
         request.user.save()
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
-    
+
     return JsonResponse({"message": "User updated successfully."}) """
 
 @csrf_exempt
@@ -427,19 +427,19 @@ def update_user_info(request, user_id):
         data = json.loads(request.body)
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON"}, status=400)
-    
+
     if "email" in data:
         request.user.email = data["email"]
     if "first_name" in data:
         request.user.first_name = data["first_name"]
     if "last_name" in data:
         request.user.last_name = data["last_name"]
-    
+
     try:
         request.user.save()
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
-    
+
     return JsonResponse({"message": "User updated successfully."})
 
 
@@ -497,6 +497,7 @@ def getMatchRecordByUserId(request, user_id):
             "winner": m.winner.username if m.winner else None,
             "started_on": m.started_on,
             "ended_on": m.ended_on,
+            "result": m.result or None
         })
     return JsonResponse({"matches": record}, safe=False)
 

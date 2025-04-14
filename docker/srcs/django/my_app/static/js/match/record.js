@@ -120,11 +120,22 @@ class Record extends Component {
       li.classList.add("list-group-item", "d-flex", "justify-content-between");
 
       const winnerText = `<strong class="text-success">${match.winner}</strong>`;
+      const matchDate = new Date(match.ended_on);
+      const dateTimeString = `${matchDate.toLocaleDateString("en-GB")} ${matchDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+      let extraInfo = "";
+      if (match.result === "forfeit") {
+        const forfeiter = match.winner === match.player1 ? match.player2 : match.player1;
+        extraInfo = `<small class="text-danger mt-1">Forfeited by ${forfeiter}</small>`;
+      } else if (match.result && match.result.includes("-")) {
+        extraInfo = `<em>Score: ${match.result}</em>`;
+      }
 
       li.innerHTML = `
         <div>
           <strong>${match.player1}</strong> vs <strong>${match.player2}</strong>
-          <br><small>${match.game_type} | ${new Date(match.ended_on).toLocaleDateString()}</small>
+          <div>${ extraInfo }</div>
+          <small>${match.game_type} | ${dateTimeString}</small>
         </div>
         <div>${winnerText}</div>
       `;
