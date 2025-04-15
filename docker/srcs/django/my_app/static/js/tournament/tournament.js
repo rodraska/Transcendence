@@ -5,21 +5,23 @@ import Route from "../spa/route.js";
 
 const fetchUsername = async () => {
   try {
-    const response = await fetch("/api/current_user/", { credentials: "include" });
+    const response = await fetch("/api/current_user/", {
+      credentials: "include",
+    });
     const data = await response.json();
-    
+
     if (data.error) {
       showToast("No logged in user", "danger");
       return;
     }
-    
+
     return data.username;
   } catch (error) {
     showToast("Error fetching user.", "danger");
   }
-}
+};
 
-const isAlpha = str => /^[a-zA-Z]*$/.test(str);
+const isAlpha = (str) => /^[a-zA-Z]*$/.test(str);
 
 class TournamentPage extends Component {
   constructor() {
@@ -27,7 +29,7 @@ class TournamentPage extends Component {
     this.tournamentState = [];
   }
 
-  onInit() {
+  async onInit() {
     this.playerCountSelect = document.getElementById("playerCount");
     this.playersContainer = document.getElementById("playersContainer");
     this.startButton = document.getElementById("startTournament");
@@ -53,8 +55,7 @@ class TournamentPage extends Component {
       this.openNextGameModal.bind(this)
     );
 
-    this.updatePlayers();
-    this.validatePlayerNames();
+    await this.updatePlayers();
     this.loadMyTournaments();
   }
 
@@ -95,13 +96,13 @@ class TournamentPage extends Component {
         const errorDiv = document.getElementById(input.id + "_error");
         const alias = input.value.trim();
         let errorMsg = "";
-        if (alias.length > 0 && alias.length > 8) {
-          errorMsg = "Alias is to big.";
-        }
-        else if (!isAlpha(alias)) {
+        if (alias === "") {
+          errorMsg = "Alias cannot be empty.";
+        } else if (alias.length > 8) {
+          errorMsg = "Alias is too big.";
+        } else if (!isAlpha(alias)) {
           errorMsg = "Alias can only contain letters.";
-        }
-        else if (alias) {
+        } else {
           const inputs = this.playersContainer.querySelectorAll("input");
           let countAlias = 0;
           inputs.forEach((el) => {
@@ -120,6 +121,7 @@ class TournamentPage extends Component {
           errorDiv.textContent = "";
           errorDiv.classList.add("d-none");
         }
+        this.validatePlayerNames();
       });
     }
   }
@@ -141,6 +143,14 @@ class TournamentPage extends Component {
         }
       }
     });
+
+    const errorDivs = this.playersContainer.querySelectorAll(".text-danger");
+    errorDivs.forEach((errorDiv) => {
+      if (!errorDiv.classList.contains("d-none")) {
+        valid = false;
+      }
+    });
+
     this.startButton.disabled = !valid;
   }
 
@@ -149,11 +159,18 @@ class TournamentPage extends Component {
   }
 
   initTournament() {
+    debugger;
     const count = parseInt(this.playerCountSelect.value, 10);
     const players = [];
     for (let i = 1; i <= count; i++) {
       const alias = document.getElementById("player" + i).value.trim();
-      if (!alias || alias.length > 5 || players.indexOf(alias) !== -1 || !isAlpha(alias)) return;
+      if (
+        !alias ||
+        alias.length > 8 ||
+        players.indexOf(alias) !== -1 ||
+        !isAlpha(alias)
+      )
+        return;
       players.push(alias);
     }
     const randomizedPlayers = this.shuffleArray(players);
@@ -396,7 +413,6 @@ class TournamentPage extends Component {
                       <div class="card-header">My Tournaments</div>
                       <div class="card-body">`;
         if (data && data.tournaments && data.tournaments.length) {
-
           data.tournaments.forEach((tourney) => {
             html += this.renderTournamentCard(tourney);
           });
@@ -414,7 +430,7 @@ class TournamentPage extends Component {
     this.bracketDiv.innerHTML = "";
     this.nextMatchDiv.innerHTML = "";
     this.playersContainer.innerHTML = "";
-    this.startButton.disabled = false;
+    this.startButton.disabled = true;
     this.startNextGameBtn.style.display = "none";
     this.playerCountSelect.value = "4";
     this.updatePlayers();
