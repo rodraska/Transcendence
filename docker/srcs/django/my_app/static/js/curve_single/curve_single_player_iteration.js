@@ -76,7 +76,6 @@ const checkCollision = function()
                 console.log(i);
                 console.log('collision regular');
                 this.processCollision();
-                this.game.sendCollision(this.id);
                 return ;
             }
         }
@@ -84,14 +83,12 @@ const checkCollision = function()
         {
             console.log('collision white')
             this.processCollision();
-            this.game.sendCollision(this.id);
             return ;
         }
         if (this.hard_boundaries())
         {
             console.log('collision out')
             this.processCollision();
-            this.game.sendCollision(this.id);
             return ;
         }
     }

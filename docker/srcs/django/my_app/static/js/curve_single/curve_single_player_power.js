@@ -8,7 +8,7 @@ const pick_powerups = function()
         {
             this.give_powerup(this.game.powers[i].id);
             this.game.powers.splice(i, 1);
-            this.game.sendGamePowers(this.game.powers);
+            //this.game.sendGamePowers(this.game.powers);
             i--;
         }
     }
@@ -34,11 +34,18 @@ const give_powerup = function(id)
     }
     else if (id >= 4 && id <= 5) //give others
     {
-        this.game.sendPickOthers(id);
+        let power = new this.powerConstructors[power_id](power_id, [0, 0], this.baseIters[power_id])
+        if (this.id == 1)
+            this.game.players[1].powers.push(power);
+        else
+            this.game.players[0].powers.push(power);
+        //this.game.sendPickOthers(id);
     }
     else if (id == 6) //general
     {
-        this.game.sendPickGeneral();
+        this.currentIters[6] = this.baseIters[6];
+        this.erase = true;
+        //this.game.sendPickGeneral();
     }
 }
 

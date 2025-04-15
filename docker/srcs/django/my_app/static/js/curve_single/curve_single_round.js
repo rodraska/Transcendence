@@ -1,12 +1,10 @@
-import Player from "./curve_player.js"
+import Player from "./curve_single_player.js"
 
 const ft_round = function()
 {
     if (this.game_winner != 0)
     {
-        //return (this.ft_stop(this.game_winner));
         this.score = this.playerScores[1] + "-" + this.playerScores[2];
-        if (this.playerNumber == 1) this.sendGameOver();
         return (this.final_paint());
     }
     this.round++;
@@ -26,8 +24,6 @@ const players_spawn = function()
         let t = Math.floor(Math.random() * 361) * Math.PI / 180;
         this.players.push(new Player(i, this.name, this.playerColors[i], this.playerRGB[i], [x, y], t, this.playerControls[i][0], this.playerControls[i][1], this));
     }
-    this.myPlayer = this.players[this.playerNumber - 1];
-    this.sendPlayerState(this.myPlayer);
 }
 
 const players_load = function()
@@ -38,17 +34,17 @@ const players_load = function()
     this.reset_paint();
     this.paint_offset();
     this.gamePaintPlayers();
-    this.myPlayer.paint_arrow();
+    this.gamePaintArrows();
+    this.gamePaintArrows();
 }
 
 const players_still = function()
 {
     if (this.currentIters.load == 150) return (this.players_free());
-    this.sendPlayerState(this.myPlayer);
     this.reset_paint();
     this.paint_offset();
     this.gamePaintPlayers();
-    this.myPlayer.paint_arrow();
+    this.gamePaintArrows();
     this.currentIters.load++;
     this.animationID = requestAnimationFrame(this.players_still.bind(this));
 }

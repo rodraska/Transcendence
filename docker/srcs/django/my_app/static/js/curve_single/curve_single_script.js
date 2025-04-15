@@ -1,6 +1,5 @@
 const players_free = function()
 {
-    this.sendPlayerState(this.myPlayer);
     if (this.currentIters.begin == 150)
     {
         this.reset_paint();
@@ -9,10 +8,10 @@ const players_free = function()
     }
     this.currentIters.load = 0;
     this.reset_paint();
-    this.myPlayer.save_hist();
-    this.myPlayer.generalized_coordinates();
+    this.gameSaveHist();
+    this.gameGeneralizedCoordinates();
     this.gamePaintPlayers();
-    this.myPlayer.paint_arrow();
+    this.gamePaintArrows();
     this.paint_offset();
     this.currentIters.begin++;
     this.animationID = requestAnimationFrame(this.players_free.bind(this));
@@ -20,7 +19,6 @@ const players_free = function()
 
 const begin_iter = function()
 {
-    this.sendPlayerState(this.myPlayer);
     if (this.currentIters[6] > 0) this.currentIters[6]--;
     this.paint_offset();
     this.new_powerup();
@@ -34,11 +32,11 @@ const curr_iter = function()
         this.erase = false;
         this.reset_paint();
     }
-    this.myPlayer.save_hist();
-    this.myPlayer.generalized_coordinates();
-    this.myPlayer.holes();
-    this.myPlayer.pick_powerups();
-    this.myPlayer.checkCollision();
+    this.gameSaveHist();
+    this.gameGeneralizedCoordinates();
+    this.gameHoles();
+    this.gamePickPowers();
+    this.gameCheckCollision();
     this.gamePaintHist();
     this.saveCanvas();
     this.gamePaintPlayers();
@@ -65,7 +63,6 @@ const players_play = function()
 
 const ft_start = function(bool)
 {
-    //console.trace("ft start called");
     console.log('ft_start');
     if (this.isOver == true) return;
     if (this.isPaused === true) return (this.ft_pause());
@@ -80,7 +77,6 @@ const ft_start = function(bool)
 const ft_pause = function()
 {
     console.log('ft_pause: ', this.isPaused);
-    //if (this.currentIters.begin < 150) return;
     if (!this.isStart) return;
     this.isPaused = !this.isPaused;
     if (this.isPaused) cancelAnimationFrame(this.animationID);
@@ -90,20 +86,11 @@ const ft_pause = function()
 
 const ft_stop = function(player_number)
 {
-    //if (this.game.playerScores[i] == this.game.points_to_win)
     if (this.isOver == true) return;
     console.log('ft_stop: ', player_number);
-    console.log('playerNumber: ', this.playerNumber);
     this.isStart = false;
     this.isOver = true;
     cancelAnimationFrame(this.animationID);
-    if (player_number == 1)
-        this.game_winner = 2;
-    else if (player_number == 2)
-        this.game_winner = 1;
-    this.score = 'forfeit';
-    if (player_number == this.playerNumber)
-        this.sendGameOver();
     return (this.final_paint());
 }
 

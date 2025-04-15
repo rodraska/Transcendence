@@ -1,6 +1,6 @@
 import { _cos, _sin, check_powerup, count_powerup, hard_boundaries } from "./curve_single_player_utils.js"
-import { paint_player, paint_hist, paint_arcs, paint_arrow } from "./curve_player_paint.js"
-import { save_hist, generalized_coordinates, holes, processCollision, checkCollision } from "./curve_player_iteration.js"
+import { paint_player, paint_hist, paint_arcs, paint_arrow } from "./curve_single_player_paint.js"
+import { save_hist, generalized_coordinates, holes, processCollision, checkCollision } from "./curve_single_player_iteration.js"
 import { pick_powerups, give_powerup, iter_power } from "./curve_single_player_power.js"
 
 class Player

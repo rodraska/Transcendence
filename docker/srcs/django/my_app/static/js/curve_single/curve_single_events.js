@@ -39,21 +39,19 @@ document.addEventListener('visibilitychange', function()
 });
 
 const curveGameControlEvents = function() {
-    if (!window.curve_game) return;
-    const curve = window.curve_game;
-    if (curve.startBtn) {
-        curve.startBtn.addEventListener('click', () => {
-            curve.sendGameControl('start');
+    if (this.startBtn) {
+        this.startBtn.addEventListener('click', () => {
+            this.ft_start();
         });
     }
-    if (curve.pauseBtn) {
-        curve.pauseBtn.addEventListener('click', () => {
-            curve.sendGameControl('pause');
+    if (this.pauseBtn) {
+        this.pauseBtn.addEventListener('click', () => {
+            this.ft_pause();
         });
     }
-    if (curve.stopBtn) {
-        curve.stopBtn.addEventListener('click', () => {
-            curve.sendGameControl('stop');
+    if (this.stopBtn) {
+        this.stopBtn.addEventListener('click', () => {
+            this.ft_stop();
         });
     }
 }
