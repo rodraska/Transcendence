@@ -1,6 +1,7 @@
 import Component from "../spa/component.js";
 import { showToast } from "../utils/toast.js";
 import Route from "../spa/route.js";
+import { getCookie } from "../utils/cookie.js";
 
 const isAlpha = str => /^[a-zA-Z]*$/.test(str);
 class RegistrationForm extends Component {
@@ -56,10 +57,12 @@ class RegistrationForm extends Component {
         confirm_password: confirm_password,
       };
 
+      const csrftoken = getCookie("csrftoken");
       fetch("/api/register/", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json", 
+          "X-CSRFToken": csrftoken
         },
         body: JSON.stringify(payload),
       })

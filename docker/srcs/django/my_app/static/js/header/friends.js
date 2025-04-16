@@ -1,6 +1,7 @@
 import Component from "../spa/component.js";
 import { getOrCreateSocket } from "../utils/socketManager.js";
 import { showToast } from "../utils/toast.js";
+import { getCookie } from "../utils/cookie.js";
 
 class FriendsPage extends Component {
   constructor() {
@@ -212,10 +213,13 @@ class FriendsPage extends Component {
     } else {
       body = JSON.stringify({ user_id: userId });
     }
+    const csrftoken = getCookie("csrftoken");
     fetch(url, {
       method: "POST",
       credentials: "include",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken
+      },
       body: body,
     })
       .then((res) => res.json())

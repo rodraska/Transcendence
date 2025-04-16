@@ -29,7 +29,6 @@ class HeaderBar extends Component {
     const profileButton = this.querySelector("#profilebtn");
     if (profileButton) {
       profileButton.addEventListener("click", (e) => {
-        debugger;
         e.preventDefault();
         e.stopPropagation();
         Route.go("/profile");
