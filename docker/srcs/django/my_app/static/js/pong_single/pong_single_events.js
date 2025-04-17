@@ -12,7 +12,12 @@ document.addEventListener('keydown', function(event)
         pong.p1.moving = true;
         pong.p1.vel = 5 * pong.boost;
     }
+});
 
+document.addEventListener('keydown', function(event)
+{
+    if (!window.pong_game) return;
+    const pong = window.pong_game;
     if (event.key === 'w' && pong.p2.pos[1] - pong.p_height / 2 > - pong.height / 2)
     {
         pong.p2.moving = true;
@@ -34,6 +39,12 @@ document.addEventListener('keyup', function(event)
         pong.p1.moving = false;
         pong.p1.vel = 0;
     }
+});
+
+document.addEventListener('keyup', function(event) 
+{
+    if (!window.pong_game) return;
+    const pong = window.pong_game;
     if (event.key === 'w' || event.key === 's') 
     {
         pong.p2.moving = false;
