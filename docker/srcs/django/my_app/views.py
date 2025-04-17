@@ -5,7 +5,6 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model, authenticate, login
-# from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from transcendence.models import Matchmaking, Relationship, CustomUser, GameType, Match, Tournament
 from django.db.models import Q
@@ -379,20 +378,27 @@ def get_user_by_id(request, user_id):
 @login_required
 def update_user_info(request, user_id):
     if request.method not in ["PUT", "PATCH"]:
-        return JsonResponse({"error": "Only PUT/PATCH is allowed."}, status=405)
+        return JsonResponse({"error": "Only PUT or PATCH allowed."}, status=405)
+
     if request.user.id != user_id:
         return JsonResponse({"error": "You cannot update another user's information."}, status=403)
+
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON"}, status=400)
 
     if "email" in data:
-        request.user.email = data["email"]
+        email = data["email"].strip()
+        if User.objects.filter(email=email).exclude(pk=request.user.pk).exists():
+            return JsonResponse({"error": "Email already exists."}, status=400)
+        request.user.email = email
+
     if "first_name" in data:
-        request.user.first_name = data["first_name"]
+        request.user.first_name = data["first_name"].strip()
+
     if "last_name" in data:
-        request.user.last_name = data["last_name"]
+        request.user.last_name = data["last_name"].strip()
 
     try:
         request.user.save()
@@ -428,7 +434,8 @@ def update_avatar(request, user_id):
 
             return JsonResponse({"avatar_url": avatar_url})
 
-    return JsonResponse({"error": "No avatar founded"}, status=400)
+    return JsonResponse({"error": "Avatar not found"}, status=400)
+
 
 
 @login_required

@@ -1,5 +1,4 @@
 <style>
-    /* Estilos personalizados */
     .card {
       border: 1px solid #ccc;
       border-radius: 10px;
@@ -12,11 +11,11 @@
     }
   
     .btn {
-      width: 100%; /* Faz os botões ocuparem toda a largura */
+      width: 100%; 
     }
   
     textarea {
-      resize: vertical; /* Permite redimensionar a área de texto apenas verticalmente */
+      resize: vertical; 
     }
 
     .avatar-option {
@@ -32,12 +31,11 @@
   .avatar-option:hover {
     border-color: #007bff;
   }
-
 </style>
   
  <div class="container-fluid mt-5">
     <div class="row">
-      <!-- Parte Esquerda: Cartão com Imagem de Perfil e Botões -->
+      <!-- Photo card -->
       <div class="col-md-4 d-flex justify-content-center">
         <div class="card my-auto" style="width: 18rem;">
           <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg" class="card-img-top" alt="Profile Photo" id="profileImage">
@@ -49,7 +47,7 @@
       </div>
 
 
-      <!-- Modal para seleção de avatar -->
+      <!-- Avatar Modal -->
       <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -76,7 +74,7 @@
       </div>
 
   
-      <!-- Parte Direita: Formulário para Inserir Dados de Perfil -->
+      <!-- Form data -->
       <div class="col-md-7">
         <form>
           <div class="mb-3">
@@ -86,10 +84,12 @@
           <div class="mb-3">
             <label for="name1" class="form-label">First Name</label>
             <input type="text" class="form-control" id="name1" placeholder="">
+            <div id="firstname_error" class="text-danger small d-none"></div>
           </div>
           <div class="mb-3">
             <label for="name2" class="form-label">Last Name</label>
             <input type="text" class="form-control" id="name2" placeholder="">
+            <div id="lastname_error" class="text-danger small d-none"></div>
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">E-mail</label>
