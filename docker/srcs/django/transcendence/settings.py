@@ -75,7 +75,6 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 
 ACCOUNT_LOGOUT_ON_GET = True
 
-# settings.py
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -86,35 +85,33 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG',  # captures DEBUG and above messages
+        'level': 'DEBUG',
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
         'transcendence': {
             'handlers': ['console'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
         'allauth': {
             'handlers': ['console'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
-        # Add a logger for Channels to capture async errors
         'channels': {
             'handlers': ['console'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
-        # Optionally also add one for Daphne
         'daphne': {
             'handlers': ['console'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
     },
 }
@@ -155,11 +152,11 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("POSTGRES_DB", "transcendence"),
-        'USER': os.getenv("POSTGRES_USER", "admin"),
-        'PASSWORD': os.getenv("POSTGRES_PASSWORD", "admin"),
-        'HOST': os.getenv("POSTGRES_HOST", "db"),
-        'PORT': os.getenv("POSTGRES_PORT", "5432"),
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+        'HOST': os.getenv("POSTGRES_HOST"),
+        'PORT': os.getenv("POSTGRES_PORT"),
     }
 }
 
@@ -200,9 +197,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "my_app/static"),  # Your static files directory
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "my_app/static"),
+# ]
 # Collects all static files here
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 

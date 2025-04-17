@@ -29,7 +29,6 @@ services:
       - OAUTH42_SECRET=${OAUTH42_SECRET}
     volumes:
       - ./django/staticfiles:/app/staticfiles
-      - ./django/media:/app/media
 
   nginx:
     build:

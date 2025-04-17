@@ -15,14 +15,17 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static '/css/variables.css' %}" />
-    <link rel="stylesheet" href="{% static '/css/styles.css' %}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/variables.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <link rel="icon" href="../static/images/favicon.png" type="image/x-icon" />
   </head>
   <body>
     <div id="header-container"></div>
-    <div class="align-items-center mt-5" id="content-container"></div> 
+    <div class="align-items-center mt-5" id="content-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="{% static 'js/spa/route.js' %}"></script>
@@ -30,8 +33,11 @@
     <script type="module" src="{% static 'js/header/header.js' %}"></script>
     <script type="module" src="{% static 'js/login/login.js' %}"></script>
     <script type="module" src="{% static 'js/login/login_form.js' %}"></script>
-    <script type="module"src="{% static 'js/login/registration_form.js' %}"></script>
-    
+
+    <script
+      type="module"
+      src="{% static 'js/login/registration_form.js' %}"
+    ></script>
     <script>
       window.loggedInUserId = "{{ user.id|escapejs }}";
       window.loggedInUserName = "{{ user.username|escapejs }}";
