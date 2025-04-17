@@ -12,7 +12,6 @@ import LoginForm from "./login/login_form.js";
 import FriendsPage from "./header/friends.js";
 import Record from "./match/record.js";
 import Play from "./play_games/play.js";
-import ActiveMatch from "./match/active_match.js";
 import TournamentPage from "./tournament/tournament.js";
 
 const headerContainer = document.getElementById("header-container");
@@ -50,7 +49,6 @@ Route.subscribe("/login_form", LoginForm);
 Route.subscribe("/friends", FriendsPage);
 Route.subscribe("/record", Record);
 Route.subscribe("/play", Play);
-Route.subscribe("/active-match", ActiveMatch);
 Route.subscribe("/tournament", TournamentPage);
 
 window.addEventListener("hashchange", toggleHeader);
