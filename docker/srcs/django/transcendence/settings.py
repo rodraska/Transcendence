@@ -20,13 +20,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+4l5_2g1*-v=(uv&r5ld^8t466wg4k@pv$@fiw0c1fbe555g=t'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure-default")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = ['*']
 
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
@@ -56,7 +60,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-SITE_ID = 5
+SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -154,14 +158,13 @@ WSGI_APPLICATION = 'transcendence.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'transcendence',
-        'USER': 'admin',
-        'PASSWORD': 'admin',
-        'HOST': 'db',
-        'PORT': '5432',
+        'NAME': os.getenv("POSTGRES_DB", "transcendence"),
+        'USER': os.getenv("POSTGRES_USER", "admin"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD", "admin"),
+        'HOST': os.getenv("POSTGRES_HOST", "db"),
+        'PORT': os.getenv("POSTGRES_PORT", "5432"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

@@ -1,5 +1,9 @@
 import Component from "../spa/component.js";
-import { getOrCreateSocket } from "../utils/socketManager.js";
+import {
+  getOrCreateSocket,
+  addSocketListener,
+  removeSocketListener,
+} from "../utils/socketManager.js";
 import { showToast } from "../utils/toast.js";
 
 class FriendsPage extends Component {
@@ -17,19 +21,15 @@ class FriendsPage extends Component {
     this.fetchFriends();
     this.setupSearch();
     this.setupModal();
-    const s = getOrCreateSocket();
-    s.onmessage = (e) => {
-      const d = JSON.parse(e.data);
-      console.log("friendsPage onmessage triggered", d);
-      if (d.friend_request) {
-        showToast(
-          `New friend request from ${d.from_username}`,
-          "info",
-          "Friends"
-        );
-        this.fetchFriends();
-      }
+
+    this.socketListener = (d) => {
+      if (d.friend_request) this.fetchFriends();
     };
+    addSocketListener(this.socketListener);
+  }
+
+  disconnectedCallback() {
+    removeSocketListener(this.socketListener);
   }
 
   fetchFriends() {
@@ -38,7 +38,7 @@ class FriendsPage extends Component {
       credentials: "include",
       headers: { "Content-Type": "application/json" },
     })
-      .then((response) => response.json())
+      .then((r) => r.json())
       .then((data) => {
         if (data.error) {
           showToast("Error getting users!", "danger");
@@ -71,7 +71,7 @@ class FriendsPage extends Component {
     const startIndex = (page - 1) * this.friendsPerPage;
     const endIndex = page * this.friendsPerPage;
     const currentFriends = this.friendsData.slice(startIndex, endIndex);
-  
+
     currentFriends.forEach((friend) => {
       const friendItem = document.createElement("li");
       friendItem.className = "list-group-item d-flex align-items-center";
@@ -91,67 +91,57 @@ class FriendsPage extends Component {
           }
         </div>
       `;
-  
-        
-    const photo = friendItem.querySelector(".friend-photo");
-    let tooltip = null;
 
-    function closeTooltip(event) {
-      // click outside photo
-      if (tooltip && !tooltip.contains(event.target) && event.target !== photo) {
-        tooltip.remove();
-        tooltip = null;
-      }
-    }
+      const photo = friendItem.querySelector(".friend-photo");
+      let tooltip = null;
 
-    // open tooltip
-    photo.addEventListener("click", async (event) => {
-      if (!friend.isFriend) return;
-      
-      if (tooltip) {
-        tooltip.remove();
-        tooltip = null;
-        return;
+      function closeTooltip(e) {
+        if (tooltip && !tooltip.contains(e.target) && e.target !== photo) {
+          tooltip.remove();
+          tooltip = null;
+        }
       }
 
-      tooltip = document.createElement("div");
-      tooltip.className = "user-tooltip";
-      tooltip.style.position = "absolute";
-      tooltip.style.background = "#fff";
-      tooltip.style.border = "1px solid #ccc";
-      tooltip.style.padding = "10px";
-      tooltip.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
-      tooltip.style.zIndex = "1000";
+      photo.addEventListener("click", async () => {
+        if (!friend.isFriend) return;
+        if (tooltip) {
+          tooltip.remove();
+          tooltip = null;
+          return;
+        }
+        tooltip = document.createElement("div");
+        tooltip.className = "user-tooltip";
+        tooltip.style.position = "absolute";
+        tooltip.style.background = "#fff";
+        tooltip.style.border = "1px solid #ccc";
+        tooltip.style.padding = "10px";
+        tooltip.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+        tooltip.style.zIndex = "1000";
+        document.body.appendChild(tooltip);
+        const stats = await fetchUserStats(friend.id, friend.name);
+        tooltip.innerHTML =
+          stats && Object.keys(stats).length
+            ? `<strong>${friend.name}</strong><br>${Object.entries(stats)
+                .map(([g, v]) => {
+                  const winRate =
+                    v.total > 0 ? Math.round((v.wins / v.total) * 100) : 0;
+                  return `<span style="display:inline-block;margin-bottom:4px;">
+                    ${g} → Games: ${v.total} Wins: ${winRate}%
+                  </span>`;
+                })
+                .join("<br>")}`
+            : `<strong>${friend.name}</strong><br><em>No games played.</em>`;
+        const rect = photo.getBoundingClientRect();
+        tooltip.style.left = `${rect.left + window.scrollX + 20}px`;
+        tooltip.style.top = `${rect.top + window.scrollY + 20}px`;
+        document.addEventListener("click", closeTooltip);
+      });
 
-      document.body.appendChild(tooltip);
-
-      const stats = await fetchUserStats(friend.id, friend.name);
-
-      tooltip.innerHTML = stats && Object.keys(stats).length
-        ? `<strong>${friend.name}</strong><br>
-            ${Object.entries(stats).map(([gameType, { total, wins }]) => {
-              const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
-              return `<span style="display: inline-block; margin-bottom: 4px;">
-                ${gameType} → Games: ${total} Wins: ${winRate}%
-              </span>`;
-            }).join("<br>")}`
-        : `<strong>${friend.name}</strong><br><em>No games played.</em>`;
-
-      const rect = photo.getBoundingClientRect();
-      tooltip.style.left = `${rect.left + window.scrollX + 20}px`;
-      tooltip.style.top = `${rect.top + window.scrollY + 20}px`;
-
-      document.addEventListener("click", closeTooltip);
-    });
-
-
-  
       this.setupFriendActions(friendItem, friend);
-  
       this.friendsList.appendChild(friendItem);
     });
   }
-  
+
   setupFriendActions(friendItem, friend) {
     friendItem
       .querySelector(".is-friend-btn")
@@ -196,35 +186,26 @@ class FriendsPage extends Component {
         })
       );
       const friend = this.friendsData.find((f) => f.id === userId);
-      if (friend) {
-        friend.sentFriendRequest = true;
-      }
+      if (friend) friend.sentFriendRequest = true;
       this.displayFriends(this.currentPage);
       return;
     }
-
     let url = `/api/friend_request/${actionType}/`;
     let body;
-    if (actionType === "cancel") {
-      body = JSON.stringify({ to_user_id: userId });
-    } else if (actionType === "accept" || actionType === "decline") {
+    if (actionType === "cancel") body = JSON.stringify({ to_user_id: userId });
+    else if (actionType === "accept" || actionType === "decline")
       body = JSON.stringify({ from_user_id: userId });
-    } else {
-      body = JSON.stringify({ user_id: userId });
-    }
+    else body = JSON.stringify({ user_id: userId });
     fetch(url, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: body,
+      body,
     })
       .then((res) => res.json())
       .then((resData) => {
-        if (resData.error) {
-          showToast(`Error: ${resData.error}`, "danger");
-        } else {
-          this.fetchFriends();
-        }
+        if (resData.error) showToast(`Error: ${resData.error}`, "danger");
+        else this.fetchFriends();
       })
       .catch(() => showToast("Error sending request.", "danger"));
   }
@@ -303,34 +284,26 @@ class FriendsPage extends Component {
 
 async function fetchUserStats(userId, username) {
   try {
-    const response = await fetch(`/api/match_record/${userId}/`, {
-      credentials: "include"
+    const r = await fetch(`/api/match_record/${userId}/`, {
+      credentials: "include",
     });
-    if (!response.ok) throw new Error(`Erro ${response.status}`);
-    
-    const data = await response.json();
+    if (!r.ok) throw new Error();
+    const data = await r.json();
     return data.matches ? calculateStats(data.matches, username) : null;
-  } catch (err) {
-    console.error("Falha ao buscar stats:", err);
+  } catch {
     return null;
   }
 }
 
 function calculateStats(matches, username) {
   const stats = {};
-  matches.forEach(match => {
-    const gameType = match.game_type;
-    if (!stats[gameType]) {
-      stats[gameType] = { total: 0, wins: 0 };
-    }
-    stats[gameType].total += 1;
-    if (match.winner === username) {
-      stats[gameType].wins += 1;
-    }
+  matches.forEach((m) => {
+    const g = m.game_type;
+    if (!stats[g]) stats[g] = { total: 0, wins: 0 };
+    stats[g].total += 1;
+    if (m.winner === username) stats[g].wins += 1;
   });
   return stats;
 }
-
-
 
 export default FriendsPage;

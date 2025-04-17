@@ -148,32 +148,9 @@
   </div>
 </div>
 
-<!-- Custom Game Invitation Modal -->
-<div class="modal fade" id="inviteModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Custom Game Invitation</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <p id="invite-info"></p>
-      </div>
-      <div class="modal-footer">
-        <button
-          id="decline-invite-btn"
-          class="btn btn-secondary"
-          data-bs-dismiss="modal"
-        >
-          Decline
-        </button>
-        <button id="accept-invite-btn" class="btn btn-primary">Accept</button>
-      </div>
-    </div>
-  </div>
+<div id="pending-invites-container" class="mt-5">
+  <h4 class="mb-3">Pending Invites</h4>
+  <div id="invite-list" class="d-flex flex-column gap-3"></div>
+  <p id="no-invites-msg" class="text-muted">No pending invites.</p>
 </div>
+

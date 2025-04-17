@@ -2,8 +2,8 @@ import Route, { normalizeRoute } from "./spa/route.js";
 import HeaderBar from "./header/header.js";
 import HomePage from "./home/home_page.js";
 import UserProfile from "./header/profile.js";
-import PongGame from "./pong/pong_game.js"
-import CurveGame from "./curve/curve_game.js"
+import PongGame from "./pong/pong_game.js";
+import CurveGame from "./curve/curve_game.js";
 import LoginButtons from "./login/login.js";
 import RegistrationForm from "./login/registration_form.js";
 import LoginForm from "./login/login_form.js";
@@ -23,12 +23,12 @@ if (!customElements.get("header-component")) {
 headerContainer.appendChild(document.createElement("header-component"));
 
 function toggleHeader() {
-  let currentRoute = normalizeRoute(window.location.hash || "/");
+  const currentRoute = normalizeRoute(window.location.hash || "/");
   if (
     currentRoute === "/login" ||
     currentRoute === "/login_form" ||
-    currentRoute === "/registration_form" || 
-    (!window.loggedInUserName)
+    currentRoute === "/registration_form" ||
+    !window.loggedInUserName
   ) {
     headerContainer.style.display = "none";
   } else {
@@ -50,10 +50,7 @@ Route.subscribe("/play", Play);
 Route.subscribe("/active-match", ActiveMatch);
 Route.subscribe("/tournament", TournamentPage);
 
-window.addEventListener("hashchange", () => {
-  toggleHeader();
-});
-
+window.addEventListener("hashchange", toggleHeader);
 window.addEventListener("DOMContentLoaded", () => {
   checkLoginStatus();
   toggleHeader();
@@ -67,13 +64,9 @@ function checkLoginStatus() {
         window.loggedInUserName = data.username;
         window.loggedInUserId = data.user_id;
         window.loggedInAvatarUrl = data.avatar_url;
-        import("./utils/socketManager.js").then((module) => {
-          module.getOrCreateSocket();
-        });
+        import("./utils/socketManager.js").then((m) => m.getOrCreateSocket());
         if (normalizeRoute(window.location.hash) === "/") {
           Route.go("/play");
-        } else {
-          //Route.go(window.location.hash);
         }
       } else {
         window.loggedInUserName = null;

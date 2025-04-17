@@ -159,7 +159,6 @@ class TournamentPage extends Component {
   }
 
   initTournament() {
-    debugger;
     const count = parseInt(this.playerCountSelect.value, 10);
     const players = [];
     for (let i = 1; i <= count; i++) {
