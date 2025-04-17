@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:latest
+    image: postgres:17
     container_name: postgres
     restart: on-failure:5
     environment:
@@ -44,7 +44,6 @@ services:
       - "80:80"
     volumes:
       - ./django/staticfiles:/app/staticfiles
-      - ./django/media:/app/media
 
 volumes:
   db_data:
