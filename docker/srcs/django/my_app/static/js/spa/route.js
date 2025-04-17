@@ -53,7 +53,6 @@ function forfeitIfGame(newRoute) {
 }
 
 function setPage(url) {
-  //forfeitIfActiveMatch(url);
   forfeitIfGame(url);
   const normUrl = normalizeRoute(url);
   if (!contentContainer) {

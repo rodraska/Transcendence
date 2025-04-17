@@ -7,10 +7,14 @@ python3 manage.py migrate --noinput
 python3 manage.py collectstatic --noinput
 
 python3 manage.py shell << EOF
+import os
 from django.contrib.auth import get_user_model
 User = get_user_model()
-if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser('admin', 'admin@example.com', 'admin')
+username = os.environ.get('DJANGO_SUPERUSER_USERNAME')
+email = os.environ.get('DJANGO_SUPERUSER_EMAIL')
+password = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
+if username and email and password and not User.objects.filter(username=username).exists():
+    User.objects.create_superuser(username, email, password)
 EOF
 
 python3 manage.py shell << EOF
@@ -41,7 +45,6 @@ GameType.objects.get_or_create(name="Curve")
 
 cid = "$OAUTH42_CLIENT_ID"
 secret = "$OAUTH42_SECRET"
-print("DEBUG: OAUTH 42 cid=", repr(cid), "secret=", repr(secret))
 if cid and secret:
     app, _ = SocialApp.objects.get_or_create(provider="fortytwo", name="42")
     app.client_id = cid
