@@ -1,5 +1,5 @@
 import Component from "../spa/component.js";
-import PongPage from "../pong/pong_game.js";
+import PongSingle from "../pong_single/pong_single.js";
 import { showToast } from "../utils/toast.js";
 import Route from "../spa/route.js";
 import { getCookie } from "../utils/cookie.js";
@@ -24,6 +24,10 @@ const fetchUsername = async () => {
 
 const isAlpha = (str) => /^[a-zA-Z]*$/.test(str);
 
+if (!customElements.get("pong-single-modal")) {
+  class PongSingleModal extends PongSingle {}
+  customElements.define("pong-single-modal", PongSingleModal);
+}
 class TournamentPage extends Component {
   constructor() {
     super("static/html/tournament.html");
@@ -271,37 +275,37 @@ class TournamentPage extends Component {
   }
 
   openNextGameModal() {
-    if (!customElements.get("pong-component")) {
-      customElements.define("pong-component", PongPage);
-    }
     const nextMatch = this.getNextPendingMatch();
     if (!nextMatch) {
       showToast("No pending matches.", "warning", "Tournament");
       return;
     }
+
     if (
       this.tournamentState.length === 2 &&
       (!nextMatch.players[0] || !nextMatch.players[1])
     ) {
-      const winnerAlias = nextMatch.players[0] || nextMatch.players[1];
-      nextMatch.winner = winnerAlias;
+      const byeWinner = nextMatch.players[0] || nextMatch.players[1];
+      nextMatch.winner = byeWinner;
       nextMatch.result = "Bye";
       this.updateBracketDisplay();
       this.announceNextMatch();
       this.saveTournamentResult();
       return;
     }
+
     this.currentMatch = nextMatch;
     window.currentTournamentMatch = this.currentMatch;
     this.gameMatchInfo.textContent = `${nextMatch.players[0]} vs ${nextMatch.players[1]}`;
+
     const container = this.getElementById("pongGameContainer");
     container.innerHTML = "";
-    const pongElement = document.createElement("pong-component");
-    container.appendChild(pongElement);
+    container.appendChild(document.createElement("pong-single-modal"));
+
     const self = this;
-    window.tournamentGameFinished = function (resultData) {
-      self.currentMatch.winner = resultData.winner;
-      self.currentMatch.result = resultData.result;
+    window.tournamentGameFinished = function (data) {
+      self.currentMatch.winner = data.winner;
+      self.currentMatch.result = data.result;
 
       if (
         self.tournamentState.length === 3 &&
@@ -310,18 +314,15 @@ class TournamentPage extends Component {
         const finalMatch = self.tournamentState.find(
           (m) => m.round === "Final"
         );
-        if (!finalMatch.players[0]) {
-          finalMatch.players[0] = resultData.winner;
-        } else if (!finalMatch.players[1]) {
-          finalMatch.players[1] = resultData.winner;
-        }
+        if (!finalMatch.players[0]) finalMatch.players[0] = data.winner;
+        else if (!finalMatch.players[1]) finalMatch.players[1] = data.winner;
       }
 
       if (
         self.tournamentState.length === 2 &&
         self.currentMatch.round === "Semi-final"
       ) {
-        self.tournamentState[1].players[0] = resultData.winner;
+        self.tournamentState[1].players[0] = data.winner;
       }
 
       self.updateBracketDisplay();
@@ -337,6 +338,7 @@ class TournamentPage extends Component {
         self.finishTournament();
       }
     };
+
     this.gameModal.show();
   }
 
@@ -386,7 +388,7 @@ class TournamentPage extends Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken
+        "X-CSRFToken": csrftoken,
       },
       body: JSON.stringify(tournamentResult),
     })

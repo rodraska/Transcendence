@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-python manage.py shell <<EOF
+python3 manage.py shell <<EOF
 from django.conf import settings
 from django.contrib.sites.models import Site
 from allauth.socialaccount.models import SocialApp

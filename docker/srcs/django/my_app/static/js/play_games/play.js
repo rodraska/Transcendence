@@ -208,11 +208,10 @@ class Play extends Component {
       spBtn.textContent = t.name;
       spBtn.classList.add("btn", "btn-primary", "m-2");
       spBtn.addEventListener("click", () => {
-        // redirect to singleplayer match page for that game type
         if (t.name === "Pong") {
-          Route.go("/pong");
+          Route.go("/pong_single");
         } else if (t.name === "Curve") {
-          Route.go("/curve");
+          Route.go("/curve_single");
         }
       });
       this.singleplayerGameTypesContainer.appendChild(spBtn);
@@ -291,6 +290,19 @@ class Play extends Component {
     }
     this.isSearching = false;
     this.showSearchingUI(false);
+  }
+
+  enterMatch() {
+    this.isSearching = false;
+    this.showSearchingUI(false);
+    if (this.socket.readyState === WebSocket.OPEN && this.currentPendingId) {
+      this.socket.send(
+        JSON.stringify({
+          action: "confirm_match",
+          pending_id: this.currentPendingId,
+        })
+      );
+    }
   }
 
   cancelMatch() {

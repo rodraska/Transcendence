@@ -20,14 +20,17 @@ const paint_squares = function()
 
 const paint_names = function()
 {
+    const leftAlias = this.p1?.name || "Player1";
+    const rightAlias = this.p2?.name || "Player2";
+
     this.pong_ctx.font = "30px 'Press Start 2P', cursive";
     this.pong_ctx.fillStyle = 'white';
     this.pong_ctx.textAlign = "center";
     this.pong_ctx.textBaseline = "bottom";
-    this.pong_ctx.fillText("Player2", this.width / 4, this.s_height / 2);
+    this.pong_ctx.fillText(leftAlias, this.width / 4, this.s_height / 2);
     this.pong_ctx.textAlign = "center";
     this.pong_ctx.textBaseline = "bottom";
-    this.pong_ctx.fillText("Player1", 3 * this.width / 4, this.s_height / 2);
+    this.pong_ctx.fillText(rightAlias, 3 * this.width / 4, this.s_height / 2);
 }
 
 const paint_score = function()
