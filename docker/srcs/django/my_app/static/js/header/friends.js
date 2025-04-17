@@ -5,6 +5,7 @@ import {
   removeSocketListener,
 } from "../utils/socketManager.js";
 import { showToast } from "../utils/toast.js";
+import { getCookie } from "../utils/cookie.js";
 
 class FriendsPage extends Component {
   constructor() {
@@ -193,14 +194,17 @@ class FriendsPage extends Component {
     let url = `/api/friend_request/${actionType}/`;
     let body;
     if (actionType === "cancel") body = JSON.stringify({ to_user_id: userId });
-    else if (actionType === "accept" || actionType === "decline")
+    else if (actionType === "accept" || actionType === "decline") {
       body = JSON.stringify({ from_user_id: userId });
-    else body = JSON.stringify({ user_id: userId });
+    } else {
+      body = JSON.stringify({ user_id: userId });
+    }
+    const csrftoken = getCookie("csrftoken");
     fetch(url, {
       method: "POST",
       credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body,
+      headers: { "Content-Type": "application/json", "X-CSRFToken": csrftoken },
+      body: body,
     })
       .then((res) => res.json())
       .then((resData) => {

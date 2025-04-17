@@ -208,8 +208,12 @@ class Play extends Component {
       spBtn.textContent = t.name;
       spBtn.classList.add("btn", "btn-primary", "m-2");
       spBtn.addEventListener("click", () => {
-        if (t.name === "Pong") Route.go("/pong");
-        else if (t.name === "Curve") Route.go("/curve");
+        // redirect to singleplayer match page for that game type
+        if (t.name === "Pong") {
+          Route.go("/pong");
+        } else if (t.name === "Curve") {
+          Route.go("/curve");
+        }
       });
       this.singleplayerGameTypesContainer.appendChild(spBtn);
     });

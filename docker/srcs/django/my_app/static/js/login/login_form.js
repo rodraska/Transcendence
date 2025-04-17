@@ -1,5 +1,6 @@
 import Component from "../spa/component.js";
 import { showToast } from "../utils/toast.js";
+import { getCookie } from "../utils/cookie.js";
 
 class LoginForm extends Component {
   constructor() {
@@ -14,16 +15,18 @@ class LoginForm extends Component {
       const password = this.querySelector("#password").value;
       const payload = { username, password };
 
+      const csrftoken = getCookie("csrftoken");
       fetch("/api/login/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+          "X-CSRFToken": csrftoken
+        },
         body: JSON.stringify(payload),
       })
         .then((r) => r.json())
         .then((data) => {
           if (data.error) {
             showToast("Error: " + data.error, "danger", "Login");
-            //alert("Error: " + data.error);
           } else {
             showToast("Login successful.", "success", "Login");
             fetch("/api/current_user/", { credentials: "include" })
@@ -51,7 +54,6 @@ class LoginForm extends Component {
         .catch((error) => {
           console.error("Error logging in user:", error);
           showToast("Error logging in user: " + data.error, "danger", "Login");
-          //alert("Error logging in user: " + error);
         });
     });
   }

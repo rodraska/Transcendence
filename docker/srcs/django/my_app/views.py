@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model, authenticate, login
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from transcendence.models import Matchmaking, Relationship, CustomUser, GameType, Match, Tournament
 from django.db.models import Q
@@ -29,7 +29,6 @@ def current_user(request):
 
 User = get_user_model()
 
-@csrf_exempt
 @require_POST
 def register_user(request):
     try:
@@ -52,7 +51,6 @@ def register_user(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
-@csrf_exempt
 @require_POST
 def main_login(request):
     try:
@@ -70,7 +68,6 @@ def main_login(request):
     else:
         return JsonResponse({"success": False, "error": "Invalid credentials."}, status=401)
 
-@csrf_exempt
 @login_required
 def send_friend_request(request):
     if request.method != "POST":
@@ -92,7 +89,6 @@ def send_friend_request(request):
     Relationship.objects.create(from_user=from_user, to_user=to_user, status="pending")
     return JsonResponse({"message": "Friend request sent."}, status=201)
 
-@csrf_exempt
 @login_required
 def accept_friend_request(request):
     if request.method != "POST":
@@ -116,7 +112,6 @@ def accept_friend_request(request):
     relationship.save()
     return JsonResponse({"message": "Friend request accepted."})
 
-@csrf_exempt
 @login_required
 def decline_friend_request(request):
     if request.method != "POST":
@@ -139,7 +134,6 @@ def decline_friend_request(request):
     relationship.delete()
     return JsonResponse({"message": "Friend request declined."})
 
-@csrf_exempt
 @login_required
 def cancel_friend_request(request):
     if request.method != "POST":
@@ -162,7 +156,6 @@ def cancel_friend_request(request):
     relationship.delete()
     return JsonResponse({"message": "Friend request cancelled."})
 
-@csrf_exempt
 @login_required
 def unfriend(request):
     if request.method != "POST":
@@ -184,7 +177,6 @@ def unfriend(request):
     relationship.delete()
     return JsonResponse({"message": "Friendship ended."})
 
-@csrf_exempt
 @login_required
 def reject_user(request):
     if request.method != "POST":
@@ -211,7 +203,6 @@ def reject_user(request):
         return JsonResponse({"error": str(e)}, status=400)
     return JsonResponse({"message": "User rejected."})
 
-@csrf_exempt
 @login_required
 def block_user(request):
     if request.method != "POST":
@@ -239,7 +230,6 @@ def block_user(request):
     return JsonResponse({"message": "User blocked."})
 
 
-@csrf_exempt
 @login_required
 def get_all_users(request):
     if request.method != "GET":
@@ -270,7 +260,6 @@ def get_all_users(request):
         return JsonResponse({"error": str(e)}, status=400)
     return JsonResponse(users, safe=False)
 
-@csrf_exempt
 @login_required
 def get_game_types(request):
     if request.method != "GET":
@@ -282,7 +271,6 @@ def get_game_types(request):
         return JsonResponse({"error": str(e)}, status=400)
     return JsonResponse(data_parsed, safe=False)
 
-@csrf_exempt
 @login_required
 def search_for_match(request):
     if request.method != "POST":
@@ -338,7 +326,6 @@ def find_match():
 
     return None
 
-@csrf_exempt
 @login_required
 def search_for_match(request):
     if request.method != "POST":
@@ -368,7 +355,7 @@ def cleanup_stale_entries():
     timeout = timezone.now() - timedelta(minutes=5)
     Matchmaking.objects.filter(match__isnull=True, created_at__lt=timeout).delete()
 
-@csrf_exempt
+
 @login_required
 def get_user_by_id(request, user_id):
     if request.method != "GET":
@@ -388,35 +375,7 @@ def get_user_by_id(request, user_id):
     }
     return JsonResponse(data)
 
-""" @csrf_exempt
-@login_required
-def update_user_info(request, user_id):
-    if request.method not in ["PUT", "PATCH"]:
-        return JsonResponse({"error": "Only PUT/PATCH is allowed."}, status=405)
-    if request.user.id != user_id:
-        return JsonResponse({"error": "You cannot update another user's information."}, status=403)
-    try:
-        data = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
 
-    if "email" in data:
-        request.user.email = data["email"]
-    if "first_name" in data:
-        request.user.first_name = data["first_name"]
-    if "last_name" in data:
-        request.user.last_name = data["last_name"]
-    if "avatar_url" in data:
-        request.user.avatar_url = data["avatar_url"]
-
-    try:
-        request.user.save()
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
-
-    return JsonResponse({"message": "User updated successfully."}) """
-
-@csrf_exempt
 @login_required
 def update_user_info(request, user_id):
     if request.method not in ["PUT", "PATCH"]:
@@ -443,30 +402,27 @@ def update_user_info(request, user_id):
     return JsonResponse({"message": "User updated successfully."})
 
 
-@csrf_exempt
 @login_required
 def update_avatar(request, user_id):
     user = request.user
 
     if request.method == "POST":
         if "avatar_url" in request.POST:
-            # O usuário selecionou um avatar da lista
+            # listed avatar
             avatar_url = request.POST["avatar_url"]
             user.avatar_url = avatar_url
             user.save()
             return JsonResponse({"avatar_url": avatar_url})
 
         elif "avatar" in request.FILES:
-            # O usuário fez upload de um arquivo
+            # uploaded avatar
             avatar = request.FILES["avatar"]
             avatar_filename = f"{user.username}_{avatar.name}"
             avatar_path = os.path.join("staticfiles", "avatars", avatar_filename)
 
-            # Salvar o arquivo
             saved_path = default_storage.save(avatar_path, ContentFile(avatar.read()))
-            avatar_url = f"/static/avatars/{avatar_filename}"  # Gera a URL da imagem
+            avatar_url = f"/static/avatars/{avatar_filename}" 
 
-            # Atualizar no perfil do usuário
             user.avatar_url = avatar_url
             user.save()
 
@@ -475,7 +431,6 @@ def update_avatar(request, user_id):
     return JsonResponse({"error": "No avatar founded"}, status=400)
 
 
-@csrf_exempt
 @login_required
 def getMatchRecordByUserId(request, user_id):
     if request.method != "GET":
@@ -501,7 +456,6 @@ def getMatchRecordByUserId(request, user_id):
         })
     return JsonResponse({"matches": record}, safe=False)
 
-@csrf_exempt
 @login_required
 def save_tournament_result(request):
     if request.method == "POST":
@@ -517,7 +471,6 @@ def save_tournament_result(request):
             return JsonResponse({"success": False, "error": str(e)}, status=400)
     return JsonResponse({"error": "Only POST allowed."}, status=405)
 
-@csrf_exempt
 @login_required
 def get_tournaments(request):
     if request.method == "GET":

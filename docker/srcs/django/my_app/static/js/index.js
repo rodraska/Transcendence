@@ -2,13 +2,14 @@ import Route, { normalizeRoute } from "./spa/route.js";
 import HeaderBar from "./header/header.js";
 import HomePage from "./home/home_page.js";
 import UserProfile from "./header/profile.js";
-import PongGame from "./pong/pong_game.js";
-import CurveGame from "./curve/curve_game.js";
+import PongGame from "./pong/pong_game.js"
+import CurveGame from "./curve/curve_game.js"
+import PongSingle from "./pong_single/pong_single.js"
+import CurveSingle from "./curve_single/curve_single.js"
 import LoginButtons from "./login/login.js";
 import RegistrationForm from "./login/registration_form.js";
 import LoginForm from "./login/login_form.js";
 import FriendsPage from "./header/friends.js";
-import PlayGames from "./play_games/play_games.js";
 import Record from "./match/record.js";
 import Play from "./play_games/play.js";
 import ActiveMatch from "./match/active_match.js";
@@ -41,6 +42,8 @@ Route.subscribe("/home", HomePage);
 Route.subscribe("/profile", UserProfile);
 Route.subscribe("/pong", PongGame);
 Route.subscribe("/curve", CurveGame);
+Route.subscribe("/pong_single", PongSingle);
+Route.subscribe("/curve_single", CurveSingle);
 Route.subscribe("/login", LoginButtons);
 Route.subscribe("/registration_form", RegistrationForm);
 Route.subscribe("/login_form", LoginForm);

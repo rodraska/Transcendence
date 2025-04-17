@@ -92,6 +92,9 @@ const setMatchData = function() {
         this.name = this.matchData.player2;
     }
     this.points_to_win = this.matchData.points_to_win;
+    this.powerups_enabled = this.matchData.powerups_enabled;
+    if (this.powerups_enabled) this.boost = 2;
+    console.log('powerups_enabled: ', this.powerups_enabled);
     this.p1.name = this.matchData.player1;
     this.p2.name = this.matchData.player2;
 }

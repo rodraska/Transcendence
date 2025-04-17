@@ -7,12 +7,12 @@ document.addEventListener('keydown', function(event)
         if (event.key === 'ArrowUp' && pong.p1.pos[1] - pong.p_height / 2 > - pong.height / 2)
         {
             pong.p1.moving = true;
-            pong.p1.vel = -5;
+            pong.p1.vel = -5 * pong.boost;
         }
         if (event.key === 'ArrowDown' && pong.p1.pos[1] + pong.p_height / 2 < pong.height / 2)
         {
             pong.p1.moving = true;
-            pong.p1.vel = 5;
+            pong.p1.vel = 5 * pong.boost;
         }
     }
     if (pong.playerNumber === 2)
@@ -20,12 +20,12 @@ document.addEventListener('keydown', function(event)
         if (event.key === 'w' && pong.p2.pos[1] - pong.p_height / 2 > - pong.height / 2)
         {
             pong.p2.moving = true;
-            pong.p2.vel = -5;
+            pong.p2.vel = -5 * pong.boost;
         }
         if (event.key === 's' && pong.p2.pos[1] + pong.p_height / 2 < pong.height / 2)
         {
             pong.p2.moving = true;
-            pong.p2.vel = 5;
+            pong.p2.vel = 5 * pong.boost;
         }
     }
 });

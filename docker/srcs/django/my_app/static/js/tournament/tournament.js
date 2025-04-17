@@ -2,6 +2,7 @@ import Component from "../spa/component.js";
 import PongPage from "../pong/pong_game.js";
 import { showToast } from "../utils/toast.js";
 import Route from "../spa/route.js";
+import { getCookie } from "../utils/cookie.js";
 
 const fetchUsername = async () => {
   try {
@@ -380,10 +381,12 @@ class TournamentPage extends Component {
       tournament: this.tournamentState,
       timestamp: new Date().toISOString(),
     };
+    const csrftoken = getCookie("csrftoken");
     fetch("/api/save_tournament_result/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken
       },
       body: JSON.stringify(tournamentResult),
     })
