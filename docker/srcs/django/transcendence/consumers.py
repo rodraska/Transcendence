@@ -94,7 +94,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                 "p1": users[0],
                 "p2": users[1],
                 "game_type": gid,
-                "points": 10,
+                "points": 3,
                 "powerups": False,
                 "confirmed": set(),
             }

@@ -325,7 +325,7 @@ class Play extends Component {
     await this.populateOpponentSelect();
     this.customOpponentSelect.value = "";
     this.customPowerupsSwitch.checked = false;
-    this.customPointsInput.value = "10";
+    this.customPointsInput.value = "3";
     this.customModalInstance.show();
   }
 
@@ -338,8 +338,8 @@ class Play extends Component {
       showToast("Select opponent.", "danger");
       return;
     }
-    if (isNaN(pts) || pts < 5 || pts > 20) {
-      showToast("Points must be 5-20.", "danger");
+    if (isNaN(pts) || pts < 3 || pts > 10) {
+      showToast("Points must be 3-20.", "danger");
       return;
     }
     if (this.socket.readyState === WebSocket.OPEN) {
