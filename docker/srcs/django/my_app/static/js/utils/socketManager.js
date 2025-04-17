@@ -1,33 +1,51 @@
-// import { showToast } from "./toast";
-import Route from "../spa/route.js";
+import { addInvite, removeInvite } from "./inviteStore.js";
+import { showToast } from "./toast.js";
 
-let activeSocket = null;
+let socket = null;
+const listeners = new Set();
 
 export function getOrCreateSocket() {
-  if (activeSocket && activeSocket.readyState === WebSocket.OPEN) {
-    return activeSocket;
-  }
-  activeSocket = new WebSocket(`ws://${window.location.hostname}:8000/ws/matchmaking/`);
-  activeSocket.onopen = () => console.log("Global WebSocket connected.");
-  activeSocket.onclose = () => console.warn("Global WebSocket closed.");
-  activeSocket.onerror = (err) => console.error("Global WebSocket error:", err);
-  activeSocket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    if (data.event === "match_forfeited") {
-      // alert(data.message || "Opponent forfeited.");
-      // showToast(data.message || "Opponent forfeited.")
-      forceCloseAllModals();
-      window.currentMatchData = null;
-      // window.location.hash = "#/play";
-      Route.go("/play")
-    } else {
-      console.log("Global message:", data);
+  if (socket) return socket;
+  socket = new WebSocket(`wss://${location.host}/ws/matchmaking/`);
+  socket.onmessage = (e) => {
+    const d = JSON.parse(e.data);
+
+    if (d.custom_invite) {
+      addInvite({
+        pending_id: d.pending_id,
+        from: d.player1,
+        game_type: d.game_type,
+        points_to_win: d.points_to_win,
+        powerups: d.powerups_enabled,
+      });
+      showToast(`${d.player1} invited you to a ${d.game_type} match`, "info");
     }
+
+    if (d.friend_request) {
+      showToast(`New friend request from ${d.from_username}`, "info");
+    }
+
+    if ((d.event === "match_cancelled" || d.invite_declined) && d.pending_id) {
+      removeInvite(d.pending_id);
+    }
+
+    if (d.match_start && d.pending_id) removeInvite(d.pending_id);
+
+    for (const fn of listeners) fn(d);
   };
-  return activeSocket;
+  socket.onclose = () => {
+    setTimeout(() => {
+      socket = null;
+      getOrCreateSocket();
+    }, 1000);
+  };
+  return socket;
 }
 
-function forceCloseAllModals() {
-  document.body.classList.remove("modal-open");
-  document.querySelectorAll(".modal-backdrop").forEach((b) => b.remove());
+export function addSocketListener(fn) {
+  listeners.add(fn);
+}
+
+export function removeSocketListener(fn) {
+  listeners.delete(fn);
 }

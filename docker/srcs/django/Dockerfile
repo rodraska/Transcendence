@@ -1,12 +1,12 @@
 FROM debian:bullseye
 
 RUN apt-get update && apt-get install -y \
-  python3 \
-  python3-pip \
-  python3-dev \
-  git \
-  libpq-dev \
-  && rm -rf /var/lib/apt/lists/*
+    python3 \
+    python3-pip \
+    python3-dev \
+    git \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -15,8 +15,15 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-RUN python3 manage.py collectstatic --noinput
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+COPY healthcheck.sh /app/healthcheck.sh
+RUN chmod +x /app/healthcheck.sh
 
 EXPOSE 8000
 
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "transcendence.asgi:application"]
+HEALTHCHECK --interval=10s --timeout=5s --start-period=20s --retries=3 \
+  CMD /app/healthcheck.sh || exit 1
+
+ENTRYPOINT ["/app/entrypoint.sh"]

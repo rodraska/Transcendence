@@ -8,22 +8,6 @@ function normalizeRoute(url) {
   return url;
 }
 
-function forfeitIfActiveMatch(newRoute) {
-  if (
-    window.currentMatchData &&
-    window.currentMatchData.matchId &&
-    normalizeRoute(newRoute) !== "/active-match"
-  ) {
-    import("../utils/socketManager.js").then((module) => {
-      const socket = module.getOrCreateSocket();
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ action: "forfeit" }));
-      }
-    });
-    window.currentMatchData = null;
-  }
-}
-
 function forfeitIfGame(newRoute) {
   if (
     window.currentMatchData &&

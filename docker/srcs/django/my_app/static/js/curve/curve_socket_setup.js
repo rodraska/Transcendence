@@ -3,7 +3,7 @@ const setupCurveSocket =function()
     const self = this;
 
     const matchId = this.matchData.matchId;
-    const curveSocket = new WebSocket(`ws://${window.location.hostname}:8000/ws/curve_game/${matchId}/`);
+    const curveSocket = new WebSocket(`wss://${window.location.hostname}/ws/curve_game/${matchId}/`);
     this.curveSocket = curveSocket;
     window.curveSocket = curveSocket;
 

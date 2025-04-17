@@ -1,38 +1,51 @@
 services:
   db:
-    build:
-      context: ./postgresql
+    image: postgres:latest
     container_name: postgres
+    restart: on-failure:5
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=transcendence
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+
   web:
     build:
       context: ./django
     container_name: django
+    restart: on-failure:5
     depends_on:
       - db
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./django:/app
-      - static_volume:/app/staticfiles
+    expose:
+      - "8000"
+    env_file:
+      - .env
     environment:
       - DJANGO_SETTINGS_MODULE=transcendence.settings
-    command: daphne -b 0.0.0.0 -p 8000 transcendence.asgi:application
-  adminer:
-    image: adminer
-    container_name: adminer
-    restart: always
+      - OAUTH42_CLIENT_ID=${OAUTH42_CLIENT_ID}
+      - OAUTH42_SECRET=${OAUTH42_SECRET}
+    volumes:
+      - ./django/staticfiles:/app/staticfiles
+      - ./django/media:/app/media
+
+  nginx:
+    build:
+      context: ./nginx
+      args:
+        - DOMAIN_NAME=${DOMAIN_NAME}
+    container_name: nginx
+    restart: on-failure:5
+    depends_on:
+      - web
     ports:
-      - 8080:8080
-  
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./django/staticfiles:/app/staticfiles
+      - ./django/media:/app/media
 
 volumes:
   db_data:
-  static_volume:

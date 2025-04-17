@@ -10,7 +10,6 @@ import LoginButtons from "./login/login.js";
 import RegistrationForm from "./login/registration_form.js";
 import LoginForm from "./login/login_form.js";
 import FriendsPage from "./header/friends.js";
-import PlayGames from "./play_games/play_games.js";
 import Record from "./match/record.js";
 import Play from "./play_games/play.js";
 import ActiveMatch from "./match/active_match.js";
@@ -25,12 +24,12 @@ if (!customElements.get("header-component")) {
 headerContainer.appendChild(document.createElement("header-component"));
 
 function toggleHeader() {
-  let currentRoute = normalizeRoute(window.location.hash || "/");
+  const currentRoute = normalizeRoute(window.location.hash || "/");
   if (
     currentRoute === "/login" ||
     currentRoute === "/login_form" ||
-    currentRoute === "/registration_form" || 
-    (!window.loggedInUserName)
+    currentRoute === "/registration_form" ||
+    !window.loggedInUserName
   ) {
     headerContainer.style.display = "none";
   } else {
@@ -54,10 +53,7 @@ Route.subscribe("/play", Play);
 Route.subscribe("/active-match", ActiveMatch);
 Route.subscribe("/tournament", TournamentPage);
 
-window.addEventListener("hashchange", () => {
-  toggleHeader();
-});
-
+window.addEventListener("hashchange", toggleHeader);
 window.addEventListener("DOMContentLoaded", () => {
   checkLoginStatus();
   toggleHeader();
@@ -71,13 +67,9 @@ function checkLoginStatus() {
         window.loggedInUserName = data.username;
         window.loggedInUserId = data.user_id;
         window.loggedInAvatarUrl = data.avatar_url;
-        import("./utils/socketManager.js").then((module) => {
-          module.getOrCreateSocket();
-        });
+        import("./utils/socketManager.js").then((m) => m.getOrCreateSocket());
         if (normalizeRoute(window.location.hash) === "/") {
           Route.go("/play");
-        } else {
-          //Route.go(window.location.hash);
         }
       } else {
         window.loggedInUserName = null;
