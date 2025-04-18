@@ -58,9 +58,7 @@ document.addEventListener('visibilitychange', function()
     const pong = window.pong_game;
 
     if (document.hidden) {
-        if (pong.isStart && !pong.isPaused && !pong.isOver) {
-            pong.sendGameControl('pause');
-        }
+        pong.sendGameControl('stop');
     }
 });
 
