@@ -32,9 +32,7 @@ document.addEventListener('visibilitychange', function()
     const curve = window.curve_game;
 
     if (document.hidden) {
-        if (curve.isStart && !curve.isPaused && !curve.isOver) {
-            curve.sendGameControl('pause');
-        }
+        curve.sendGameControl('stop');
     }
 });
 
