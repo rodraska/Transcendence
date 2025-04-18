@@ -29,6 +29,18 @@ class Play extends Component {
   }
 
   async onInit() {
+    window.playInstance = this;
+    this.boundUnloadHandler = () => {
+      this.cancelSearch();
+    };
+    window.addEventListener("beforeunload", this.boundUnloadHandler);
+
+    this.boundVisibilityHandler = () => {
+      if (document.hidden && this.isSearching) {
+        this.cancelSearch();
+      }
+    };
+    document.addEventListener("visibilitychange", this.boundVisibilityHandler);
     this.gameTypesContainer = this.querySelector("#game-types");
     this.searchingIndicator = this.querySelector("#searching-indicator");
     this.cancelSearchBtn = this.querySelector("#cancel-search-btn");
@@ -130,8 +142,16 @@ class Play extends Component {
   }
 
   disconnectedCallback() {
+    if (window.playInstance === this) {
+      window.playInstance = null;
+    }
     unsubInv(this.renderInvites);
     removeSocketListener(this.playSocketListener);
+    window.removeEventListener("beforeunload", this.boundUnloadHandler);
+    document.removeEventListener(
+      "visibilitychange",
+      this.boundVisibilityHandler
+    );
   }
 
   renderInvites(invites) {
@@ -263,39 +283,40 @@ class Play extends Component {
       this.cancelSearchBtn.classList.remove("d-none");
       this.customGameBtn.classList.add("disabled");
 
-      const buttons = this.gameTypesContainer.querySelectorAll('button');
+      const buttons = this.gameTypesContainer.querySelectorAll("button");
 
-      buttons.forEach(button => {
+      buttons.forEach((button) => {
         button.classList.add("disabled");
       });
 
-      const buttonsSingle = this.singleplayerGameTypesContainer.querySelectorAll('button');
+      const buttonsSingle =
+        this.singleplayerGameTypesContainer.querySelectorAll("button");
 
-      buttonsSingle.forEach(button => {
+      buttonsSingle.forEach((button) => {
         button.classList.add("disabled");
       });
 
-      this.querySelector("#tournament-btn").classList.add("disabled")
-
+      this.querySelector("#tournament-btn").classList.add("disabled");
     } else {
       this.searchingIndicator.classList.add("d-none");
       this.cancelSearchBtn.classList.add("d-none");
 
       this.customGameBtn.classList.remove("disabled");
 
-      const buttons = this.gameTypesContainer.querySelectorAll('button');
+      const buttons = this.gameTypesContainer.querySelectorAll("button");
 
-      buttons.forEach(button => {
+      buttons.forEach((button) => {
         button.classList.remove("disabled");
       });
 
-      const buttonsSingle = this.singleplayerGameTypesContainer.querySelectorAll('button');
+      const buttonsSingle =
+        this.singleplayerGameTypesContainer.querySelectorAll("button");
 
-      buttonsSingle.forEach(button => {
+      buttonsSingle.forEach((button) => {
         button.classList.remove("disabled");
       });
 
-      this.querySelector("#tournament-btn").classList.remove("disabled")
+      this.querySelector("#tournament-btn").classList.remove("disabled");
     }
   }
 

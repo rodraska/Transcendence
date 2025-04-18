@@ -24,7 +24,7 @@
     <link rel="icon" href="../static/images/favicon.png" type="image/x-icon" />
   </head>
   <body>
-    <input type="hidden" id="csrf-token" value="{% csrf_token %}">
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
     <div id="header-container"></div>
     <div class="align-items-center mt-5" id="content-container"></div>
 
