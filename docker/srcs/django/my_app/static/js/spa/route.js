@@ -12,9 +12,10 @@ function forfeitIfGame(newRoute) {
   if (
     window.currentMatchData &&
     window.currentMatchData.matchId &&
-    normalizeRoute(newRoute) !== "/curve" && normalizeRoute(newRoute) !== "/pong"
+    normalizeRoute(newRoute) !== "/curve" &&
+    normalizeRoute(newRoute) !== "/pong"
   ) {
-    console.log('new route forfeit');
+    console.log("new route forfeit");
     const pongSocket = window.pongSocket;
     const curveSocket = window.curveSocket;
 
@@ -23,13 +24,15 @@ function forfeitIfGame(newRoute) {
       if (window.loggedInUserName === window.currentMatchData.player2)
         playerNumber = 2;
 
-      console.log('playerNumber: ', playerNumber);
+      console.log("playerNumber: ", playerNumber);
 
-      pongSocket.send(JSON.stringify({
-        'type': 'game_control',
-        'action': 'stop',
-        'player_number': playerNumber
-      }))
+      pongSocket.send(
+        JSON.stringify({
+          type: "game_control",
+          action: "stop",
+          player_number: playerNumber,
+        })
+      );
     }
 
     if (curveSocket && curveSocket.readyState === WebSocket.OPEN) {
@@ -37,13 +40,15 @@ function forfeitIfGame(newRoute) {
       if (window.loggedInUserName === window.currentMatchData.player2)
         playerNumber = 2;
 
-      console.log('playerNumber: ', playerNumber);
+      console.log("playerNumber: ", playerNumber);
 
-      curveSocket.send(JSON.stringify({
-        'type': 'game_control',
-        'action': 'stop',
-        'player_number': playerNumber
-      }))
+      curveSocket.send(
+        JSON.stringify({
+          type: "game_control",
+          action: "stop",
+          player_number: playerNumber,
+        })
+      );
     }
 
     window.pongSocket = null;
@@ -60,6 +65,12 @@ function setPage(url) {
     return;
   }
   const component = routes.get(normUrl);
+  if (
+    window.playInstance &&
+    typeof window.playInstance.cancelSearch === "function"
+  ) {
+    window.playInstance.cancelSearch();
+  }
   if (component) {
     contentContainer.innerHTML = "";
     const elementName =
