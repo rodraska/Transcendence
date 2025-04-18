@@ -45,5 +45,12 @@ services:
     volumes:
       - ./django/staticfiles:/app/staticfiles
 
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
 volumes:
   db_data:

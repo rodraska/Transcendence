@@ -261,9 +261,41 @@ class Play extends Component {
     if (s) {
       this.searchingIndicator.classList.remove("d-none");
       this.cancelSearchBtn.classList.remove("d-none");
+      this.customGameBtn.classList.add("disabled");
+
+      const buttons = this.gameTypesContainer.querySelectorAll('button');
+
+      buttons.forEach(button => {
+        button.classList.add("disabled");
+      });
+
+      const buttonsSingle = this.singleplayerGameTypesContainer.querySelectorAll('button');
+
+      buttonsSingle.forEach(button => {
+        button.classList.add("disabled");
+      });
+
+      this.querySelector("#tournament-btn").classList.add("disabled")
+
     } else {
       this.searchingIndicator.classList.add("d-none");
       this.cancelSearchBtn.classList.add("d-none");
+
+      this.customGameBtn.classList.remove("disabled");
+
+      const buttons = this.gameTypesContainer.querySelectorAll('button');
+
+      buttons.forEach(button => {
+        button.classList.remove("disabled");
+      });
+
+      const buttonsSingle = this.singleplayerGameTypesContainer.querySelectorAll('button');
+
+      buttonsSingle.forEach(button => {
+        button.classList.remove("disabled");
+      });
+
+      this.querySelector("#tournament-btn").classList.remove("disabled")
     }
   }
 
