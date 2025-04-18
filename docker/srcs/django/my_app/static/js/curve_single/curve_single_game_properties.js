@@ -83,12 +83,12 @@ const initializeCurveGameProperties = function()
         },
     
         playerControls: {
-            1: ["ArrowUp", "ArrowLeft"],
+            1: ["ArrowRight", "ArrowLeft"],
             2: ["d", "a"]
         },
     
         playerArrows: {
-            1: ["Up", "Left"],
+            1: ["Right", "Left"],
             2: ["D", "A"]
         },
     
