@@ -67,6 +67,10 @@ class TournamentPage extends Component {
 
     await this.updatePlayers();
     this.loadMyTournaments();
+
+    this.updateButtons();
+    window.addEventListener("online", this.updateButtons.bind(this));
+    window.addEventListener("offline", this.updateButtons.bind(this));
   }
 
   async updatePlayers() {
@@ -507,6 +511,16 @@ class TournamentPage extends Component {
         </div>
       </div>
     `;
+  }
+
+  updateButtons() {
+    if (isOnline()) {
+      this.startButton.disabled = false;
+      this.startNextGameBtn.disabled = false;
+    } else {
+      this.startButton.disabled = true;
+      this.startNextGameBtn.disabled = true;
+    }
   }
 }
 

@@ -12,7 +12,8 @@ class Record extends Component {
     this.filterElement = this.querySelector("#game-filter");
 
     if (!window.loggedInUserId) {
-      this.listElement.innerHTML = "<p class='text-danger'>No user is logged in.</p>";
+      this.listElement.innerHTML =
+        "<p class='text-danger'>No user is logged in.</p>";
       return;
     }
 
@@ -45,14 +46,16 @@ class Record extends Component {
   calculateAndDisplayStats() {
     const statsByGameType = {};
 
-    this.matches.forEach(match => {
+    this.matches.forEach((match) => {
+      if (match.winner === null || !match.ended_on) return;
+
       const gameType = match.game_type;
       if (!statsByGameType[gameType]) {
         statsByGameType[gameType] = { totalGames: 0, wins: 0, losses: 0 };
       }
 
       statsByGameType[gameType].totalGames += 1;
-      if (match.winner === window.window.loggedInUserName) {
+      if (match.winner === window.loggedInUserName) {
         statsByGameType[gameType].wins += 1;
       } else {
         statsByGameType[gameType].losses += 1;
@@ -61,14 +64,18 @@ class Record extends Component {
 
     this.statsElement.innerHTML = "";
 
-    Object.keys(statsByGameType).forEach(gameType => {
+    Object.keys(statsByGameType).forEach((gameType) => {
       const stats = statsByGameType[gameType];
       const totalGames = stats.totalGames;
       const wins = stats.wins;
       const losses = stats.losses;
 
-      const winPercentage = totalGames ? Math.round((wins / totalGames) * 100) : 0;
-      const lossPercentage = totalGames ? Math.round((losses / totalGames) * 100) : 0;
+      const winPercentage = totalGames
+        ? Math.round((wins / totalGames) * 100)
+        : 0;
+      const lossPercentage = totalGames
+        ? Math.round((losses / totalGames) * 100)
+        : 0;
 
       const statsColumn = document.createElement("div");
       statsColumn.classList.add("col-md-4", "mb-3");
@@ -93,8 +100,10 @@ class Record extends Component {
   }
 
   populateFilterOptions() {
-    const gameTypes = [...new Set(this.matches.map(match => match.game_type))];
-    gameTypes.forEach(game => {
+    const gameTypes = [
+      ...new Set(this.matches.map((match) => match.game_type)),
+    ];
+    gameTypes.forEach((game) => {
       const option = document.createElement("option");
       option.value = game;
       option.textContent = game;
@@ -106,26 +115,37 @@ class Record extends Component {
     this.listElement.innerHTML = "";
 
     const selectedGame = this.filterElement.value;
-    const filteredMatches = selectedGame === "all"
-      ? this.matches
-      : this.matches.filter(match => match.game_type === selectedGame);
+    const filteredMatches =
+      selectedGame === "all"
+        ? this.matches
+        : this.matches.filter((match) => match.game_type === selectedGame);
 
     if (filteredMatches.length === 0) {
       this.listElement.innerHTML = "<p>No matches found.</p>";
       return;
     }
 
-    filteredMatches.forEach(match => {
+    filteredMatches.forEach((match) => {
+      if (match.winner === null && !match.ended_on) {
+        return;
+      }
+
       const li = document.createElement("li");
       li.classList.add("list-group-item", "d-flex", "justify-content-between");
 
       const winnerText = `<strong class="text-success">${match.winner}</strong>`;
       const matchDate = new Date(match.ended_on);
-      const dateTimeString = `${matchDate.toLocaleDateString("en-GB")} ${matchDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      const dateTimeString = `${matchDate.toLocaleDateString(
+        "en-GB"
+      )} ${matchDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })}`;
 
       let extraInfo = "";
       if (match.result === "forfeit") {
-        const forfeiter = match.winner === match.player1 ? match.player2 : match.player1;
+        const forfeiter =
+          match.winner === match.player1 ? match.player2 : match.player1;
         extraInfo = `<small class="text-danger mt-1">Forfeited by ${forfeiter}</small>`;
       } else if (match.result && match.result.includes("-")) {
         extraInfo = `<em>Score: ${match.result}</em>`;
@@ -134,7 +154,7 @@ class Record extends Component {
       li.innerHTML = `
         <div>
           <strong>${match.player1}</strong> vs <strong>${match.player2}</strong>
-          <div>${ extraInfo }</div>
+          <div>${extraInfo}</div>
           <small>${match.game_type} | ${dateTimeString}</small>
         </div>
         <div>${winnerText}</div>
