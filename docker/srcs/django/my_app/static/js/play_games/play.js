@@ -71,9 +71,16 @@ class Play extends Component {
       this.createCustomGame()
     );
 
-    this.querySelector("#tournament-btn")?.addEventListener("click", () => {
+    this.tournamentBtn = this.querySelector("#tournament-btn");
+    this.tournamentBtn?.addEventListener("click", () => {
       Route.go("/tournament");
     });
+
+    window.addEventListener("online", () => this.updateConnectionStatus(true));
+    window.addEventListener("offline", () =>
+      this.updateConnectionStatus(false)
+    );
+    this.updateConnectionStatus(navigator.onLine);
 
     this.modalInstance = new bootstrap.Modal(this.matchFoundModal, {
       backdrop: "static",
@@ -418,6 +425,24 @@ class Play extends Component {
       }
       this.customModalInstance.hide();
     }, 500);
+  }
+
+  updateConnectionStatus(isOnline) {
+    const mpButtons = this.gameTypesContainer.querySelectorAll("button");
+    mpButtons.forEach((btn) => (btn.disabled = !isOnline));
+    if (this.tournamentBtn) {
+      this.tournamentBtn.disabled = !isOnline;
+    }
+    if (this.customGameBtn) {
+      this.customGameBtn.disabled = !isOnline;
+    }
+  }
+
+  onOffline() {
+    this.insertAdjacentHTML("beforeend", "<button id='retry'>Retry</button>");
+    this.querySelector("#retry").addEventListener("click", () => {
+      location.reload();
+    });
   }
 }
 

@@ -12,7 +12,7 @@ class Component extends HTMLElement {
         }
       })
       .catch(() => {
-        this.innerHTML = "Error loading template.";
+        this.innerHTML = "Error loading template. Check internet connection.";
       });
   }
 

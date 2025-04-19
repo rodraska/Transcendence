@@ -5,6 +5,10 @@ import Route from "../spa/route.js";
 import { getCookie } from "../utils/cookie.js";
 
 const fetchUsername = async () => {
+  if (!isOnline()) {
+    showToast("No internet connection.", "danger");
+    return;
+  }
   try {
     const response = await fetch("/api/current_user/", {
       credentials: "include",
@@ -23,6 +27,7 @@ const fetchUsername = async () => {
 };
 
 const isAlpha = (str) => /^[a-zA-Z]*$/.test(str);
+const isOnline = () => navigator.onLine;
 
 if (!customElements.get("pong-single-modal")) {
   class PongSingleModal extends PongSingle {}
@@ -379,6 +384,17 @@ class TournamentPage extends Component {
   }
 
   saveTournamentResult(callback) {
+    if (!isOnline()) {
+      showToast(
+        "No internet connection. Unable to save tournament.",
+        "danger",
+        "Tournament"
+      );
+      if (typeof callback === "function") {
+        callback();
+      }
+      return;
+    }
     const tournamentResult = {
       tournament: this.tournamentState,
       timestamp: new Date().toISOString(),
@@ -410,6 +426,12 @@ class TournamentPage extends Component {
   }
 
   loadMyTournaments() {
+    if (!isOnline()) {
+      document.getElementById(
+        "myTournaments"
+      ).innerHTML = `<div class="alert alert-danger">No internet connection. Cannot load tournaments.</div>`;
+      return;
+    }
     fetch("/api/get_tournaments/")
       .then((res) => res.json())
       .then((data) => {
