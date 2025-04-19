@@ -339,7 +339,6 @@ class Play extends Component {
       }
       removeInvite(this.currentPendingId);
       this.currentPendingId = null;
-      showToast("Invitation canceled.", "warning");
     } else {
       if (!this.isSearching) return;
       this.isSearching = false;
