@@ -450,7 +450,9 @@ class TournamentPage extends Component {
           html += `<p>No results</p>`;
         }
         html += `</div></div>`;
-        document.getElementById("myTournaments").innerHTML = html;
+        if (document.getElementById("myTournaments")) {
+          document.getElementById("myTournaments").innerHTML = html;
+        }
       })
       .catch((err) => console.error("Error loading tournaments:", err));
   }
