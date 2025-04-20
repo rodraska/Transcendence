@@ -3,7 +3,7 @@ import { showToast } from "../utils/toast.js";
 import Route from "../spa/route.js";
 import { getCookie } from "../utils/cookie.js";
 
-const isAlpha = str => /^[a-zA-Z]*$/.test(str);
+const isAlphaOrHyphen = str => /^[a-zA-Z-]*$/.test(str);
 class RegistrationForm extends Component {
   constructor() {
     super("static/html/registration_form.html");
@@ -25,8 +25,8 @@ class RegistrationForm extends Component {
         errorMsg = "Username is too long.";
       } else if (value.length < 3) {
         errorMsg = "Username is too short.";
-      } else if (!isAlpha(value)) {
-        errorMsg = "Username can only contain letters.";
+      } else if (!isAlphaOrHyphen(value)) {
+        errorMsg = "Username can only contain letters and hyphens.";
       }
 
       if (errorMsg) {
@@ -61,7 +61,7 @@ class RegistrationForm extends Component {
       fetch("/api/register/", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", 
+          "Content-Type": "application/json",
           "X-CSRFToken": csrftoken
         },
         body: JSON.stringify(payload),

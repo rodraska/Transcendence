@@ -26,7 +26,7 @@ const fetchUsername = async () => {
   }
 };
 
-const isAlpha = (str) => /^[a-zA-Z]*$/.test(str);
+const isAlphaOrHyphen = (str) => /^[a-zA-Z-]*$/.test(str);
 const isOnline = () => navigator.onLine;
 
 if (!customElements.get("pong-single-modal")) {
@@ -114,8 +114,8 @@ class TournamentPage extends Component {
           errorMsg = "Alias cannot be empty.";
         } else if (alias.length > 8) {
           errorMsg = "Alias is too big.";
-        } else if (!isAlpha(alias)) {
-          errorMsg = "Alias can only contain letters.";
+        } else if (!isAlphaOrHyphen(alias)) {
+          errorMsg = "Alias can only contain letters and hyphens.";
         } else {
           const inputs = this.playersContainer.querySelectorAll("input");
           let countAlias = 0;
@@ -146,7 +146,7 @@ class TournamentPage extends Component {
     const names = [];
     inputs.forEach((input) => {
       const alias = input.value.trim();
-      if (alias === "" || alias.length > 8 || !isAlpha(alias)) {
+      if (alias === "" || alias.length > 8 || !isAlphaOrHyphen(alias)) {
         valid = false;
       }
       if (alias) {
@@ -181,7 +181,7 @@ class TournamentPage extends Component {
         !alias ||
         alias.length > 8 ||
         players.indexOf(alias) !== -1 ||
-        !isAlpha(alias)
+        !isAlphaOrHyphen(alias)
       )
         return;
       players.push(alias);
@@ -450,7 +450,9 @@ class TournamentPage extends Component {
           html += `<p>No results</p>`;
         }
         html += `</div></div>`;
-        document.getElementById("myTournaments").innerHTML = html;
+        if (document.getElementById("myTournaments")) {
+          document.getElementById("myTournaments").innerHTML = html;
+        }
       })
       .catch((err) => console.error("Error loading tournaments:", err));
   }
