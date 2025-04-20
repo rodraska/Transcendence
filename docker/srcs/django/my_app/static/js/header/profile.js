@@ -9,6 +9,7 @@ class UserProfile extends Component {
   constructor() {
     super("static/html/profile.html");
     this.selectedFile = null;
+    this.avatarSaved = false;
   }
 
   onInit() {
@@ -21,17 +22,11 @@ class UserProfile extends Component {
     const firstNameInput = form.querySelector("#name1");
     const lastNameInput = form.querySelector("#name2");
     const emailInput = form.querySelector("#email");
-    const saveButton = form.querySelector("button[type='submit']");
+    this.saveButton = this.querySelector("button[type='submit']");
     const firstNameError = form.querySelector("#firstname_error");
     const lastNameError = form.querySelector("#lastname_error");
 
-    if (
-      !form ||
-      !firstNameInput ||
-      !lastNameInput ||
-      !emailInput ||
-      !saveButton
-    ) {
+    if (!form || !firstNameInput || !lastNameInput || !emailInput || !this.saveButton) {
       console.error("Some form elements were not found. Check HTML structure.");
       return;
     }
@@ -57,6 +52,8 @@ class UserProfile extends Component {
           last_name: data.last_name || "",
           email: data.email || "",
         };
+
+        this.updateSubmitState();
       })
       .catch((error) => console.error("Error loading user:", error));
 
@@ -108,44 +105,25 @@ class UserProfile extends Component {
       }
     };
 
-    const updateSubmitState = () => {
-      const validFirst = validateFirstName();
-      const validLast = validateLastName();
-      const emailNotEmpty = emailInput.value.trim() !== "";
+    this.updateSubmitState = () => {
+      const isValidFirstName = validateFirstName();
+      const isValidLastName = validateLastName();
+      const isEmailFilled = emailInput.value.trim() !== "";
       const hasChanges = isChanged();
 
-      const firstValidOrUnchanged =
-        !hasChanges ||
-        firstNameInput.value.trim() === this.originalData.first_name ||
-        validFirst;
-      const lastValidOrUnchanged =
-        !hasChanges ||
-        lastNameInput.value.trim() === this.originalData.last_name ||
-        validLast;
-
-      saveButton.disabled = !(
-        hasChanges &&
-        emailNotEmpty &&
-        firstValidOrUnchanged &&
-        lastValidOrUnchanged
-      );
+      this.saveButton.disabled = !(hasChanges && isValidFirstName && isValidLastName && isEmailFilled);
     };
 
-    firstNameInput.addEventListener("input", updateSubmitState);
-    lastNameInput.addEventListener("input", updateSubmitState);
-    emailInput.addEventListener("input", updateSubmitState);
+    firstNameInput.addEventListener("input", this.updateSubmitState);
+    lastNameInput.addEventListener("input", this.updateSubmitState);
+    emailInput.addEventListener("input", this.updateSubmitState);
     firstNameInput.addEventListener("blur", validateFirstName);
     lastNameInput.addEventListener("blur", validateLastName);
 
-    saveButton.disabled = true;
+    this.saveButton.disabled = true;
 
-    document
-      .getElementById("changeImageBtn")
-      .addEventListener("click", this.openAvatarSelection.bind(this));
-    document
-      .getElementById("resetImageBtn")
-      .addEventListener("click", this.resetAvatar.bind(this));
-
+    document.getElementById("changeImageBtn").addEventListener("click", this.openAvatarSelection.bind(this));
+    document.getElementById("resetImageBtn").addEventListener("click", this.resetAvatar.bind(this));
     form.addEventListener("submit", this.updateProfile.bind(this));
   }
 
@@ -154,6 +132,9 @@ class UserProfile extends Component {
       showToast("Offline: Cannot change profile photo", "warning");
       return;
     }
+
+    this.tempAvatarUrlBeforeModal = document.getElementById("profileImage").src;
+    this.avatarSaved = false;
 
     const avatarModalElement = document.getElementById("avatarModal");
     if (!avatarModalElement) {
@@ -164,40 +145,73 @@ class UserProfile extends Component {
     const avatarModal = new bootstrap.Modal(avatarModalElement);
     avatarModal.show();
 
+    avatarModalElement.addEventListener("hidden.bs.modal", () => {
+        if (!this.avatarSaved) {
+            document.getElementById("profileImage").src = this.tempAvatarUrlBeforeModal;
+        } else {
+            this.tempAvatarUrlBeforeModal = document.getElementById("profileImage").src;
+        }
+        this.selectedFile = null;
+        this.toggleSaveAvatarButton();
+    });
+
     document.querySelectorAll(".avatar-option").forEach((option) => {
       option.addEventListener("click", () => {
         document.getElementById("profileImage").src = option.dataset.avatarUrl;
         this.selectedFile = null;
+        this.toggleSaveAvatarButton();
       });
     });
 
     const uploadInput = document.getElementById("uploadAvatarBtn");
     if (uploadInput) {
+      uploadInput.value = "";
       uploadInput.addEventListener("change", this.handleFileUpload.bind(this));
     }
 
-    document.getElementById("saveAvatarBtn").addEventListener("click", () => {
-      const selectedAvatarUrl = document.getElementById("profileImage").src;
-      this.updateAvatar(selectedAvatarUrl);
-      avatarModal.hide();
+    const newSaveBtn = document.getElementById("saveAvatarBtn");
+
+    // Remove any existing click listeners
+    const newSaveBtnClone = newSaveBtn.cloneNode(true);
+    newSaveBtn.parentNode.replaceChild(newSaveBtnClone, newSaveBtn);
+
+    newSaveBtnClone.addEventListener("click", () => {
+    const selectedAvatarUrl = document.getElementById("profileImage").src;
+    this.avatarSaved = true;
+    this.updateAvatar(selectedAvatarUrl);
+    avatarModal.hide();
     });
+    
+    this.toggleSaveAvatarButton();
+  }
+
+  toggleSaveAvatarButton() {
+    const currentAvatar = document.getElementById("profileImage").src;
+    const saveBtn = document.getElementById("saveAvatarBtn");
+    const hasChanges = currentAvatar !== this.tempAvatarUrlBeforeModal;
+    saveBtn.disabled = !hasChanges;
   }
 
   handleFileUpload(event) {
     const file = event.target.files[0];
-    if (!file) {
-      console.error("No file selected.");
+    if (!file) return;
+  
+    const maxFileSize = 1 * 1024 * 1024; // 1MB
+    if (file.size > maxFileSize) {
+      showToast("Image is too large. Max size is 1MB.", "warning");
       return;
     }
-
+  
     this.selectedFile = file;
-
+  
     const reader = new FileReader();
     reader.onload = (e) => {
       document.getElementById("profileImage").src = e.target.result;
+      this.toggleSaveAvatarButton();
     };
     reader.readAsDataURL(file);
   }
+  
 
   updateAvatar(selectedAvatarUrl = null) {
     if (!navigator.onLine) {
@@ -212,7 +226,6 @@ class UserProfile extends Component {
     } else if (selectedAvatarUrl) {
       formData.append("avatar_url", selectedAvatarUrl);
     } else {
-      console.error("No avatar selected.");
       return;
     }
 
@@ -230,15 +243,11 @@ class UserProfile extends Component {
           showToast("Error updating avatar!", "danger");
         } else {
           showToast("Updated Avatar!", "success", "Profile");
-          document.getElementById("profileImage").src = data.avatar_url;
           window.loggedInAvatarUrl = data.avatar_url;
-
+          
           const headerComponent = document.querySelector("header");
           if (headerComponent && headerComponent.component) {
-            headerComponent.component.updateHeader(
-              window.loggedInUserName,
-              data.avatar_url
-            );
+            headerComponent.component.updateHeader(window.loggedInUserName, data.avatar_url);
           }
         }
       })
@@ -286,6 +295,8 @@ class UserProfile extends Component {
           showToast("Error: " + data.error, "danger", "Profile");
         } else {
           showToast("Updated profile!", "success", "Profile");
+          this.originalData = { ...updatedData };
+          this.updateSubmitState();
         }
       })
       .catch((error) => console.error("Error updating profile: ", error));
@@ -293,3 +304,4 @@ class UserProfile extends Component {
 }
 
 export default UserProfile;
+
