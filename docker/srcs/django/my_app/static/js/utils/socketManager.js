@@ -6,7 +6,16 @@ const listeners = new Set();
 
 export function getOrCreateSocket() {
   if (socket) return socket;
-  socket = new WebSocket(`wss://${location.host}/ws/matchmaking/`);
+  if (!navigator.onLine) {
+    showToast("You are offline", "error");
+    return null;
+  }
+  try {
+    socket = new WebSocket(`wss://${location.host}/ws/matchmaking/`);
+  } catch (e) {
+    showToast("Error connecting to server", "error");
+    return null;
+  }
   socket.onmessage = (e) => {
     const d = JSON.parse(e.data);
 

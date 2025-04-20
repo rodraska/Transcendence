@@ -41,7 +41,7 @@ document.addEventListener('visibilitychange', function()
 const curveGameControlEvents = function() {
     if (this.startBtn) {
         this.startBtn.addEventListener('click', () => {
-            this.ft_start();
+            this.ft_start(false);
         });
     }
     if (this.pauseBtn) {

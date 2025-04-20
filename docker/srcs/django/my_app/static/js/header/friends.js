@@ -178,6 +178,10 @@ class FriendsPage extends Component {
   }
 
   action(actionType, userId) {
+    if (!navigator.onLine) {
+      showToast("No internet connection. Cannot perform action.", "danger");
+      return;
+    }
     if (actionType === "send") {
       const socket = getOrCreateSocket();
       socket.send(
