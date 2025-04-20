@@ -1,4 +1,4 @@
-import Component from "../spa/component.js";
+/* import Component from "../spa/component.js";
 import { showToast } from "../utils/toast.js";
 import { getCookie } from "../utils/cookie.js";
 
@@ -21,17 +21,11 @@ class UserProfile extends Component {
     const firstNameInput = form.querySelector("#name1");
     const lastNameInput = form.querySelector("#name2");
     const emailInput = form.querySelector("#email");
-    const saveButton = form.querySelector("button[type='submit']");
+    const saveButton = form.querySelector("button[type='submit']"); 
     const firstNameError = form.querySelector("#firstname_error");
     const lastNameError = form.querySelector("#lastname_error");
 
-    if (
-      !form ||
-      !firstNameInput ||
-      !lastNameInput ||
-      !emailInput ||
-      !saveButton
-    ) {
+    if (!form || !firstNameInput || !lastNameInput || !emailInput || !saveButton) {
       console.error("Some form elements were not found. Check HTML structure.");
       return;
     }
@@ -57,6 +51,8 @@ class UserProfile extends Component {
           last_name: data.last_name || "",
           email: data.email || "",
         };
+
+        this.updateSubmitState();
       })
       .catch((error) => console.error("Error loading user:", error));
 
@@ -92,7 +88,7 @@ class UserProfile extends Component {
       const value = lastNameInput.value.trim();
       let errorMsg = "";
 
-      if (value.length > 30) {
+      if (value.length > 50) {
         errorMsg = "Last name is too long.";
       } else if (value && !isAlphaSpace(value)) {
         errorMsg = "Last name must contain only letters and spaces.";
@@ -108,7 +104,35 @@ class UserProfile extends Component {
       }
     };
 
-    const updateSubmitState = () => {
+ /*    const updateSubmitState = () => {
+        const validFirst = validateFirstName();
+        const validLast = validateLastName();
+        const emailNotEmpty = emailInput.value.trim() !== "";
+      
+        const hasChanges = isChanged();
+      
+        const firstValidOrUnchanged =
+          firstNameInput.value.trim() === this.originalData.first_name || validFirst;
+      
+        const lastValidOrUnchanged =
+          lastNameInput.value.trim() === this.originalData.last_name || validLast;
+      
+        saveButton.disabled = !(
+          hasChanges && emailNotEmpty && firstValidOrUnchanged && lastValidOrUnchanged
+        );
+      }; 
+
+      const updateSubmitState = () => {
+        const isValidFirstName = validateFirstName();
+        const isValidLastName = validateLastName();
+        const isEmailFilled = emailInput.value.trim() !== "";
+        const hasChanges = isChanged();
+  
+        // Só ativar o botão se houver alterações e todos os campos forem válidos
+        saveButton.disabled = !(hasChanges && isValidFirstName && isValidLastName && isEmailFilled);
+      };
+
+  /*   const updateSubmitState = () => {
       const validFirst = validateFirstName();
       const validLast = validateLastName();
       const emailNotEmpty = emailInput.value.trim() !== "";
@@ -129,7 +153,7 @@ class UserProfile extends Component {
         firstValidOrUnchanged &&
         lastValidOrUnchanged
       );
-    };
+    }; 
 
     firstNameInput.addEventListener("input", updateSubmitState);
     lastNameInput.addEventListener("input", updateSubmitState);
@@ -286,9 +310,299 @@ class UserProfile extends Component {
           showToast("Error: " + data.error, "danger", "Profile");
         } else {
           showToast("Updated profile!", "success", "Profile");
+          this.originalData = { ...updatedData };
+          this.updateSubmitState();
         }
       })
       .catch((error) => console.error("Error updating profile: ", error));
+
+  }
+}
+
+export default UserProfile;
+
+ */
+
+
+import Component from "../spa/component.js";
+import { showToast } from "../utils/toast.js";
+import { getCookie } from "../utils/cookie.js";
+
+const isAlpha = (str) => /^[A-Za-zÀ-ÿ\u00C0-\u017F]+$/.test(str);
+const isAlphaSpace = (str) => /^[A-Za-zÀ-ÿ\u00C0-\u017F\s]+$/.test(str);
+
+class UserProfile extends Component {
+  constructor() {
+    super("static/html/profile.html");
+    this.selectedFile = null;
+    this.originalData = {};
+  }
+
+  onInit() {
+    if (!window.loggedInUserId) {
+      console.error("User ID is not defined.");
+      return;
+    }
+
+    const form = this.querySelector("form");
+    const firstNameInput = form.querySelector("#name1");
+    const lastNameInput = form.querySelector("#name2");
+    const emailInput = form.querySelector("#email");
+    const saveButton = this.querySelector("button[type='submit']");
+    const firstNameError = form.querySelector("#firstname_error");
+    const lastNameError = form.querySelector("#lastname_error");
+
+    if (!form || !firstNameInput || !lastNameInput || !emailInput || !saveButton) {
+      console.error("Some form elements were not found. Check HTML structure.");
+      return;
+    }
+
+    this.firstNameInput = firstNameInput;
+    this.lastNameInput = lastNameInput;
+    this.emailInput = emailInput;
+    this.saveButton = saveButton;
+    this.firstNameError = firstNameError;
+    this.lastNameError = lastNameError;
+
+    fetch(`/api/user/${window.loggedInUserId}/`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          console.error("Error uploading user info:", data.error);
+          return;
+        }
+
+        document.getElementById("dname").value = data.username || "";
+        this.firstNameInput.value = data.first_name || "";
+        this.lastNameInput.value = data.last_name || "";
+        this.emailInput.value = data.email || "";
+        document.getElementById("profileImage").src =
+          data.avatar_url ||
+          "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
+
+        this.originalData = {
+          first_name: data.first_name || "",
+          last_name: data.last_name || "",
+          email: data.email || "",
+        };
+
+        this.updateSubmitState();
+      })
+      .catch((error) => console.error("Error loading user:", error));
+
+    this.firstNameInput.addEventListener("input", this.updateSubmitState.bind(this));
+    this.lastNameInput.addEventListener("input", this.updateSubmitState.bind(this));
+    this.emailInput.addEventListener("input", this.updateSubmitState.bind(this));
+    this.firstNameInput.addEventListener("blur", () => this.validateFirstName());
+    this.lastNameInput.addEventListener("blur", () => this.validateLastName());
+
+    this.saveButton.disabled = true;
+
+    document.getElementById("changeImageBtn").addEventListener("click", this.openAvatarSelection.bind(this));
+    document.getElementById("resetImageBtn").addEventListener("click", this.resetAvatar.bind(this));
+
+    form.addEventListener("submit", this.updateProfile.bind(this));
+  }
+
+  isChanged() {
+    return (
+      this.firstNameInput.value.trim() !== this.originalData.first_name ||
+      this.lastNameInput.value.trim() !== this.originalData.last_name ||
+      this.emailInput.value.trim() !== this.originalData.email
+    );
+  }
+
+  validateFirstName() {
+    const value = this.firstNameInput.value.trim();
+    let errorMsg = "";
+
+    if (value.length > 15) {
+      errorMsg = "First name is too long.";
+    } else if (value && !isAlpha(value)) {
+      errorMsg = "First name must contain only letters.";
+    }
+
+    if (errorMsg) {
+      this.firstNameError.textContent = errorMsg;
+      this.firstNameError.classList.remove("d-none");
+      return false;
+    } else {
+      this.firstNameError.classList.add("d-none");
+      return true;
+    }
+  }
+
+  validateLastName() {
+    const value = this.lastNameInput.value.trim();
+    let errorMsg = "";
+
+    if (value.length > 30) {
+      errorMsg = "Last name is too long.";
+    } else if (value && !isAlphaSpace(value)) {
+      errorMsg = "Last name must contain only letters and spaces.";
+    }
+
+    if (errorMsg) {
+      this.lastNameError.textContent = errorMsg;
+      this.lastNameError.classList.remove("d-none");
+      return false;
+    } else {
+      this.lastNameError.classList.add("d-none");
+      return true;
+    }
+  }
+
+  updateSubmitState() {
+    const isValidFirstName = this.validateFirstName();
+    const isValidLastName = this.validateLastName();
+    const isEmailFilled = this.emailInput.value.trim() !== "";
+    const hasChanges = this.isChanged();
+
+    this.saveButton.disabled = !(hasChanges && isValidFirstName && isValidLastName && isEmailFilled);
+  }
+
+  updateProfile(event) {
+    event.preventDefault();
+
+    if (!navigator.onLine) {
+      showToast("Offline: Cannot save changes", "warning");
+      return;
+    }
+
+    const updatedData = {
+      first_name: this.firstNameInput.value.trim(),
+      last_name: this.lastNameInput.value.trim(),
+      email: this.emailInput.value.trim(),
+    };
+
+    fetch(`/api/user/${window.loggedInUserId}/update/`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: JSON.stringify(updatedData),
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          showToast("Error: " + data.error, "danger", "Profile");
+        } else {
+          showToast("Updated profile!", "success", "Profile");
+          this.originalData = { ...updatedData };
+          this.saveButton.disabled = true;
+          this.updateSubmitState();
+        }
+      })
+      .catch((error) => console.error("Error updating profile: ", error));
+  }
+
+  openAvatarSelection() {
+    if (!navigator.onLine) {
+      showToast("Offline: Cannot change profile photo", "warning");
+      return;
+    }
+
+    const avatarModalElement = document.getElementById("avatarModal");
+    if (!avatarModalElement) {
+      console.error("Error: Modal not found!");
+      return;
+    }
+
+    const avatarModal = new bootstrap.Modal(avatarModalElement);
+    avatarModal.show();
+
+    document.querySelectorAll(".avatar-option").forEach((option) => {
+      option.addEventListener("click", () => {
+        document.getElementById("profileImage").src = option.dataset.avatarUrl;
+        this.selectedFile = null;
+      });
+    });
+
+    const uploadInput = document.getElementById("uploadAvatarBtn");
+    if (uploadInput) {
+      uploadInput.addEventListener("change", this.handleFileUpload.bind(this));
+    }
+
+    document.getElementById("saveAvatarBtn").addEventListener("click", () => {
+      const selectedAvatarUrl = document.getElementById("profileImage").src;
+      this.updateAvatar(selectedAvatarUrl);
+      avatarModal.hide();
+    });
+  }
+
+  handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) {
+      console.error("No file selected.");
+      return;
+    }
+
+    this.selectedFile = file;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById("profileImage").src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  updateAvatar(selectedAvatarUrl = null) {
+    if (!navigator.onLine) {
+      showToast("Offline: Cannot update avatar", "warning");
+      return;
+    }
+
+    const formData = new FormData();
+
+    if (this.selectedFile) {
+      formData.append("avatar", this.selectedFile);
+    } else if (selectedAvatarUrl) {
+      formData.append("avatar_url", selectedAvatarUrl);
+    } else {
+      console.error("No avatar selected.");
+      return;
+    }
+
+    fetch(`/api/user/${window.loggedInUserId}/update_avatar/`, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: formData,
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          showToast("Error updating avatar!", "danger");
+        } else {
+          showToast("Updated Avatar!", "success", "Profile");
+          document.getElementById("profileImage").src = data.avatar_url;
+          window.loggedInAvatarUrl = data.avatar_url;
+
+          const headerComponent = document.querySelector("header");
+          if (headerComponent && headerComponent.component) {
+            headerComponent.component.updateHeader(
+              window.loggedInUserName,
+              data.avatar_url
+            );
+          }
+        }
+      })
+      .catch((error) => console.error("Error updating avatar: ", error));
+  }
+
+  resetAvatar() {
+    if (!navigator.onLine) {
+      showToast("Offline: Cannot reset avatar", "warning");
+      return;
+    }
+    const defaultAvatar =
+      "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
+    document.getElementById("profileImage").src = defaultAvatar;
+    this.updateAvatar(defaultAvatar);
   }
 }
 
