@@ -57,7 +57,7 @@ const ft_stop = function(player_number)
         this.p1.score = this.points_to_win;
         this.p2.score = 0;
     }
-    else if (player_number == 3) {
+    else if (player_number == 4) {
         if (this.playerNumber == 1) {
             this.p1.score = this.points_to_win;
             this.p2.score = 0;
@@ -67,7 +67,7 @@ const ft_stop = function(player_number)
             this.p2.score = this.points_to_win;
         }
     }
-    else if (player_number == 4) {
+    else if (player_number == 5) {
         if (this.playerNumber == 1) {
             this.p1.score = 0;
             this.p2.score = this.points_to_win;
@@ -79,7 +79,7 @@ const ft_stop = function(player_number)
     }
     this.initial_conditions();
     this.paint_stop();
-    if ((this.playerNumber == 1 || player_number == 3) && player_number != 4)
+    if ((this.playerNumber == 1 || player_number == 4) && player_number != 5)
         this.sendGameOver();
 }
 

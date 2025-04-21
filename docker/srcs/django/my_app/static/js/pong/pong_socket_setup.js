@@ -26,7 +26,7 @@ const setupPongSocket = function()
     };
     window.addEventListener("offline", (event) => {
         console.log("browser offline");
-        self.ft_stop(4);
+        self.ft_stop(5);
         setTimeout(() => {
             pongSocket.close();
         }, 1000); // 10ms delay
