@@ -10,6 +10,8 @@ class UserProfile extends Component {
     super("static/html/profile.html");
     this.selectedFile = null;
     this.avatarSaved = false;
+    this.uploadListenerAdded = false;
+    
   }
 
   onInit() {
@@ -166,8 +168,13 @@ class UserProfile extends Component {
     const uploadInput = document.getElementById("uploadAvatarBtn");
     if (uploadInput) {
       uploadInput.value = "";
+
+    if (!this.uploadListenerAdded) {
       uploadInput.addEventListener("change", this.handleFileUpload.bind(this));
+      this.uploadListenerAdded = true;
     }
+
+  }
 
     const newSaveBtn = document.getElementById("saveAvatarBtn");
 
