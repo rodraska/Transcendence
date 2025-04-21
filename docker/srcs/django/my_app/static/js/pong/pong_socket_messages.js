@@ -63,8 +63,6 @@ const handleSocketMessage = function(data)
         case 'game_over':
             this.closePongSocket();
             break;
-            //window.currentMatchData = null;
-            //Route.go("/play");
 
         default:
             console.log('Unknown message type:', type);
@@ -191,6 +189,8 @@ const sendGameOver = function() {
         'match_id': this.matchData.matchId,
         'score': this.score,
     }))
+
+    console.log('send game over 2');
 }
 
 export { handleSocketMessage, checkSocket, setMatchData, sendPaddlePosition, sendBallUpdate, sendScoreUpdate, sendGameControl, sendMatchData, sendGameOver }

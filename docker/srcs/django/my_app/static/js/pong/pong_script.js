@@ -49,6 +49,7 @@ const ft_stop = function(player_number)
     this.isOver = true;
     this.score = 'forfeit';
     cancelAnimationFrame(this.animationID);
+    console.log('playerNumber: ', this.playerNumber);
     if (player_number == 1) {
         this.p1.score = 0;
         this.p2.score = this.points_to_win;

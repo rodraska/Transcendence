@@ -524,6 +524,22 @@ class PongConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         message_type = data.get('type')
 
+        if message_type == 'game_over':
+            winner_username = data.get('winner')
+            match_id = data.get('match_id')
+            score = data.get('score')
+            result = await process_game_end(match_id, winner_username, score)
+            logging.info("result  %s", result)
+            
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_over',
+                    'result': result
+                }
+            )
+
         if self.room_group_name in self.game_players and self.game_players[self.room_group_name] < 2:
             return
 
@@ -602,20 +618,6 @@ class PongConsumer(AsyncWebsocketConsumer):
                     'sender_channel_name': self.channel_name
                 }
             )
-
-        elif message_type == 'game_over':
-            winner_username = data.get('winner')
-            match_id = data.get('match_id')
-            score = data.get('score')
-            result = await process_game_end(match_id, winner_username, score)
-
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'game_over',
-                    'result': result
-                }
-            )
     
     async def player_disconnect(self, event):
         await self.send(text_data=json.dumps({
@@ -664,6 +666,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             }))
 
     async def game_over(self, event):
+        logging.info("async game over")
         await self.send(text_data=json.dumps({
             'type': 'game_over',
             'result': event['result']
@@ -710,6 +713,21 @@ class CurveConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message_type = data.get('type')
+
+        if message_type == 'game_over':
+            winner_username = data.get('winner')
+            match_id = data.get('match_id')
+            score = data.get('score')
+            result = await process_game_end(match_id, winner_username, score)
+            logging.info("result  %s", result)
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_over',
+                    'result': result
+                }
+            )
 
         if self.room_group_name in self.game_players and self.game_players[self.room_group_name] < 2:
             return
@@ -803,20 +821,6 @@ class CurveConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-        elif message_type == 'game_over':
-            winner_username = data.get('winner')
-            match_id = data.get('match_id')
-            score = data.get('score')
-            result = await process_game_end(match_id, winner_username, score)
-
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'game_over',
-                    'result': result
-                }
-            )
-
     async def player_disconnect(self, event):
         await self.send(text_data=json.dumps({
             'type': 'player_disconnect'
@@ -874,6 +878,7 @@ class CurveConsumer(AsyncWebsocketConsumer):
             }))
 
     async def game_over(self, event):
+        logging.info("async game over")
         await self.send(text_data=json.dumps({
             'type': 'game_over',
             'result': event['result']
