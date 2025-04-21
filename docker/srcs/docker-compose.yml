@@ -46,7 +46,7 @@ services:
       - ./django/staticfiles:/app/staticfiles
 
   adminer:
-    image: adminer
+    image: adminer:5.2.1
     container_name: adminer
     restart: always
     ports:

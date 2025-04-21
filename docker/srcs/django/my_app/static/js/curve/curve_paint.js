@@ -8,7 +8,9 @@ const paint_gg = function()
     if (this.game_winner == 0)
     {
         this.ctx.fillStyle = 'white';
-        this.ctx.fillText(this.players[this.round_winner - 1].name + " Wins This Round", this.width / 2, this.height / 2);
+        if (this.players[this.round_winner - 1]) {
+            this.ctx.fillText(this.players[this.round_winner - 1].name + " Wins This Round", this.width / 2, this.height / 2);
+        }
     }
     else
     {

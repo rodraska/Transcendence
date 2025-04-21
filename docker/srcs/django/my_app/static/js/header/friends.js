@@ -1,4 +1,5 @@
 import Component from "../spa/component.js";
+import Route from "../spa/route.js";
 import {
   getOrCreateSocket,
   addSocketListener,
@@ -18,6 +19,11 @@ class FriendsPage extends Component {
   }
 
   onInit() {
+    if (!window.loggedInUserName) {
+        Route.go('/login');
+        return;
+    }
+
     this.friendsList = document.getElementById("friends-list");
     this.fetchFriends();
     this.setupSearch();
