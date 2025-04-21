@@ -6,7 +6,7 @@ const handleSocketMessage = function(data)
     {
         case 'player_disconnect':
             console.log('player_disconnect');
-            this.ft_stop(4);
+            this.ft_stop(3);
             break;
         case 'player_state':
             const player = data.player;
