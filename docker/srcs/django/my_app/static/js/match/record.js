@@ -1,4 +1,5 @@
 import Component from "../spa/component.js";
+import Route from "../spa/route.js";
 
 class Record extends Component {
   constructor() {
@@ -7,6 +8,11 @@ class Record extends Component {
   }
 
   async onInit() {
+    if (!window.loggedInUserName) {
+        Route.go('/login');
+        return;
+    }
+
     this.listElement = this.querySelector("#match-record-list");
     this.statsElement = this.querySelector("#stats-by-game-type");
     this.filterElement = this.querySelector("#game-filter");

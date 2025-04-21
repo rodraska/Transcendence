@@ -40,6 +40,13 @@ class TournamentPage extends Component {
   }
 
   async onInit() {
+
+    if (!window.loggedInUserName)
+    {
+        Route.go('/login');
+        return;
+    }
+
     this.playerCountSelect = document.getElementById("playerCount");
     this.playersContainer = document.getElementById("playersContainer");
     this.startButton = document.getElementById("startTournament");

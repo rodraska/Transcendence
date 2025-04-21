@@ -1,4 +1,5 @@
 import Component from "../spa/component.js";
+import Route from "../spa/route.js";
 import { initializePongGameProperties } from "./pong_single_game_properties.js";
 import "./pong_single_events.js";
 
@@ -10,6 +11,11 @@ class PongSingle extends Component {
   }
 
   onInit() {
+    if (!window.loggedInUserName) {
+        Route.go('/login');
+        return;
+    }
+
     window.pong_game = this;
     this.getPongHtmlElements(0);
     this.gameControlEvents();

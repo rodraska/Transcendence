@@ -1,4 +1,5 @@
 import Component from "../spa/component.js";
+import Route from "../spa/route.js";
 import { showToast } from "../utils/toast.js";
 import { getCookie } from "../utils/cookie.js";
 
@@ -11,12 +12,13 @@ class UserProfile extends Component {
     this.selectedFile = null;
     this.avatarSaved = false;
     this.uploadListenerAdded = false;
-    
+
   }
 
   onInit() {
     if (!window.loggedInUserId) {
       console.error("User ID is not defined.");
+      Route.go('/login');
       return;
     }
 
@@ -188,7 +190,7 @@ class UserProfile extends Component {
     this.updateAvatar(selectedAvatarUrl);
     avatarModal.hide();
     });
-    
+
     this.toggleSaveAvatarButton();
   }
 
@@ -202,15 +204,15 @@ class UserProfile extends Component {
   handleFileUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
-  
+
     const maxFileSize = 1 * 1024 * 1024; // 1MB
     if (file.size > maxFileSize) {
       showToast("Image is too large. Max size is 1MB.", "warning");
       return;
     }
-  
+
     this.selectedFile = file;
-  
+
     const reader = new FileReader();
     reader.onload = (e) => {
       document.getElementById("profileImage").src = e.target.result;
@@ -218,7 +220,7 @@ class UserProfile extends Component {
     };
     reader.readAsDataURL(file);
   }
-  
+
 
   updateAvatar(selectedAvatarUrl = null) {
     if (!navigator.onLine) {
@@ -251,7 +253,7 @@ class UserProfile extends Component {
         } else {
           showToast("Updated Avatar!", "success", "Profile");
           window.loggedInAvatarUrl = data.avatar_url;
-          
+
           const headerComponent = document.querySelector("header");
           if (headerComponent && headerComponent.component) {
             headerComponent.component.updateHeader(window.loggedInUserName, data.avatar_url);
@@ -311,4 +313,3 @@ class UserProfile extends Component {
 }
 
 export default UserProfile;
-

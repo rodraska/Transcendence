@@ -1,4 +1,5 @@
 import Component from "../spa/component.js"
+import Route from "../spa/route.js";
 import { initializeCurveGameProperties } from "./curve_single_game_properties.js"
 //import "./curve_single_events.js"
 
@@ -12,6 +13,11 @@ class CurveSingle extends Component
     }
 
     onInit() {
+        if (!window.loggedInUserName) {
+            Route.go('/login');
+            return;
+        }
+
         window.curve_game = this;
         this.getCurveHtmlElements(0);
         this.curveGameControlEvents();
