@@ -478,9 +478,15 @@ def process_game_end(match_id, winner_username, score):
 
 class PongConsumer(AsyncWebsocketConsumer):
 
+    game_players = {}
+
     async def connect(self):
         self.game_id = self.scope['url_route']['kwargs']['game_id']
         self.room_group_name = f'pong_{self.game_id}'
+
+        if self.room_group_name not in self.game_players:
+            self.game_players[self.room_group_name] = 0
+        self.game_players[self.room_group_name] += 1
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -489,14 +495,21 @@ class PongConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
         print(f"New client {self}")
-        logging.info("New client %s %s", self, self.scope)
+        logging.info("New client %s", self)
 
     async def disconnect(self, close_code):
-        logging.info("losing %s %s", self, self.scope)
+        logging.info("losing %s", self)
+
+        if self.room_group_name in self.game_players:
+            self.game_players[self.room_group_name] -= 1
+            if self.game_players[self.room_group_name] <= 0:
+                del self.game_players[self.room_group_name]
+
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
+
         logging.info("removed from group %s", self)
 
         await self.channel_layer.group_send(
@@ -511,6 +524,9 @@ class PongConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         message_type = data.get('type')
 
+        if self.room_group_name in self.game_players and self.game_players[self.room_group_name] < 2:
+            return
+
         if message_type == 'player_disconnect':
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -519,7 +535,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-        elif message_type == 'paddle_position':
+        if message_type == 'paddle_position':
             player = data.get('player')
             position = data.get('position')
 
@@ -655,9 +671,15 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 class CurveConsumer(AsyncWebsocketConsumer):
 
+    game_players = {}
+
     async def connect(self):
         self.game_id = self.scope['url_route']['kwargs']['game_id']
         self.room_group_name = f'curve_{self.game_id}'
+
+        if self.room_group_name not in self.game_players:
+            self.game_players[self.room_group_name] = 0
+        self.game_players[self.room_group_name] += 1
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -667,6 +689,11 @@ class CurveConsumer(AsyncWebsocketConsumer):
         await self.accept()
     
     async def disconnect(self, close_code):
+
+        if self.room_group_name in self.game_players:
+            self.game_players[self.room_group_name] -= 1
+            if self.game_players[self.room_group_name] <= 0:
+                del self.game_players[self.room_group_name]
 
         await self.channel_layer.group_discard(
             self.room_group_name,
@@ -683,6 +710,9 @@ class CurveConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message_type = data.get('type')
+
+        if self.room_group_name in self.game_players and self.game_players[self.room_group_name] < 2:
+            return
 
         if message_type == 'player_disconnect':
             await self.channel_layer.group_send(
@@ -836,6 +866,7 @@ class CurveConsumer(AsyncWebsocketConsumer):
         }))
 
     async def match_data(self, event):
+
         if self.channel_name != event.get('sender_channel_name'):
             await self.send(text_data=json.dumps({
                 'type': 'match_data',

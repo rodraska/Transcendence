@@ -79,7 +79,7 @@ const initializePongGameProperties = function()
         setupPongSocket: setupPongSocket,
         closePongSocket: closePongSocket,
         sendMatchData: sendMatchData,
-        sendGameOver: sendGameOver
+        sendGameOver: sendGameOver,
     }
 }
 
