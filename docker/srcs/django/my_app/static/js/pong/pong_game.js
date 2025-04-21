@@ -1,4 +1,5 @@
 import Component from "../spa/component.js"
+import Route from "../spa/route.js";
 import { initializePongGameProperties } from "./pong_game_properties.js"
 import "./pong_events.js"
 
@@ -14,6 +15,11 @@ class PongGame extends Component
     }
 
     onInit() {
+        if (!window.loggedInUserName) {
+            Route.go('/login');
+            return;
+        }
+
         window.pong_game = this;
         this.getPongHtmlElements(0);
         this.setupPongSocket();

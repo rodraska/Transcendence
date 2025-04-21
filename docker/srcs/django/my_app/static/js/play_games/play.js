@@ -29,6 +29,12 @@ class Play extends Component {
   }
 
   async onInit() {
+    if (!window.loggedInUserName)
+    {
+      Route.go('/login');
+      return;
+    }
+
     window.playInstance = this;
     this.boundUnloadHandler = () => {
       this.cancelSearch();
