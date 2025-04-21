@@ -25,6 +25,13 @@ const setupCurveSocket =function()
         //console.log("Curve socket onmessage:", data);
         self.handleSocketMessage(data);
     }
+    window.addEventListener("offline", (event) => {
+        console.log("browser offline");
+        self.ft_stop(4);
+        setTimeout(() => {
+            curveSocket.close();
+        }, 1000); // 10ms delay
+    });
 }
 
 const closeCurveSocket = function() {

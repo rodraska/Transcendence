@@ -57,9 +57,19 @@ const ft_stop = function(player_number)
         this.p1.score = this.points_to_win;
         this.p2.score = 0;
     }
+    else if (player_number == 3 || player_number == 4) {
+        if (this.playerNumber == 1) {
+            this.p1.score = this.points_to_win;
+            this.p2.score = 0;
+        }
+        else if (this.playerNumber == 2) {
+            this.p1.score = 0;
+            this.p2.score = this.points_to_win;
+        }
+    }
     this.initial_conditions();
     this.paint_stop();
-    if (this.playerNumber == 1)
+    if ((this.playerNumber == 1 || player_number == 3) && player_number != 4)
         this.sendGameOver();
 }
 

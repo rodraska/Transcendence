@@ -75,6 +75,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 
 ACCOUNT_LOGOUT_ON_GET = True
 
+"""
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -115,6 +116,7 @@ LOGGING = {
         },
     },
 }
+"""
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -101,8 +101,17 @@ const ft_stop = function(player_number)
         this.game_winner = 2;
     else if (player_number == 2)
         this.game_winner = 1;
+    else if (player_number == 3) {
+        this.game_winner = this.playerNumber;
+    }
+    else if (player_number == 4) {
+        if (this.playerNumber == 1)
+            this.game_winner = 2;
+        else if (this.playerNumber == 2)
+            this.game_winner = 1;
+    }
     this.score = 'forfeit';
-    if (player_number == this.playerNumber)
+    if ((player_number == this.playerNumber || player_number == 3) && player_number != 4)
         this.sendGameOver();
     return (this.final_paint());
 }

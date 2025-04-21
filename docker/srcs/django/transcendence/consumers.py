@@ -1,5 +1,6 @@
 import json
 import random
+import logging
 from datetime import timedelta
 from django.utils import timezone
 from channels.db import database_sync_to_async
@@ -487,18 +488,38 @@ class PongConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
+        print(f"New client {self}")
+        logging.info("New client %s %s", self, self.scope)
 
     async def disconnect(self, close_code):
+        logging.info("losing %s %s", self, self.scope)
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
+        logging.info("removed from group %s", self)
+
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'player_disconnect',
+            }
+        )
+        logging.info("sent disconnect packet %s", self)
 
     async def receive(self, text_data):
         data = json.loads(text_data)
         message_type = data.get('type')
 
-        if message_type == 'paddle_position':
+        if message_type == 'player_disconnect':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'player_disconnect',
+                }
+            )
+
+        elif message_type == 'paddle_position':
             player = data.get('player')
             position = data.get('position')
 
@@ -580,6 +601,11 @@ class PongConsumer(AsyncWebsocketConsumer):
                 }
             )
     
+    async def player_disconnect(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'player_disconnect'
+        }))
+    
     async def paddle_position(self, event):
         if self.channel_name != event.get('sender_channel_name'):
             await self.send(text_data=json.dumps({
@@ -591,7 +617,7 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def game_control(self, event):
         action = event.get('action')
         player_number = event.get('player_number')
-    
+
         await self.send(text_data=json.dumps({
             'type': 'game_control',
             'action': action,
@@ -647,9 +673,24 @@ class CurveConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'player_disconnect',
+            }
+        )
+
     async def receive(self, text_data):
         data = json.loads(text_data)
         message_type = data.get('type')
+
+        if message_type == 'player_disconnect':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'player_disconnect',
+                }
+            )
 
         if message_type == 'player_state':
             player = data.get('player')
@@ -745,6 +786,12 @@ class CurveConsumer(AsyncWebsocketConsumer):
                     'result': result
                 }
             )
+
+    async def player_disconnect(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'player_disconnect'
+        }))
+    
 
     async def player_state(self, event):
         if self.channel_name != event.get('sender_channel_name'):

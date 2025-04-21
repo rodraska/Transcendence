@@ -4,6 +4,10 @@ const handleSocketMessage = function(data)
 
     switch (type)
     {
+        case 'player_disconnect':
+            console.log('player_disconnect');
+            this.ft_stop(3);
+            break;
         case 'player_state':
             const player = data.player;
             const targetPlayer = this.players[player.id - 1];

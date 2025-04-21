@@ -16,7 +16,7 @@ const setupPongSocket = function()
     };
 
     pongSocket.onclose = function(e) {
-        console.log('Pong socket closed:', e.code, e.reason)
+        console.log('Pong socket closed:', e.code, e.reason);
     };
 
     pongSocket.onmessage = function(e) {
@@ -24,7 +24,15 @@ const setupPongSocket = function()
         //console.log("Pong socket onmessage:", data);
         self.handleSocketMessage(data);
     };
+    window.addEventListener("offline", (event) => {
+        console.log("browser offline");
+        self.ft_stop(4);
+        setTimeout(() => {
+            pongSocket.close();
+        }, 1000); // 10ms delay
+    });
 }
+
 
 const closePongSocket = function() {
     if (this.pongSocket && this.pongSocket.readyState !== WebSocket.CLOSED) {
