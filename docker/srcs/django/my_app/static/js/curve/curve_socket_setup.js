@@ -21,16 +21,28 @@ const setupCurveSocket =function()
 
     curveSocket.onmessage = function(e)
     {
-        const data = JSON.parse(e.data);
-        //console.log("Curve socket onmessage:", data);
-        self.handleSocketMessage(data);
+        try {
+            const data = JSON.parse(e.data);
+            self.handleSocketMessage(data);
+        }
+        catch (error) {
+            console.log("error socket closing");
+            //curveSocket.close();
+            setTimeout(() => {
+                self.ft_stop(4);
+            }, 1000);
+            setTimeout(() => {
+                curveSocket.close();
+            }, 1000);
+        }
+        
     }
     window.addEventListener("offline", (event) => {
         console.log("browser offline");
         self.ft_stop(4);
         setTimeout(() => {
             curveSocket.close();
-        }, 1000); // 10ms delay
+        }, 1000);
     });
 }
 

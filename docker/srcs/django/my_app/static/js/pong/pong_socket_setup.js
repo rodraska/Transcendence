@@ -20,16 +20,27 @@ const setupPongSocket = function()
     };
 
     pongSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        //console.log("Pong socket onmessage:", data);
-        self.handleSocketMessage(data);
+        try {
+            const data = JSON.parse(e.data);
+            self.handleSocketMessage(data);
+        }
+        catch(error) {
+            console.log("error socket closing");
+            setTimeout(() => {
+                self.ft_stop(5);
+            }, 1000);
+            setTimeout(() => {
+                pongSocket.close();
+            }, 1000);
+        }
+        
     };
     window.addEventListener("offline", (event) => {
         console.log("browser offline");
         self.ft_stop(5);
         setTimeout(() => {
             pongSocket.close();
-        }, 1000); // 10ms delay
+        }, 1000);
     });
 }
 
