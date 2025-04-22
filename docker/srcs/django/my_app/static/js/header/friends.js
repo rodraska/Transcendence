@@ -20,10 +20,9 @@ class FriendsPage extends Component {
 
   onInit() {
     if (!window.loggedInUserName) {
-        Route.go('/login');
-        return;
+      Route.go("/login");
+      return;
     }
-
     this.friendsList = document.getElementById("friends-list");
     this.fetchFriends();
     this.setupSearch();
@@ -41,7 +40,6 @@ class FriendsPage extends Component {
 
   fetchFriends() {
     fetch(`/api/all-users/?target_user_id=${window.loggedInUserId}`, {
-      method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
     })
@@ -75,16 +73,17 @@ class FriendsPage extends Component {
 
   displayFriends(page) {
     this.friendsList.innerHTML = "";
-    const startIndex = (page - 1) * this.friendsPerPage;
-    const endIndex = page * this.friendsPerPage;
-    const currentFriends = this.friendsData.slice(startIndex, endIndex);
+    const start = (page - 1) * this.friendsPerPage;
+    const end = page * this.friendsPerPage;
+    const slice = this.friendsData.slice(start, end);
 
-    currentFriends.forEach((friend) => {
-      const friendItem = document.createElement("li");
-      friendItem.className = "list-group-item d-flex align-items-center";
-      friendItem.innerHTML = `
+    slice.forEach((friend) => {
+      const li = document.createElement("li");
+      li.className = "list-group-item d-flex align-items-center";
+
+      li.innerHTML = `
         <img src="${friend.photo}" class="friend-photo" alt="Profile">
-        <span class="me-2">${friend.name}</span>
+        <span class="friend-name me-2">${friend.name}</span>
         <span class="status ${friend.status} me-2"></span>
         <div class="friend-actions ms-auto">
           ${
@@ -99,93 +98,129 @@ class FriendsPage extends Component {
         </div>
       `;
 
-      const photo = friendItem.querySelector(".friend-photo");
-      let tooltip = null;
-
-      function closeTooltip(e) {
-        if (tooltip && !tooltip.contains(e.target) && e.target !== photo) {
-          tooltip.remove();
-          tooltip = null;
-        }
-      }
-
-      photo.addEventListener("click", async () => {
+      const nameEl = li.querySelector(".friend-name");
+      nameEl.style.cursor = "pointer";
+      nameEl.addEventListener("click", () => {
         if (!friend.isFriend) return;
-        if (tooltip) {
-          tooltip.remove();
-          tooltip = null;
-          return;
-        }
-        tooltip = document.createElement("div");
-        tooltip.className = "user-tooltip";
-        tooltip.style.position = "absolute";
-        tooltip.style.background = "#fff";
-        tooltip.style.border = "1px solid #ccc";
-        tooltip.style.padding = "10px";
-        tooltip.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
-        tooltip.style.zIndex = "1000";
-        document.body.appendChild(tooltip);
-        const stats = await fetchUserStats(friend.id, friend.name);
-        tooltip.innerHTML =
-          stats && Object.keys(stats).length
-            ? `<strong>${friend.name}</strong><br>${Object.entries(stats)
-                .map(([g, v]) => {
-                  const winRate =
-                    v.total > 0 ? Math.round((v.wins / v.total) * 100) : 0;
-                  return `<span style="display:inline-block;margin-bottom:4px;">
-                    ${g} → Games: ${v.total} Wins: ${winRate}%
-                  </span>`;
-                })
-                .join("<br>")}`
-            : `<strong>${friend.name}</strong><br><em>No games played.</em>`;
-        const rect = photo.getBoundingClientRect();
-        tooltip.style.left = `${rect.left + window.scrollX + 20}px`;
-        tooltip.style.top = `${rect.top + window.scrollY + 20}px`;
-        document.addEventListener("click", closeTooltip);
+        this.showUserDetails(friend);
       });
 
-      this.setupFriendActions(friendItem, friend);
-      this.friendsList.appendChild(friendItem);
+      this.setupFriendActions(li, friend);
+      this.friendsList.appendChild(li);
     });
+  }
+
+  async showUserDetails(friend) {
+    const modalTitle = document.getElementById("userDetailModalTitle");
+    const modalBody = document.getElementById("userDetailModalBody");
+
+    try {
+      const res = await fetch(`/api/match_record/${friend.id}/`, {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to load records");
+      const data = await res.json();
+
+      const finished = (data.matches || []).filter((m) => m.ended_on && m.winner);
+
+      const byType = finished.reduce((acc, m) => {
+        acc[m.game_type] = acc[m.game_type] || [];
+        acc[m.game_type].push(m);
+        return acc;
+      }, {});
+
+      const records = Object.entries(byType)
+        .map(([type, arr]) => {
+          const total = arr.length;
+          const wins = arr.filter((m) => m.winner === friend.name).length;
+          const losses = total - wins;
+          return `<p>
+          <strong>${type} Record:</strong>
+          ${total > 0 ? `${wins}W / ${losses}L` : `No record`}
+        </p>`;
+        })
+        .join("");
+
+      const lastFive = finished
+        .sort((a, b) => new Date(b.ended_on) - new Date(a.ended_on))
+        .slice(0, 5);
+
+      const lastFiveHTML = lastFive.length
+        ? `<ul>${lastFive
+            .map((m) => {
+              const d = new Date(m.ended_on);
+              const dateStr = d.toLocaleDateString("en-GB");
+              const timeStr = d.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              const opponent =
+                m.player1 === friend.name ? m.player2 : m.player1;
+              return `<li>
+              <strong>${m.game_type}</strong>
+              on ${dateStr} ${timeStr},
+              vs ${opponent} — Winner: ${m.winner}
+            </li>`;
+            })
+            .join("")}</ul>`
+        : `<p>No matches played.</p>`;
+
+      modalTitle.textContent = friend.name;
+      modalBody.innerHTML = `
+        <div class="d-flex align-items-center mb-3">
+          <img src="${friend.photo}"
+               alt="Avatar"
+               style="width:80px;height:80px;border-radius:50%;margin-right:15px;">
+          <h4 class="m-0">${friend.name}</h4>
+        </div>
+        ${records}
+        <hr>
+        <h5>Last 5 Matches</h5>
+        ${lastFiveHTML}
+      `;
+    } catch (err) {
+      modalTitle.textContent = friend.name;
+      modalBody.innerHTML = `<p class="text-danger">Error loading records.</p>`;
+    }
+
+    new bootstrap.Modal(document.getElementById("userDetailModal")).show();
   }
 
   setupFriendActions(friendItem, friend) {
     friendItem
       .querySelector(".is-friend-btn")
-      ?.addEventListener("click", () => {
+      ?.addEventListener("click", () =>
         this.showConfirmationModal(
           "Unfriend",
-          `Are you sure you want to remove ${friend.name} from your friends' list?`,
+          `Remove ${friend.name} from your friends?`,
           "unfriend",
           friend.id
-        );
-      });
+        )
+      );
     friendItem
       .querySelector(".pending-request-btn")
-      ?.addEventListener("click", () => {
+      ?.addEventListener("click", () =>
         this.showConfirmationModal(
           "Cancel Friend Request",
-          `Are you sure you want to cancel the friend request to ${friend.name}?`,
+          `Cancel friend request to ${friend.name}?`,
           "cancel",
           friend.id
-        );
-      });
+        )
+      );
     friendItem
       .querySelector(".send-request-btn")
-      ?.addEventListener("click", () => {
-        this.action("send", friend.id);
-      });
-    friendItem.querySelector(".accept-btn")?.addEventListener("click", () => {
-      this.action("accept", friend.id);
-    });
-    friendItem.querySelector(".decline-btn")?.addEventListener("click", () => {
-      this.action("decline", friend.id);
-    });
+      ?.addEventListener("click", () => this.action("send", friend.id));
+    friendItem
+      .querySelector(".accept-btn")
+      ?.addEventListener("click", () => this.action("accept", friend.id));
+    friendItem
+      .querySelector(".decline-btn")
+      ?.addEventListener("click", () => this.action("decline", friend.id));
   }
 
   action(actionType, userId) {
     if (!navigator.onLine) {
-      showToast("No internet connection. Cannot perform action.", "danger");
+      showToast("No internet connection.", "danger");
       return;
     }
     if (actionType === "send") {
@@ -230,6 +265,8 @@ class FriendsPage extends Component {
     const next = document.getElementById("next-page");
     if (prev) {
       prev.style.visibility = this.currentPage > 1 ? "visible" : "hidden";
+      next.style.visibility =
+        this.currentPage < totalPages ? "visible" : "hidden";
       prev.onclick = () => {
         if (this.currentPage > 1) {
           this.currentPage--;
@@ -294,30 +331,6 @@ class FriendsPage extends Component {
     this.actionType = actionType;
     this.confirmationModal.show();
   }
-}
-
-async function fetchUserStats(userId, username) {
-  try {
-    const r = await fetch(`/api/match_record/${userId}/`, {
-      credentials: "include",
-    });
-    if (!r.ok) throw new Error();
-    const data = await r.json();
-    return data.matches ? calculateStats(data.matches, username) : null;
-  } catch {
-    return null;
-  }
-}
-
-function calculateStats(matches, username) {
-  const stats = {};
-  matches.forEach((m) => {
-    const g = m.game_type;
-    if (!stats[g]) stats[g] = { total: 0, wins: 0 };
-    stats[g].total += 1;
-    if (m.winner === username) stats[g].wins += 1;
-  });
-  return stats;
 }
 
 export default FriendsPage;

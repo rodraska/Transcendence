@@ -1,155 +1,193 @@
 <style>
-	.status {
-		width: 12px;
-		height: 12px;
-		border-radius: 50%;
-		display: inline-block;
-		margin-left: 10px;
-	}
+  .status {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 10px;
+  }
 
-	.status.online {
-		background-color: #28a745;
-	}
+  .status.online {
+    background-color: #28a745;
+  }
 
-	.status.offline {
-		background-color: #6c757d;
-	}
+  .status.offline {
+    background-color: #6c757d;
+  }
 
-	.friend-photo {
-		width: 40px;
-		/* Reduced size */
-		height: 40px;
-		/* Reduced size */
-		border-radius: 50%;
-		margin-right: 10px;
-		cursor: pointer;
-	}
+  .friend-photo {
+    width: 40px;
+    /* Reduced size */
+    height: 40px;
+    /* Reduced size */
+    border-radius: 50%;
+    margin-right: 10px;
+    cursor: pointer;
+  }
 
-	.header-friends {
-		text-align: center;
-		margin-top: 20px;
-	}
+  .header-friends {
+    text-align: center;
+    margin-top: 20px;
+  }
 
-	h1 {
-		font-size: 2.5em;
-		color: var(--primary-color);
-		font-family: 'Arial', sans-serif;
-	}
+  h1 {
+    font-size: 2.5em;
+    color: var(--primary-color);
+    font-family: "Arial", sans-serif;
+  }
 
-	#friends-list {
-		margin-bottom: 120px; /* ou mais se precisares */
-	}
+  #friends-list {
+    margin-bottom: 120px; /* ou mais se precisares */
+  }
 
-	.bottom {
-		position: fixed;
-		bottom: 0;
-		width: 100%;
-		background-color: white;
-		padding: 20px 0;
-		z-index: 10;
-	}
+  .bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    padding: 20px 0;
+    z-index: 10;
+  }
 
+  /* Tooltip */
+  .user-tooltip {
+    max-width: 220px;
+    font-size: 14px;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    border: 1px solid #ccc;
+    padding: 10px;
+    transition: opacity 0.2s ease;
+    opacity: 1;
+    pointer-events: auto;
+    position: absolute;
+    z-index: 1000;
+  }
 
-	/* Tooltip */	
-	.user-tooltip {
-		max-width: 220px;
-		font-size: 14px;
-		border-radius: 8px;
-		background-color: #fdfdfd;
-		border: 1px solid #ccc;
-		padding: 10px;
-		transition: opacity 0.2s ease;
-		opacity: 1;
-		pointer-events: auto;
-		position: absolute;
-		z-index: 1000;
-	}
+  .user-tooltip strong {
+    font-size: 15px;
+    color: var(--accent-color);
+  }
 
-	.user-tooltip strong {
-		font-size: 15px;
-		color: var(--accent-color);
-	}
+  .user-tooltip em {
+    color: var(--primary-color);
+  }
 
-	.user-tooltip em {
-		color: var(--primary-color);
-	}
+  .user-tooltip.no-stats {
+    color: #999;
+  }
 
-	.user-tooltip.no-stats {
-		color: #999;
-	}
+  .user-tooltip.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
 
-	.user-tooltip.hidden {
-		opacity: 0;
-		pointer-events: none;
-	}
-
-	.user-tooltip::after {
-		content: '';
-		position: absolute;
-		border-left: 6px solid transparent;
-		border-right: 6px solid transparent;
-		border-top: 6px solid #fdfdfd;
-		top: 100%;
-		left: 50%;
-		transform: translateX(-50%);
-	}
-
+  .user-tooltip::after {
+    content: "";
+    position: absolute;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #fdfdfd;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 </style>
 
 <body>
-	<h1 class="header-friends">Friend's Page</h1>
-	<div class="container-fluid mt-5">
+  <h1 class="header-friends">Friend's Page</h1>
+  <div class="container-fluid mt-5">
+    <!-- Search Bar -->
+    <div class="row mb-4 justify-content-center">
+      <div class="col-md-6">
+        <input
+          type="text"
+          class="form-control"
+          id="search"
+          placeholder="Search..."
+        />
+      </div>
+    </div>
 
-		<!-- Search Bar -->
-		<div class="row mb-4 justify-content-center">
-			<div class="col-md-6">
-				<input type="text" class="form-control" id="search" placeholder="Search...">
-			</div>
-		</div>
+    <!-- Friends List -->
+    <div id="friends-list" class="row justify-content-center px-5">
+      <div class="col-md-8">
+        <li class="list-group-item d-flex align-items-center">
+          <img src="" class="friend-photo" alt="Foto de amigo" />
+          <span class="me-2"></span>
+          <span class="status me-2"></span>
+          <small class="text-muted me-2">Last seen online</small>
+          <div class="friend-actions ms-auto">
+            <!-- Buttons will be dynamically added here -->
+          </div>
+        </li>
+      </div>
+    </div>
 
-		<!-- Friends List -->
-		<div id="friends-list" class="row justify-content-center px-5">
-			<div class="col-md-8">
-			<li class="list-group-item d-flex align-items-center">
-				<img src="" class="friend-photo" alt="Foto de amigo">
-				<span class="me-2"></span>
-				<span class="status me-2"></span>
-				<small class="text-muted me-2">Last seen online</small>
-				<div class="friend-actions ms-auto">
-					<!-- Buttons will be dynamically added here -->
-				</div>
-			</li>
-			</div>
-		</div>
+    <!-- Pagination -->
+    <nav
+      aria-label="Page navigation"
+      class="bottom d-flex justify-content-center align-items-center"
+    >
+      <ul class="pagination justify-content-center">
+        <li class="page-item" id="prev-page">
+          <button class="page-link">Prev</button>
+        </li>
+        <li class="page-item" id="next-page">
+          <button class="page-link">Next</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <!-- Universal Confirmation Modal -->
+  <div
+    class="modal fade"
+    id="confirmationModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationTitle"></h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p id="confirmationMessage"></p>
+        </div>
+        <div class="modal-footer">
+          <button
+            id="confirmActionBtn"
+            class="btn btn-danger"
+            data-bs-dismiss="modal"
+          ></button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-		<!-- Pagination -->
-		<nav aria-label="Page navigation" class="bottom d-flex justify-content-center align-items-center">
-			<ul class="pagination justify-content-center">
-				<li class="page-item" id="prev-page">
-					<button class="page-link">Prev</button>
-				</li>
-				<li class="page-item" id="next-page">
-					<button class="page-link">Next</button>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<!-- Universal Confirmation Modal -->
-	<div class="modal fade" id="confirmationModal" tabindex="-1" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="confirmationTitle"></h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<p id="confirmationMessage"></p>
-				</div>
-				<div class="modal-footer">
-					<button id="confirmActionBtn" class="btn btn-danger" data-bs-dismiss="modal"></button>
-					<button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div class="modal fade" id="userDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userDetailModalTitle"></h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body" id="userDetailModalBody"></div>
+      </div>
+    </div>
+  </div>
 </body>
